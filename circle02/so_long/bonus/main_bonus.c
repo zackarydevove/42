@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 14:49:17 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 17:36:25 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/14 19:21:47 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,8 @@ int	main(int ac, char **av)
 		return (0);
 	if (ac == 2)
 	{
+		if (!readonechar(av[1]))
+			return (free(data->center), free(data), 0);
 		if (!check_ber(av, data))
 			return (0);
 		if (!put_value_in_data(data, av[1]))

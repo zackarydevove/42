@@ -6,14 +6,14 @@
 #    By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/03 09:09:46 by zdevove           #+#    #+#              #
-#    Updated: 2023/04/14 16:40:51 by zdevove          ###   ########.fr        #
+#    Updated: 2023/04/14 19:16:41 by zdevove          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS				=			srcs/check_map.c srcs/create_game.c srcs/help.c srcs/help2.c srcs/init.c srcs/main.c srcs/create_map.c
+SRCS				=			srcs/check_map.c srcs/create_game.c srcs/help.c srcs/help2.c srcs/init.c srcs/main.c srcs/create_map.c srcs/onechar.c
 
 
-SRCS_BONUS			=			bonus/check_map_bonus.c bonus/create_game_bonus.c bonus/help_bonus.c bonus/help2_bonus.c bonus/init_bonus.c bonus/main_bonus.c bonus/create_map_bonus.c
+SRCS_BONUS			=			bonus/check_map_bonus.c bonus/create_game_bonus.c bonus/help_bonus.c bonus/help2_bonus.c bonus/init_bonus.c bonus/main_bonus.c bonus/create_map_bonus.c bonus/onechar_bonus.c
 
 NAME				=			so_long
 

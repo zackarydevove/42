@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:01:19 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 18:14:28 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/14 19:26:07 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,7 @@ int		check_next(int keycode, t_data *data);
 void	position_p_in_map(t_data *data);
 int		ft_sprite(t_data *data);
 void	ft_print_step(t_data *data, int flg);
+
+int		readonechar(char *map_path);
 
 #endif

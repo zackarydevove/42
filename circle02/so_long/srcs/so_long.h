@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:01:19 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 18:11:02 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/14 19:22:31 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,5 +93,7 @@ void	key_hook2(t_data *data);
 char	*print_steps(int n);
 int		check_next(int keycode, t_data *data);
 void	position_p_in_map(t_data *data);
+
+int		readonechar(char *map_path);
 
 #endif
