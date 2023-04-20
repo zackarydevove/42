@@ -1,3 +1,6 @@
+#ifndef HUMANB_HPP
+#define HUMANB_HPP
+
 #include "Weapon.hpp"
 #include <string>
 
@@ -12,3 +15,5 @@ public:
     void setWeapon(Weapon& newWeapon);
     void attack() const;
 };
+
+#endif
