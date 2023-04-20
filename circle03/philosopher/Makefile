@@ -1,4 +1,4 @@
-SRCS				=			main.c init.c routine.c libft.c
+SRCS				=			main.c init.c philo.c utils.c death_routine.c routine.c
 
 NAME				=			philo
 
