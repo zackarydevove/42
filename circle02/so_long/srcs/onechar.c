@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/14 19:20:53 by zdevove           #+#    #+#             */
-/*   Updated: 2023/04/14 19:29:21 by zdevove          ###   ########.fr       */
+/*   Created: 2023/04/21 15:35:50 by zdevove           #+#    #+#             */
+/*   Updated: 2023/04/21 16:33:43 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,20 @@ int	readonechar(char *map_path)
 	if (str[1] == '\0')
 		return (free(str), 0);
 	return (free(str), 1);
+}
+
+void	ft_init_data(t_data *data)
+{
+	data->win = mlx_new_window(data->mlx, 32 * 32, 32 * 32, "SO_LONG");
+	data->height = 0;
+	data->width = 0;
+	data->c = 0;
+	data->e = 0;
+	data->p = 0;
+	data->flag_e = 0;
+	data->img_floor = 0;
+	data->img_wall = 0;
+	data->img_consumable = 0;
+	data->img_player = 0;
+	data->img_exit = 0;
 }

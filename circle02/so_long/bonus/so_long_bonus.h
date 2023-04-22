@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:01:19 by zdevove           #+#    #+#             */
-/*   Updated: 2023/04/14 19:26:07 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/21 17:10:50 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,12 @@ int		put_value_in_data(t_data *data, char *map_path);
 int		malloc_data_center(t_data **data);
 char	**ft_create_matrix(t_data *data, char *map_path);
 char	**ft_malloc_matrix(t_data *data, char *map_path);
-void	img_init(t_data *data);
+int		img_init(t_data *data);
 void	player_data(t_data *data);
-void	set_enemy_img(t_data *data);
+int		set_enemy_img(t_data *data);
+void	set_enemy_img2(t_data *data);
+int		check_line(char *line);
+void	init_img_pe(t_data *data);
 
 // Check_map
 
@@ -102,5 +105,6 @@ int		ft_sprite(t_data *data);
 void	ft_print_step(t_data *data, int flg);
 
 int		readonechar(char *map_path);
+void	ft_init_data(t_data *data);
 
 #endif

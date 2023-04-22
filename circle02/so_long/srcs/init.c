@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 11:12:17 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 15:18:35 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/21 17:23:50 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,40 +37,47 @@ void	player_data(t_data *data)
 	}
 }
 
-void	img_init(t_data *data)
+int	img_init(t_data *data)
 {
 	data->img_floor = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/floor.xpm" \
-	, &data->width, &data->height);
+	"images/floor.xpm", &data->width, &data->height);
+	if (data->img_floor == 0)
+		return (0);
 	data->img_wall = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/wall.xpm" \
-	, &data->width, &data->height);
+	"images/wall.xpm", &data->width, &data->height);
+	if (data->img_wall == 0)
+		return (0);
 	data->img_consumable = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/consumable.xpm" \
-	, &data->width, &data->height);
+	"images/consumable.xpm", &data->width, &data->height);
+	if (data->img_consumable == 0)
+		return (0);
 	data->img_player = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/player1.xpm" \
-	, &data->width, &data->height);
+	"images/player1.xpm", &data->width, &data->height);
+	if (data->img_player == 0)
+		return (0);
 	data->img_exit = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/exit.xpm" \
-	, &data->width, &data->height);
+	"images/exit.xpm", &data->width, &data->height);
+	if (data->img_exit == 0)
+		return (0);
+	return (1);
 }
 
 int	put_value_in_data(t_data *data, char *map_path)
 {
 	data->matrix = ft_create_matrix(data, map_path);
 	if (data->matrix == 0)
-		return (ft_putendl_fd("Error\nNot valid file", 2), 0);
+		return (ft_putendl_fd("Error\nNot valid file", 2), \
+		free(data->center), free(data), 0);
 	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, 32 * 32, 32 * 32, "SO_LONG");
-	data->height = 0;
-	data->width = 0;
-	data->c = 0;
-	data->e = 0;
-	data->p = 0;
-	data->flag_e = 0;
+	if (!data->mlx)
+		return (free_matrix(data->matrix, data->nb_line), free(data->center),
+			free(data), ft_putendl_fd("Error\nInvalid path", 2), 0);
+	ft_init_data(data);
+	if (!img_init(data))
+		return (ft_putendl_fd("Error\nImage not valid", 2), free_all(data), 0);
 	get_max_column(data);
-	img_init(data);
+	if (data->nb_column == data->nb_line)
+		return (ft_putendl_fd("Error\nMap not rectangle", 2), free_all(data), 0);
 	player_data(data);
 	return (1);
 }

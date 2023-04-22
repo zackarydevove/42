@@ -6,14 +6,14 @@
 #    By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/01/03 09:09:46 by zdevove           #+#    #+#              #
-#    Updated: 2023/04/14 19:16:41 by zdevove          ###   ########.fr        #
+#    Updated: 2023/04/21 16:24:47 by zdevove          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS				=			srcs/check_map.c srcs/create_game.c srcs/help.c srcs/help2.c srcs/init.c srcs/main.c srcs/create_map.c srcs/onechar.c
 
 
-SRCS_BONUS			=			bonus/check_map_bonus.c bonus/create_game_bonus.c bonus/help_bonus.c bonus/help2_bonus.c bonus/init_bonus.c bonus/main_bonus.c bonus/create_map_bonus.c bonus/onechar_bonus.c
+SRCS_BONUS			=			bonus/check_map_bonus.c bonus/create_game_bonus.c bonus/help_bonus.c bonus/help2_bonus.c bonus/help3_bonus.c bonus/init_bonus.c bonus/main_bonus.c bonus/create_map_bonus.c bonus/onechar_bonus.c
 
 NAME				=			so_long
 
@@ -34,13 +34,13 @@ all					:			$(NAME)
 $(NAME)				:			$(OBJS)
 								make -C libft/ && mv libft/libft.a .
 								make -C minilibx-linux/ && mv minilibx-linux/libmlx.a . && mv minilibx-linux/libmlx_Linux.a .
-								$(CC) -g -o $(NAME) $(OBJS) $(LFLAGS) libft.a
+								$(CC) -o $(NAME) $(OBJS) $(LFLAGS) libft.a
 								@echo "===== so_long has been created ====="
 
 $(NAME_BONUS)		:			$(OBJS_BONUS)
 								make -C libft/ && mv libft/libft.a .
 								make -C minilibx-linux/ && mv minilibx-linux/libmlx.a . && mv minilibx-linux/libmlx_Linux.a .
-								$(CC) -g -o $(NAME_BONUS) $(OBJS_BONUS) $(LFLAGS) libft.a
+								$(CC) -o $(NAME_BONUS) $(OBJS_BONUS) $(LFLAGS) libft.a
 								@echo "===== so_long bonus has been created ====="
 
 bonus				:			$(NAME_BONUS)

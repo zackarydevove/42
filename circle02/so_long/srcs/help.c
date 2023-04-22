@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 11:20:12 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 15:18:36 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/01/30 16:19:41 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,4 +76,14 @@ char	*print_steps(int n)
 		n /= 10;
 	}
 	return (str);
+}
+
+int	check_line(char *line)
+{
+	if (line[0] == '\n')
+	{
+		free(line);
+		return (0);
+	}
+	return (1);
 }

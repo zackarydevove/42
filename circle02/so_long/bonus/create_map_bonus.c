@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 14:48:01 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 17:36:41 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/21 17:10:55 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	get_max_column(t_data *data)
 	int	i;
 
 	i = 0;
-	while (data->matrix[0][i] != '\n')
+	while (data->matrix[0][i] && data->matrix[0][i] != '\n')
 		i++;
 	data->nb_column = i;
 }

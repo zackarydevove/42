@@ -5,12 +5,25 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/14 19:25:55 by zdevove           #+#    #+#             */
-/*   Updated: 2023/04/14 19:29:54 by zdevove          ###   ########.fr       */
+/*   Created: 2023/04/21 15:35:50 by zdevove           #+#    #+#             */
+/*   Updated: 2023/04/21 16:35:52 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long_bonus.h"
+
+void	ft_init_data(t_data *data)
+{
+	data->height = 0;
+	data->width = 0;
+	data->c = 0;
+	data->e = 0;
+	data->p = 0;
+	data->flag_e = 0;
+	data->counter = 0;
+	data->idx_p = 0;
+	data->idx_e = 0;
+}
 
 int	readonechar(char *map_path)
 {

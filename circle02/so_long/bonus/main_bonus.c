@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 14:49:17 by zdevove           #+#    #+#             */
-/*   Updated: 2023/04/14 19:21:47 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/21 16:35:44 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	**ft_malloc_matrix(t_data *data, char *map_path)
 		return (0);
 	while (get_next_line(fd, &line))
 	{
+		if (!check_line(line))
+			return (0);
 		free(line);
 		i++;
 	}
@@ -63,43 +65,44 @@ char	**ft_create_matrix(t_data *data, char *map_path)
 	return (map);
 }
 
-void	free_all(t_data *data)
+void	free_player_enemy_img(t_data *data)
 {
 	int	i;
 
 	i = 0;
-	free_matrix(data->matrix, data->nb_line);
-	mlx_destroy_image(data->mlx, data->img_floor);
-	mlx_destroy_image(data->mlx, data->img_wall);
-	mlx_destroy_image(data->mlx, data->img_consumable);
 	while (i < 4)
-		mlx_destroy_image(data->mlx, data->img_player[i++]);
+	{
+		if (data->img_player[i] != 0)
+			mlx_destroy_image(data->mlx, data->img_player[i]);
+		i++;
+	}
 	i = 0;
 	while (i < 8)
-		mlx_destroy_image(data->mlx, data->img_enemy[i++]);
-	mlx_destroy_image(data->mlx, data->img_exit);
+	{
+		if (data->img_enemy[i] != 0)
+			mlx_destroy_image(data->mlx, data->img_enemy[i]);
+		i++;
+	}
+}
+
+void	free_all(t_data *data)
+{
+	free_matrix(data->matrix, data->nb_line);
+	if (data->img_floor != 0)
+		mlx_destroy_image(data->mlx, data->img_floor);
+	if (data->img_wall != 0)
+		mlx_destroy_image(data->mlx, data->img_wall);
+	if (data->img_consumable != 0)
+		mlx_destroy_image(data->mlx, data->img_consumable);
+	if (data->img_exit != 0)
+		mlx_destroy_image(data->mlx, data->img_exit);
+	free_player_enemy_img(data);
 	mlx_clear_window(data->mlx, data->win);
 	mlx_destroy_window(data->mlx, data->win);
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	free(data->center);
 	free(data);
-}
-
-int	check_ber(char **av, t_data *data)
-{
-	char	*str;
-
-	if (ft_strlen(av[1]) >= 4)
-		str = ft_substr(av[1], ft_strlen(av[1]) - 4, 4);
-	else
-		return (free(data->center), free(data), \
-		ft_putendl_fd("Error\nNot valid file", 2), 0);
-	if (ft_strncmp(str, ".ber", 4) != 0)
-		return (free(data->center), free(data), free(str), \
-		ft_putendl_fd("Error\nNot .ber file", 2), 0);
-	free(str);
-	return (1);
 }
 
 int	main(int ac, char **av)
@@ -112,11 +115,12 @@ int	main(int ac, char **av)
 	if (ac == 2)
 	{
 		if (!readonechar(av[1]))
-			return (free(data->center), free(data), 0);
+			return (free(data->center), free(data),
+				ft_putendl_fd("Error\nMap not valid.", 0), 1);
 		if (!check_ber(av, data))
 			return (0);
 		if (!put_value_in_data(data, av[1]))
-			return (free(data->center), free(data), 0);
+			return (0);
 		if (!ft_check_map(data))
 			return (free_all(data), 0);
 		ft_create_map(data);

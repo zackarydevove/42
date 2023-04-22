@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/25 13:21:06 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 18:11:11 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/21 17:45:21 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int	ft_backtracking(char **matrix, t_data *data, int x, int y)
 int	error_map(t_data *data)
 {
 	data->tmp_c = data->c;
+	if (data->p != 1 || data->e != 1)
+		return (ft_putendl_fd("Error\nNot valid map", 2), 0);
 	if (!copy_map(data))
 		return (ft_putendl_fd("Error\nNo valid path", 2), 0);
 	if (data->c < 1 || data->e != 1 || data->p != 1)
@@ -98,6 +100,8 @@ int	ft_check_map(t_data *data)
 				return (0);
 			j++;
 		}
+		if (j != data->nb_column)
+			return (ft_putendl_fd("Error\nDifferent width", 2), 0);
 		i++;
 	}
 	return (error_map(data));

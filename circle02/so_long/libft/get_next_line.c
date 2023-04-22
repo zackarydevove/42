@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:35:07 by zdevove           #+#    #+#             */
-/*   Updated: 2023/04/14 18:52:05 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/02/15 11:33:59 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,8 @@ char	*get_next_line(int fd, char **line)
 		return (0);
 	*line = get_line(buffer);
 	buffer = get_rest(buffer);
+	if (line[0][0] == '\n')
+		free(buffer);
 	if (!**line)
 	{
 		free(*line);

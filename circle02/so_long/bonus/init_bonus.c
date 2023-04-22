@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/28 11:12:17 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 17:36:30 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/21 17:22:38 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,82 +37,74 @@ void	player_data(t_data *data)
 	}
 }
 
-void	set_enemy_img(t_data *data)
+int	img_player(t_data *data)
 {
-	data->img_enemy[0] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/enemy/enemy0.xpm" \
-	, &data->width, &data->height);
-	data->img_enemy[1] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/enemy/enemy1.xpm" \
-	, &data->width, &data->height);
-	data->img_enemy[2] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/enemy/enemy2.xpm" \
-	, &data->width, &data->height);
-	data->img_enemy[3] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/enemy/enemy3.xpm" \
-	, &data->width, &data->height);
-	data->img_enemy[4] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/enemy/enemy4.xpm" \
-	, &data->width, &data->height);
-	data->img_enemy[5] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/enemy/enemy5.xpm" \
-	, &data->width, &data->height);
-	data->img_enemy[6] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/enemy/enemy6.xpm" \
-	, &data->width, &data->height);
-	data->img_enemy[7] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/enemy/enemy7.xpm" \
-	, &data->width, &data->height);
+	int	i;
+
+	i = 0;
+	while (i < 4)
+		data->img_player[i++] = 0;
+	i = 0;
+	data->img_player[0] = mlx_xpm_file_to_image(data->mlx, \
+	"images/player1.xpm", &data->width, &data->height);
+	data->img_player[1] = mlx_xpm_file_to_image(data->mlx, \
+	"images/player2.xpm", &data->width, &data->height);
+	data->img_player[2] = mlx_xpm_file_to_image(data->mlx, \
+	"images/player3.xpm", &data->width, &data->height);
+	data->img_player[3] = mlx_xpm_file_to_image(data->mlx, \
+	"images/player4.xpm", &data->width, &data->height);
+	while (i < 4)
+		if (data->img_player[i++] == 0)
+			return (0);
+	return (1);
 }
 
-void	img_init(t_data *data)
+int	img_init(t_data *data)
 {
+	init_img_pe(data);
+	data->img_floor = 0;
+	data->img_wall = 0;
+	data->img_consumable = 0;
+	data->img_exit = 0;
 	data->img_floor = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/floor.xpm" \
-	, &data->width, &data->height);
+	"images/floor.xpm", &data->width, &data->height);
+	if (data->img_floor == 0)
+		return (0);
 	data->img_wall = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/wall.xpm" \
-	, &data->width, &data->height);
+	"images/wall.xpm", &data->width, &data->height);
+	if (data->img_wall == 0)
+		return (0);
 	data->img_consumable = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/consumable.xpm" \
-	, &data->width, &data->height);
-	data->img_player[0] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/player1.xpm" \
-	, &data->width, &data->height);
-	data->img_player[1] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/player2.xpm" \
-	, &data->width, &data->height);
-	data->img_player[2] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/player3.xpm" \
-	, &data->width, &data->height);
-	data->img_player[3] = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/player4.xpm" \
-	, &data->width, &data->height);
+	"images/consumable.xpm", &data->width, &data->height);
+	if (data->img_consumable == 0)
+		return (0);
 	data->img_exit = mlx_xpm_file_to_image(data->mlx, \
-	"/mnt/nfs/homes/zdevove/STUD/Exam03/so_long/images/exit.xpm" \
-	, &data->width, &data->height);
+	"images/exit.xpm", &data->width, &data->height);
+	if (data->img_exit == 0)
+		return (0);
+	if (!img_player(data))
+		return (0);
+	return (1);
 }
 
 int	put_value_in_data(t_data *data, char *map_path)
 {
 	data->matrix = ft_create_matrix(data, map_path);
 	if (data->matrix == 0)
-		return (ft_putendl_fd("Error\nNot valid file", 2), 0);
+		return (ft_putendl_fd("Error\nNot valid file", 2), \
+		free(data->center), free(data), 0);
 	data->mlx = mlx_init();
+	if (!data->mlx)
+		return (free_matrix(data->matrix, data->nb_line), free(data->center),
+			free(data), ft_putendl_fd("Error\nInvalid path", 2), 0);
 	data->win = mlx_new_window(data->mlx, 32 * 32, 32 * 32, "SO_LONG");
-	data->height = 0;
-	data->width = 0;
-	data->c = 0;
-	data->e = 0;
-	data->p = 0;
-	data->flag_e = 0;
-	data->counter = 0;
-	data->idx_p = 0;
-	data->idx_e = 0;
+	ft_init_data(data);
+	if (!img_init(data) || !set_enemy_img(data))
+		return (ft_putendl_fd("Error\nImage not valid", 2), free_all(data), 0);
 	get_max_column(data);
-	img_init(data);
+	if (data->nb_column == data->nb_line)
+		return (ft_putendl_fd("Error\nMap not rectangle", 2), free_all(data), 0);
 	player_data(data);
-	set_enemy_img(data);
 	return (1);
 }
 

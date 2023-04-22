@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 17:10:49 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/29 18:20:04 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/01/30 16:17:38 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,47 @@ void	ft_print_step(t_data *data, int flg)
 	mlx_string_put(data->mlx, data->win, 16, 16, 0xFFFFFF, str);
 	free(str);
 	free(ptr);
+}
+
+int	set_enemy_img(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	while (i < 8)
+		data->img_enemy[i++] = 0;
+	i = 0;
+	data->img_enemy[0] = mlx_xpm_file_to_image(data->mlx, \
+	"images/enemy/enemy0.xpm", &data->width, &data->height);
+	data->img_enemy[1] = mlx_xpm_file_to_image(data->mlx, \
+	"images/enemy/enemy1.xpm", &data->width, &data->height);
+	data->img_enemy[2] = mlx_xpm_file_to_image(data->mlx, \
+	"images/enemy/enemy2.xpm", &data->width, &data->height);
+	data->img_enemy[3] = mlx_xpm_file_to_image(data->mlx, \
+	"images/enemy/enemy3.xpm", &data->width, &data->height);
+	data->img_enemy[4] = mlx_xpm_file_to_image(data->mlx, \
+	"images/enemy/enemy4.xpm", &data->width, &data->height);
+	data->img_enemy[5] = mlx_xpm_file_to_image(data->mlx, \
+	"images/enemy/enemy5.xpm", &data->width, &data->height);
+	set_enemy_img2(data);
+	while (i < 8)
+		if (data->img_enemy[i++] == 0)
+			return (0);
+	return (1);
+}
+
+int	check_ber(char **av, t_data *data)
+{
+	char	*str;
+
+	if (ft_strlen(av[1]) >= 4)
+		str = ft_substr(av[1], ft_strlen(av[1]) - 4, 4);
+	else
+		return (free(data->center), free(data), \
+		ft_putendl_fd("Error\nNot valid file", 2), 0);
+	if (ft_strncmp(str, ".ber", 4) != 0)
+		return (free(data->center), free(data), free(str), \
+		ft_putendl_fd("Error\nNot .ber file", 2), 0);
+	free(str);
+	return (1);
 }

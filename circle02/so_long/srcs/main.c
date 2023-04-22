@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/29 14:49:17 by zdevove           #+#    #+#             */
-/*   Updated: 2023/04/14 19:21:37 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/21 17:23:48 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@ char	**ft_malloc_matrix(t_data *data, char *map_path)
 		return (0);
 	while (get_next_line(fd, &line))
 	{
+		if (!check_line(line))
+			return (0);
 		free(line);
 		i++;
 	}
@@ -65,15 +67,17 @@ char	**ft_create_matrix(t_data *data, char *map_path)
 
 void	free_all(t_data *data)
 {
-	int	i;
-
-	i = 0;
 	free_matrix(data->matrix, data->nb_line);
-	mlx_destroy_image(data->mlx, data->img_floor);
-	mlx_destroy_image(data->mlx, data->img_wall);
-	mlx_destroy_image(data->mlx, data->img_consumable);
-	mlx_destroy_image(data->mlx, data->img_player);
-	mlx_destroy_image(data->mlx, data->img_exit);
+	if (data->img_floor != 0)
+		mlx_destroy_image(data->mlx, data->img_floor);
+	if (data->img_wall != 0)
+		mlx_destroy_image(data->mlx, data->img_wall);
+	if (data->img_consumable != 0)
+		mlx_destroy_image(data->mlx, data->img_consumable);
+	if (data->img_player != 0)
+		mlx_destroy_image(data->mlx, data->img_player);
+	if (data->img_exit != 0)
+		mlx_destroy_image(data->mlx, data->img_exit);
 	mlx_clear_window(data->mlx, data->win);
 	mlx_destroy_window(data->mlx, data->win);
 	mlx_destroy_display(data->mlx);
@@ -108,18 +112,19 @@ int	main(int ac, char **av)
 	if (ac == 2)
 	{
 		if (!readonechar(av[1]))
-			return (free(data->center), free(data), 0);
+			return (free(data->center), free(data),
+				ft_putendl_fd("Error\nMap not valid.", 0), 1);
 		if (!check_ber(av, data))
 			return (0);
 		if (!put_value_in_data(data, av[1]))
-			return (free(data->center), free(data), 0);
+			return (0);
 		if (!ft_check_map(data))
-			return (free_all(data), 0);
+			return (free_all(data), 1);
 		ft_create_map(data);
 		ft_create_game(data);
 	}
 	else
 		return (free(data->center), free(data), \
-		ft_putendl_fd("Error\nNeed 1 argument only .ber map", 2), 0);
+		ft_putendl_fd("Error\nNeed 1 argument only .ber map", 2), 1);
 	return (free_all(data), 0);
 }

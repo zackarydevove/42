@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/01/03 09:01:19 by zdevove           #+#    #+#             */
-/*   Updated: 2023/04/14 19:22:31 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/04/21 17:10:05 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,9 @@ int		put_value_in_data(t_data *data, char *map_path);
 int		malloc_data_center(t_data **data);
 char	**ft_create_matrix(t_data *data, char *map_path);
 char	**ft_malloc_matrix(t_data *data, char *map_path);
-void	img_init(t_data *data);
+int		img_init(t_data *data);
 void	player_data(t_data *data);
+int		check_line(char *line);
 
 // Check_map
 
@@ -95,5 +96,6 @@ int		check_next(int keycode, t_data *data);
 void	position_p_in_map(t_data *data);
 
 int		readonechar(char *map_path);
+void	ft_init_data(t_data *data);
 
 #endif
