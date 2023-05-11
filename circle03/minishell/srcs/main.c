@@ -6,22 +6,13 @@
 /*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:30:09 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/05 14:52:42 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/05/08 20:42:02 by mnouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "types/env.h"
-#include "types/token.h"
-#include "types/command.h"
-#include "utils/signal.h"
-#include "utils/parsing.h"
-#include "exec.h"
-#include "libft.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-#include <signal.h>
+#include "minishell.h"
+
+int	g_force_exit;
 
 /// @brief Initialize the environment variables from the envp array
 /// @param envp The environment variables array
@@ -39,7 +30,7 @@ static t_env	*init_envs(char **envp)
 		while ((*envp)[i] != '=')
 			i++;
 		name = ft_substr(*envp, 0, i);
-		add_env(&env, name, ft_strdup(getenv(name)));
+		set_env(&env, name, ft_strdup(getenv(name)));
 		envp++;
 	}
 	return (env);
@@ -50,59 +41,94 @@ static t_env	*init_envs(char **envp)
 /// @return The commands linked list
 t_cmd	*init_cmds(char **tokens)
 {
-	t_cmd	*cmds;
-	t_cmd	*new;
-	int		start;
-	int		i;
+    t_cmd	*cmds;
+    t_cmd	*new;
+    size_t	start;
+    size_t	i;
 
 	cmds = NULL;
-	start = 0;
-	i = 0;
-	while (tokens[i])
-	{
-		if (has_pipes(tokens[i]))
-		{
-			new = new_cmd(tokens, start, i);
-			add_cmd(&cmds, new);
-			start = i + 1;
-		}
-		i++;
-	}
-	new = new_cmd(tokens, start, i);
-	add_cmd(&cmds, new);
-	return (cmds);
+    start = 0;
+    i = 0;
+    while (tokens[i])
+    {
+        if (has_pipes(tokens[i]))
+        {
+            new = new_cmd(tokens, start, i);
+            add_cmd(&cmds, new);
+            start = i + 1;
+        }
+        i++;
+    }
+    if (tokens[start])
+    {
+        new = new_cmd(tokens, start, i);
+        add_cmd(&cmds, new);
+    }
+    return (cmds);
 }
 
 /// @brief Loop to read user input and execute commands
+/// @param cmds The commands linked list
 /// @param envs The environment variables linked list
-/// @return The exit status of the command or the main process
-static int	readentry(t_cmd **cmds, t_env *envs)
+/// @return The exit status
+static int	readentry(t_cmd **cmds, t_env **envs)
 {
-	char	*line;
-	char	**tokens;
-	int		exit_status;
+    char	*line;
+    char	**tokens;
+	// int		exit_status;
+	(void)envs;
 
-	*cmds = NULL;
-	while (1)
-	{
+	t_cmd *head;
+
+    while (1)
+    {
 		signal(SIGINT, &signal_handler);
-		line = readline("minishell$ ");
-		if (!line)
-			break ;
-		add_history(line);
-		tokens = tokenize(line);
-		if (!tokens)
-			return (free(line), EXIT_FAILURE);
-		if (tokens[0])
-			*cmds = init_cmds(tokens);
-		exit_status = exec_cmds(*cmds, envs);
+        line = readline("minishell$ ");
+        if (!line)
+            break;
+        add_history(line);
+        tokens = tokenize(line);
 		free(line);
-		free_tokens(tokens);
-		free_cmds(*cmds);
-		if ((*cmds)->pid == 0)
-			return (exit_status);
-	}
-	return (EXIT_SUCCESS);
+		if (!tokens)
+			continue ;
+
+        // A delete c'est juste pour print les tokens
+        printf("-----\nline: %s\n-----\n", line);
+        if (tokens)
+			for (int k = 0; tokens[k]; k++)
+                printf("tokens[%d]: %s\n", k, tokens[k]);
+
+		*cmds = init_cmds(tokens);
+		if (*cmds)
+		{
+
+	        // A delete c'est juste pour print les nodes
+            head = *cmds;
+            int jj = 0;
+            while (head)
+            {
+                printf("node[%d]: infile: %d\toutfile: %d\n", jj, head->infile, head->outfile);
+                for (int dd = 0; head->args[dd]; dd++)
+                    printf("node[%d]: args[%d]: %s\n", jj, dd, head->args[dd]);
+                head = head->next;
+                jj++;
+            }
+
+
+			// (void)envs;
+			// exit_status = exec(*cmds, envs);
+			// if ((*cmds)->pid == 0)
+			// {
+			// 	free_cmds(*cmds);
+			// 	return (exit_status);
+			// }
+			// free_cmds(*cmds);
+			// if (g_force_exit != -1)
+			// 	return (g_force_exit);
+		}
+		//free_tokens(tokens);
+    }
+    return (EXIT_SUCCESS);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -113,8 +139,9 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	g_force_exit = -1;
 	envs = init_envs(envp);
-	exit_status = readentry(&cmds, envs);
+	exit_status = readentry(&cmds, &envs);
 	free_envs(envs);
 	return (exit_status);
 }

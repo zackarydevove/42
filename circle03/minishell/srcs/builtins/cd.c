@@ -6,21 +6,17 @@
 /*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/25 15:58:49 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/05 14:54:30 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/05/08 16:24:46 by mnouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "types/command.h"
-#include "libft.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include "minishell.h"
 
 /// @brief Execute the cd builtin command
 /// @param cmd The command data structure
 /// @param envs The environment variables
-int	builtin_cd(t_cmd *cmd, t_env *envs)
+/// @return EXIT_SUCCESS or EXIT_FAILURE if an error occured
+int	builtin_cd(t_cmd *cmd, t_env **envs)
 {
 	t_env	*env;
 	char	*path;
@@ -29,7 +25,7 @@ int	builtin_cd(t_cmd *cmd, t_env *envs)
 		path = cmd->args[1];
 	else
 	{
-		env = get_env(envs, "HOME");
+		env = get_env(*envs, "HOME");
 		if (!env)
 		{
 			ft_putstr_fd("cd: HOME not set\n", STDERR_FILENO);
@@ -38,6 +34,9 @@ int	builtin_cd(t_cmd *cmd, t_env *envs)
 		path = env->value;
 	}
 	if (chdir(path) == -1)
+	{
 		perror("cd");
+		return (EXIT_FAILURE);
+	}
 	return (EXIT_SUCCESS);
 }

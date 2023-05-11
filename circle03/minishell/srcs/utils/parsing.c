@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "minishell.h"
+
 /// @brief Check if the character is a space
 /// @param c The character to check
 /// @return 1 if the character is a space, 0 otherwise
@@ -18,9 +20,12 @@ int	is_space(char c)
 	return ((c >= 9 && c <= 13) || c == 32);
 }
 
-/// @brief Skip quotes in a line
-/// @param line The line to skip quotes from
-/// @return The index of the next character after the quotes
+void	skip_spaces(char *line, size_t *i)
+{
+    while (is_space(line[(*i)]))
+        (*i)++;
+}
+
 int	skip_quotes(char *line)
 {
 	int		i;
@@ -35,14 +40,33 @@ int	skip_quotes(char *line)
 	return (-1);
 }
 
+int handle_quotes(char *line, size_t *i)
+{
+    int skip;
+
+    skip = skip_quotes(line + (*i));
+    if (skip == -1)
+        return (0);
+    (*i) += skip;
+    return (1);
+}
+
+void    increase_token_index(size_t *count, size_t *i)
+{
+    (*count)++;
+    (*i)++;
+}
+
 /// @brief Check if the line contains pipes
 /// @param str The line to check
 /// @return 1 if the line contains pipes, 0 otherwise
 int	has_pipes(char *str)
 {
-	int	i;
+    int	i;
 
 	i = 0;
+	if (str[i] == '\'' || str[i] == '"')
+		return (0);
 	while (str[i])
 	{
 		if (str[i] == '|')

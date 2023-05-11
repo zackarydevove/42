@@ -3,36 +3,31 @@
 /*                                                        :::      ::::::::   */
 /*   command.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:30:39 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/05 14:30:41 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/05/09 16:05:22 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "types/command.h"
-#include "builtins.h"
-#include "utils/path.h"
-#include "utils/parsing.h"
-#include "libft.h"
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
+#include "minishell.h"
 
 /// @brief Create a new command from the tokens array
 /// @param tokens The tokens array
 /// @param start The start index of the command in the tokens array
 /// @param end The end index of the command in the tokens array
 /// @return The new command
-t_cmd	*new_cmd(char **tokens, int start, int end)
+t_cmd	*new_cmd(char **tokens, size_t start, size_t end)
 {
 	t_cmd	*cmd;
-	int		i;
+	size_t	i;
 
 	cmd = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
+	cmd->infile = -1;
+	cmd->outfile = -1;
+	cmd->pid = -1;
 	cmd->name = ft_strdup(tokens[start]);
 	cmd->args = (char **)malloc((end - start + 1) * sizeof(char *));
 	if (!cmd->args)
@@ -40,9 +35,21 @@ t_cmd	*new_cmd(char **tokens, int start, int end)
 	i = 0;
 	while (start + i < end)
 	{
-		cmd->args[i] = ft_strdup(tokens[start + i]);
-		i++;
+        if ((tokens[start + i][0] == '>' || tokens[start + i][0] == '<')
+            && cmd->infile == -1 && cmd->outfile == -1)
+        {
+            if (!handle_redirection(tokens, start + i, cmd))
+                return (NULL);
+            start += 2;
+        }
+        else
+        {
+            cmd->args[i] = tokens[start + i];
+            i++;
+        }
 	}
+	if (cmd->args[i - 1][0] == '|')
+		i--;
 	cmd->args[i] = NULL;
 	cmd->next = NULL;
 	return (cmd);
