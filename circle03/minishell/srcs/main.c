@@ -51,7 +51,7 @@ t_cmd	*init_cmds(char **tokens)
     i = 0;
     while (tokens[i])
     {
-        if (has_pipes(tokens[i]))
+        if (has_pipes(tokens[i]) && valid_last_command(tokens, i))
         {
             new = new_cmd(tokens, start, i);
             add_cmd(&cmds, new);
@@ -93,7 +93,9 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 			continue ;
 
         // A delete c'est juste pour print les tokens
+		// print line
         printf("-----\nline: %s\n-----\n", line);
+		// print tokens
         if (tokens)
 			for (int k = 0; tokens[k]; k++)
                 printf("tokens[%d]: %s\n", k, tokens[k]);
@@ -101,8 +103,8 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 		*cmds = init_cmds(tokens);
 		if (*cmds)
 		{
-
 	        // A delete c'est juste pour print les nodes
+			// print nodes
             head = *cmds;
             int jj = 0;
             while (head)
@@ -114,6 +116,10 @@ static int	readentry(t_cmd **cmds, t_env **envs)
                 jj++;
             }
 
+
+			// If there is a next, then there is pipes, set has pipe true to every nodes
+			if ((*cmds)->next)
+				cmds_has_pipes(*cmds);
 
 			// (void)envs;
 			// exit_status = exec(*cmds, envs);
