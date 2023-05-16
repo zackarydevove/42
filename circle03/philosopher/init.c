@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/16 10:54:40 by zdevove           #+#    #+#             */
+/*   Updated: 2023/05/16 10:54:41 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 static int	philo_init(t_data *data)
@@ -11,7 +23,7 @@ static int	philo_init(t_data *data)
 		data->philo[i].eat_time = 0;
 		data->philo[i].lfork = i;
 		data->philo[i].rfork = (i + 1) % data->nb_philo;
-		if (!(data->philo[i].num % 2))	// ?
+		if (!(data->philo[i].num % 2))
 		{
 			data->philo[i].lfork = (i + 1) % data->nb_philo;
 			data->philo[i].rfork = i;
@@ -34,7 +46,7 @@ static int	mutex_init(t_data *data)
 	{
 		if (pthread_mutex_init(&data->forks[i], 0))
 			return (write_error("error forks mutex init"), 0);
-		if (pthread_mutex_init(&(data->philo[i].philo_mutex), 0)) // on a un mutex pour pas faire 2 chose en meme temps quand on check la mort du philo
+		if (pthread_mutex_init(&(data->philo[i].philo_mutex), 0))
 			return (write_error("error philo_start mutex init"), 0);
 	}
 	if (pthread_mutex_init(&data->writing, 0))
@@ -49,18 +61,15 @@ static int	mutex_init(t_data *data)
 int	data_init(t_data *data, char **av)
 {
 	data->nb_philo = ft_atoi(av[1]);
-	if (data-> nb_philo < 1)
-		return (0);
-	data->philo = malloc(data->nb_philo * sizeof(t_philo));
-	if (!data->philo)
-		return (0);
 	data->time_to_die = ft_atoi(av[2]);
 	data->time_to_eat = ft_atoi(av[3]);
 	data->time_to_sleep = ft_atoi(av[4]);
+	data->nb_must_eat = -1;
 	if (av[5])
 		data->nb_must_eat = ft_atoi(av[5]);
-	else
-		data->nb_must_eat = -1;
+	data->philo = malloc(data->nb_philo * sizeof(t_philo));
+	if (!data->philo)
+		return (0);
 	data->stop = 0;
 	if (!mutex_init(data))
 		return (free(data->philo), 0);

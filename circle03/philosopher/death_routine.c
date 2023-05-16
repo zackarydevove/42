@@ -1,6 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   death_routine.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/16 10:54:46 by zdevove           #+#    #+#             */
+/*   Updated: 2023/05/16 11:29:47 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
-// We use a function instead of data->end directly to avoid data races
 int	routine_stop(t_data *data)
 {
 	int	status;
@@ -11,7 +22,6 @@ int	routine_stop(t_data *data)
 	return (status);
 }
 
-// We use a function instead of data->end directly to avoid data races
 static void	set_stop(t_data *data, int status)
 {
 	pthread_mutex_lock(&data->stop_mutex);
@@ -19,8 +29,6 @@ static void	set_stop(t_data *data, int status)
 	pthread_mutex_unlock(&data->stop_mutex);
 }
 
-// La fonction va checker en boucle si un philo a depasser son temps de mort sans manger
-// ou si tous les philo ont mange
 static int	philo_finish(t_data *data)
 {
 	int		i;
@@ -38,7 +46,8 @@ static int	philo_finish(t_data *data)
 			pthread_mutex_unlock(&data->philo[i].philo_mutex);
 			return (1);
 		}
-		if (data->nb_must_eat > -1 && data->philo[i].eat_time < data->nb_must_eat)
+		if (data->nb_must_eat > -1
+			&& data->philo[i].eat_time < data->nb_must_eat)
 			everyone_ate = 0;
 		pthread_mutex_unlock(&data->philo[i].philo_mutex);
 	}
@@ -47,7 +56,6 @@ static int	philo_finish(t_data *data)
 	return (0);
 }
 
-// routine to check if a philo died
 void	*death_routine(void *d)
 {
 	t_data	*data;
@@ -55,6 +63,6 @@ void	*death_routine(void *d)
 	data = (t_data *)d;
 	sync_threads(data->start_time);
 	while (!philo_finish(data))
-		ft_usleep(data->nb_philo, 900);
+		usleep(900);
 	return (0);
 }

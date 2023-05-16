@@ -1,17 +1,29 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosopher.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/16 10:55:01 by zdevove           #+#    #+#             */
+/*   Updated: 2023/05/16 10:59:35 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PHILOSOPHER_H
 # define PHILOSOPHER_H
 
-#include <stdlib.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/time.h>
+# include <stdlib.h>
+# include <pthread.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <sys/time.h>
 
-typedef struct s_data t_data;
+typedef struct s_data	t_data;
 
 typedef struct s_philo
 {
-	t_data *data;
+	t_data			*data;
 	pthread_t		pthread;
 	pthread_mutex_t	philo_mutex;
 	int				num;
@@ -49,7 +61,7 @@ int			philo_start(t_data *data);
 
 int			ft_atoi(const char *str);
 long long	timestamp(void);
-void		ft_usleep(int nb_philo, long long time_to_x);
+void		ft_usleep(long long time_to_x);
 void		ft_print(t_philo *p, char *str);
 void		sync_threads(long long start_time);
 int			write_error(char *str);

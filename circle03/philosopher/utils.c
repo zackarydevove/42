@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/16 10:55:08 by zdevove           #+#    #+#             */
+/*   Updated: 2023/05/16 11:09:16 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 int	ft_atoi(const char *str)
@@ -25,7 +37,6 @@ int	ft_atoi(const char *str)
 	return (res * sign);
 }
 
-// Get current time in ms
 long long	timestamp(void)
 {
 	struct timeval	tv;
@@ -38,17 +49,18 @@ void	ft_print(t_philo *philo, char *str)
 {
 	pthread_mutex_lock(&philo->data->writing);
 	if (!routine_stop(philo->data))
-		printf("%lld %d %s\n", timestamp() - philo->data->start_time, philo->num, str);	
+		printf("%lld %d %s\n", timestamp() - philo->data->start_time,
+			philo->num, str);
 	pthread_mutex_unlock(&philo->data->writing);
 }
 
-void	ft_usleep(int nb_philo, long long time_to_x)
+void	ft_usleep(long long time_to_x)
 {
 	long long	start;
 
 	start = timestamp();
 	while ((timestamp() - start) < time_to_x)
-		usleep(nb_philo * 2);
+		usleep(50);
 }
 
 void	sync_threads(long long start_time)

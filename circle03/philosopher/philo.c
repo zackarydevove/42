@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philo.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/16 10:54:56 by zdevove           #+#    #+#             */
+/*   Updated: 2023/05/16 11:03:38 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philosopher.h"
 
 void	destroy_mutex(t_data *data)
@@ -20,8 +32,6 @@ void	destroy_mutex(t_data *data)
 		write_error("error destroy data->stop_mutex mutex");
 }
 
-// Create a thread that will do death_routine to check if a philo died
-// Pthread_join will wait for the thread to finish its routine to join
 int	join_thread(t_data *data)
 {
 	int	i;
@@ -32,12 +42,11 @@ int	join_thread(t_data *data)
 	while (++i < data->nb_philo)
 		if (pthread_join(data->philo[i].pthread, 0))
 			return (0);
-	return (!pthread_join(data->check_d_thread, 0) ? 0 : 1);
+	if (!pthread_join(data->check_d_thread, 0))
+		return (0);
+	return (1);
 }
 
-
-// Create threads ans start routines
-// Set a starting time to synchronize on
 int	philo_start(t_data *data)
 {
 	int	i;
@@ -45,8 +54,10 @@ int	philo_start(t_data *data)
 	i = -1;
 	data->start_time = timestamp() + (data->nb_philo * 20);
 	while (++i < data->nb_philo)
-		if (pthread_create(&data->philo[i].pthread, 0
-				, &routine, &data->philo[i]))
+		if (pthread_create(&data->philo[i].pthread, 0,
+				&routine, &data->philo[i]))
 			return (write_error("error philo_start at pthread create"), 0);
-	return (!join_thread(data) ? 0 : 1);
+	if (!join_thread(data))
+		return (0);
+	return (1);
 }
