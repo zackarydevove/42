@@ -18,34 +18,28 @@
 static char	*get_next_token(char **line)
 {
 	char	*token;
+    char    quote;
 	size_t	i;
-	int		skip;
 
 	i = 0;
     skip_spaces(*line, &i);
     *line += i;
+    i = 0;
+    quote = 0;
     while ((*line)[i] && !is_space((*line)[i]))
 	{
-		skip = 0;
 		if ((*line)[i] == '\'' || (*line)[i] == '"')
-		{
-			skip = skip_quotes(*line + i);
-			if (skip == -1)
-				return (printf("error: quote not closed\n"), NULL);
-			i += skip;
-            break ;
-		}
+            quote = (*line)[i];
 		else if ((*line)[i] == ' ' || (*line)[i] == '|' || (*line)[i + 1] == '|')
 		{
 			i++;
 			break ;
 		}
-		else
-			i++;
+		i++;
 	}
 	token = ft_substr(*line, 0, i);
-	if (!token)
-		return (0);
+    if (quote)
+        token = trim_token_quote(&token, quote, i);
     skip_spaces(*line, &i);
     *line += i;
 	return (token);
@@ -65,20 +59,28 @@ static size_t	count_tokens(char *line)
 		if (line[i] == '\'' || line[i] == '"')
         {
             if (!handle_quotes(line, &i))
-                return (printf("error: quote not closed\n"), 0);
-            count++;
+                return (ft_errorendl("unclosed quotes ", 0), 0);
         }
+        // else if (line[i] == '<' || line[i] == '>')
+        // {
+        //     if ((line[i] == '<' || line[i] == '>') && line[i - 1] != ' ')
+        //         count++;
+        //     increase_token_index(&count, &i);
+        //     while (line[i] && line[i] != '|' && line[i] != ' ')
+        //         i++;
+        //     skip_spaces(line, &i);
+        // }
 		else if (line[i] == ' ' || line[i] == '|')
         {
             if (line[i] == '|' && line[i - 1] != ' ')
-                increase_token_index(&count, &i);
+                count++;
             increase_token_index(&count, &i);
             skip_spaces(line, &i);
         }
 		else
 			i++;
     }
-    if (line[i] == '\0' && !is_space(line[i - 1]) && line[i - 1] != '\'' && line[i - 1] != '"')
+    if (line[i] == '\0' && !is_space(line[i - 1]))
         count++;
     return (count);
 }

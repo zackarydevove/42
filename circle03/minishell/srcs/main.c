@@ -17,24 +17,24 @@ int	g_force_exit;
 /// @brief Initialize the environment variables from the envp array
 /// @param envp The environment variables array
 /// @return The environment variables linked list
-static t_env	*init_envs(char **envp)
-{
-	t_env	*env;
-	char	*name;
-	size_t	i;
+// static t_env	*init_envs(char **envp)
+// {
+// 	t_env	*env;
+// 	char	*name;
+// 	size_t	i;
 
-	env = NULL;
-	while (*envp)
-	{
-		i = 0;
-		while ((*envp)[i] != '=')
-			i++;
-		name = ft_substr(*envp, 0, i);
-		set_env(&env, name, ft_strdup(getenv(name)));
-		envp++;
-	}
-	return (env);
-}
+// 	env = NULL;
+// 	while (*envp)
+// 	{
+// 		i = 0;
+// 		while ((*envp)[i] != '=')
+// 			i++;
+// 		name = ft_substr(*envp, 0, i);
+// 		set_env(&env, name, ft_strdup(getenv(name)));
+// 		envp++;
+// 	}
+// 	return (env);
+// }
 
 /// @brief Initialize the commands linked list from the tokens array
 /// @param tokens The tokens array
@@ -78,8 +78,6 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 	// int		exit_status;
 	(void)envs;
 
-	t_cmd *head;
-
     while (1)
     {
 		signal(SIGINT, &signal_handler);
@@ -105,6 +103,7 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 		{
 	        // A delete c'est juste pour print les nodes
 			// print nodes
+			t_cmd *head;
             head = *cmds;
             int jj = 0;
             while (head)
@@ -115,7 +114,6 @@ static int	readentry(t_cmd **cmds, t_env **envs)
                 head = head->next;
                 jj++;
             }
-
 
 			// If there is a next, then there is pipes, set has pipe true to every nodes
 			if ((*cmds)->next)
@@ -132,7 +130,8 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 			// if (g_force_exit != -1)
 			// 	return (g_force_exit);
 		}
-		//free_tokens(tokens);
+		free_cmds(*cmds);
+		free_tokens(tokens);
     }
     return (EXIT_SUCCESS);
 }
@@ -145,9 +144,13 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	(void)envp;
+	cmds = NULL;
 	g_force_exit = -1;
-	envs = init_envs(envp);
+	// envs = init_envs(envp);
 	exit_status = readentry(&cmds, &envs);
-	free_envs(envs);
+	// if (cmds)
+	// 	free_cmds(cmds);
+	// free_envs(envs);
 	return (exit_status);
 }

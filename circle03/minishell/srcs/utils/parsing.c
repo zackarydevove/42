@@ -51,6 +51,35 @@ int handle_quotes(char *line, size_t *i)
     return (1);
 }
 
+char 	*trim_token_quote(char **token, char quote, int len)
+{
+	int i;
+	int j;
+	char *src;
+	char *dst;
+
+	i = 0;
+	j = 0;
+	src = *token;
+	while (src[i])
+		if (src[i++] == quote)
+			j++;
+	dst = malloc((len - j + 3) * sizeof(char));
+	if (!dst)
+		return (0);
+	i = -1;
+	j = 1;
+	dst[0] = quote;
+	while (++i < len)
+		if (src[i] != quote)
+			dst[j++] = src[i];
+	dst[j++] = quote;
+	dst[j] = '\0';
+	free(*token);
+	return (dst);
+}
+
+
 void    increase_token_index(size_t *count, size_t *i)
 {
     (*count)++;

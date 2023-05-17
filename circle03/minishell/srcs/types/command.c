@@ -89,17 +89,18 @@ void	add_cmd(t_cmd **cmds, t_cmd *new)
 void	free_cmds(t_cmd *cmds)
 {
 	t_cmd	*tmp;
-	size_t	i;
 
 	while (cmds)
 	{
 		tmp = cmds;
 		cmds = cmds->next;
 		free(tmp->name);
-		i = 0;
-		while (tmp->args[i])
-			free(tmp->args[i++]);
-		free(tmp->args);
+		if (tmp->args)
+			free(tmp->args);
+		if (tmp->infile > -1)
+			close(tmp->infile);
+		if (tmp->outfile > -1)
+			close(tmp->outfile);
 		free(tmp);
 	}
 }

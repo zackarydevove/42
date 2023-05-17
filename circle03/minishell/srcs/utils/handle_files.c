@@ -22,7 +22,7 @@ static int	handle_heredoc(char *delimiter, t_cmd *node)
 
 	node->infile = open("heredoc.tmp", O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (node->infile < 0)
-		return (printf("heredoc: No such file or directory"), 0);
+		return (ft_errorendl("heredoc", strerror(errno)), 0);
 	node->has_heredoc = 1;
     while (1)
     {
@@ -44,7 +44,7 @@ static int    handle_output(char *filename, t_cmd *node, int append_flag)
 	else
 		node->outfile = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (node->outfile < 0)
-		return (printf("%s: No such file or directory", filename), 0);
+		return (ft_errorendl(filename, strerror(errno)), 0);
 	return (1);
 }
 
@@ -52,7 +52,7 @@ static int    handle_input(char *filename, t_cmd *node)
 {
 	node->infile = open(filename, O_RDONLY);
 	if (node->infile < 0)
-		return (printf("%s: No such file or directory", filename), 0);
+		return (ft_errorendl(filename, strerror(errno)), 0);
 	return (1);
 }
 

@@ -23,5 +23,6 @@ void    increase_token_index(size_t *count, size_t *i);
 int		has_pipes(char *str);
 int		valid_last_command(char **tokens, int i);
 void	cmds_has_pipes(t_cmd *cmds);
+char 	*trim_token_quote(char **token, char quote, int len);
 
 #endif

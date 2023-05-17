@@ -43,6 +43,7 @@ SRCS		:= main.c				\
 			   utils/parsing.c		\
 			   utils/path.c			\
 			   utils/signals.c		\
+			   utils/error.c		\
 			   types/command.c		\
 			   types/env.c			\
 			   types/token.c		\
