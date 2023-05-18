@@ -33,8 +33,13 @@ push_swap - An efficient algorithm to sort data on a stack, with a limited set o
 so_long - Create a small 2D game using the MLX library
 
 <h3>Circle03</h3>
-minishell - A simple shell.
+minishell - A simple shell. <br>
 philosopher - Solved the dining philosopher problem using threads
+
+<h3>Circle04</h3>
+cpp modules - 5 set of exercices in CPP <br>
+cub3d - 3D FPS Game coded in C inspired by the world-famous Wolfenstein 3D game <br>
+netpractice - System Administration related exercise to discover networking
 
 
 <h2>Installation</h2>
