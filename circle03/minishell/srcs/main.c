@@ -17,24 +17,24 @@ int	g_force_exit;
 /// @brief Initialize the environment variables from the envp array
 /// @param envp The environment variables array
 /// @return The environment variables linked list
-// static t_env	*init_envs(char **envp)
-// {
-// 	t_env	*env;
-// 	char	*name;
-// 	size_t	i;
+static t_env	*init_envs(char **envp)
+{
+	t_env	*env;
+	char	*name;
+	size_t	i;
 
-// 	env = NULL;
-// 	while (*envp)
-// 	{
-// 		i = 0;
-// 		while ((*envp)[i] != '=')
-// 			i++;
-// 		name = ft_substr(*envp, 0, i);
-// 		set_env(&env, name, ft_strdup(getenv(name)));
-// 		envp++;
-// 	}
-// 	return (env);
-// }
+	env = NULL;
+	while (*envp)
+	{
+		i = 0;
+		while ((*envp)[i] != '=')
+			i++;
+		name = ft_substr(*envp, 0, i);
+		set_env(&env, name, ft_strdup(getenv(name)));
+		envp++;
+	}
+	return (env);
+}
 
 /// @brief Initialize the commands linked list from the tokens array
 /// @param tokens The tokens array
@@ -85,7 +85,7 @@ static int	readentry(t_cmd **cmds, t_env **envs)
         if (!line)
             break;
         add_history(line);
-        tokens = tokenize(line);
+        tokens = tokenize(line, *envs);
 		free(line);
 		if (!tokens)
 			continue ;
@@ -147,10 +147,10 @@ int	main(int argc, char **argv, char **envp)
 	(void)envp;
 	cmds = NULL;
 	g_force_exit = -1;
-	// envs = init_envs(envp);
+	envs = init_envs(envp);
 	exit_status = readentry(&cmds, &envs);
-	// if (cmds)
-	// 	free_cmds(cmds);
-	// free_envs(envs);
+	if (cmds)
+		free_cmds(cmds);
+	free_envs(envs);
 	return (exit_status);
 }

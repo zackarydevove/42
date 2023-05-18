@@ -51,7 +51,74 @@ int handle_quotes(char *line, size_t *i)
     return (1);
 }
 
-char 	*trim_token_quote(char **token, char quote, int len)
+int special_char(char c)
+{
+    return !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || 
+             (c >= '0' && c <= '9') || (c == '_'));
+
+//     char *special_chars = "!@#$%^&*()\\+=-~{}[]:;'<>,.?/|";
+//     int i;
+
+//     i = 0;
+//     while (special_chars[i])
+//     {
+//         if (c == special_chars[i])
+//             return 1;
+//         i++;
+//     }
+//     return 0;
+}
+
+static char    *replace_env_var2(char *token, int key_len, t_env *head, int i)
+{
+	char    *before;
+    char    *after;
+    char    *temp;
+
+    before = ft_substr(token, 0, i);
+    after = ft_strdup(token + i + key_len);
+	printf("\nbefore: %s\nafter; %s\n", before, after);
+    temp = token;
+	if (head)
+            token = ft_strjoin(before, head->value);
+	else
+			token = before;
+	free(temp);
+	temp = token;
+    token = ft_strjoin(token, after);
+    free(temp);
+    free(before);
+    free(after);
+	return (token);
+}
+
+char    *replace_env_var(t_env *envs, char *token)
+{
+    t_env   *head;
+    size_t  i;
+    size_t  key_len;
+    char    *key;
+
+    i = 0;
+    while (token[++i])
+    {
+        if (token[i] == '$')
+        {
+            key_len = 1;
+            while (!special_char(token[i + key_len]))
+                key_len++;
+            key = ft_substr(token, i + 1, key_len - 1);
+            head = envs;
+            while (head && ft_strncmp(key, head->key, ft_strlen(key)) != 0)
+            	head = head->next;
+			token = replace_env_var2(token, key_len, head, i);
+            free(key);
+        }
+    }
+    return (token);
+}
+
+char 	*trim_token_quote(char **token, char quote, int len, t_env *envs)
 {
 	int i;
 	int j;
@@ -76,9 +143,10 @@ char 	*trim_token_quote(char **token, char quote, int len)
 	dst[j++] = quote;
 	dst[j] = '\0';
 	free(*token);
+	if (quote == '"' && ft_strchr(dst, '$'))
+		return (replace_env_var(envs, dst));
 	return (dst);
 }
-
 
 void    increase_token_index(size_t *count, size_t *i)
 {

@@ -15,7 +15,7 @@
 /// @brief Get next token with space ' or " as delimiter
 /// @param line_ptr The line's pointer to parse
 /// @return char* The next token
-static char	*get_next_token(char **line)
+static char	*get_next_token(char **line, t_env *envs)
 {
 	char	*token;
     char    quote;
@@ -39,7 +39,7 @@ static char	*get_next_token(char **line)
 	}
 	token = ft_substr(*line, 0, i);
     if (quote)
-        token = trim_token_quote(&token, quote, i);
+        token = trim_token_quote(&token, quote, i, envs);
     skip_spaces(*line, &i);
     *line += i;
 	return (token);
@@ -88,7 +88,7 @@ static size_t	count_tokens(char *line)
 /// @brief Tokenize a line
 /// @param line The line to tokenize
 /// @return An array of tokens
-char	**tokenize(char *line) {
+char	**tokenize(char *line, t_env *envs) {
     size_t	i;
     size_t	tokens_count;
     char	**tokens;
@@ -102,7 +102,7 @@ char	**tokenize(char *line) {
     if (!tokens)
         return (NULL);
     while (i < tokens_count)
-        tokens[i++] = get_next_token(&line);
+        tokens[i++] = get_next_token(&line, envs);
     tokens[i] = NULL;
     return (tokens);
 }
