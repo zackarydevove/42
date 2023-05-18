@@ -89,7 +89,6 @@ void	add_cmd(t_cmd **cmds, t_cmd *new)
 void	free_cmds(t_cmd *cmds)
 {
 	t_cmd	*tmp;
-
 	while (cmds)
 	{
 		tmp = cmds;

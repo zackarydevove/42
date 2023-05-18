@@ -96,7 +96,6 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 
         // A delete c'est juste pour print les tokens
 		// print line
-        printf("-----\nline: %s\n-----\n", line);
 		// print tokens
         if (tokens)
 			for (int k = 0; tokens[k]; k++)
@@ -134,7 +133,7 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 			// if (g_force_exit != -1)
 			// 	return (g_force_exit);
 		}
-		free_cmds(*cmds);
+		// free_cmds(*cmds);
 		free_tokens(tokens);
     }
     return (1);
