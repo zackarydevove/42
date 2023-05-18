@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:30:09 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/08 20:42:02 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/05/18 15:13:22 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,12 @@ static int	readentry(t_cmd **cmds, t_env **envs)
     {
 		signal(SIGINT, &signal_handler);
         line = readline("minishell$ ");
-        if (!line)
+		// printf("line: %s\n", line);
+        if (line == NULL)
+		{
+			// printf("test");	// ne s'affiche pas ???????????
             break;
+		}
         add_history(line);
         tokens = tokenize(line, *envs);
 		free(line);
@@ -133,7 +137,7 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 		free_cmds(*cmds);
 		free_tokens(tokens);
     }
-    return (EXIT_SUCCESS);
+    return (1);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -149,8 +153,10 @@ int	main(int argc, char **argv, char **envp)
 	g_force_exit = -1;
 	envs = init_envs(envp);
 	exit_status = readentry(&cmds, &envs);
+	printf("test");
 	if (cmds)
 		free_cmds(cmds);
-	free_envs(envs);
+	if (envs)
+		free_envs(envs);
 	return (exit_status);
 }

@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:30:39 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/18 13:10:03 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/18 13:35:14 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,12 +94,13 @@ void	free_cmds(t_cmd *cmds)
 	{
 		tmp = cmds;
 		cmds = cmds->next;
-		free(tmp->name);
+		if (tmp->name)
+			free(tmp->name);
 		if (tmp->args)
 			free(tmp->args);
-		if (tmp->infile > -1)
+		if (tmp->infile > 2)
 			close(tmp->infile);
-		if (tmp->outfile > -1)
+		if (tmp->outfile > 2)
 			close(tmp->outfile);
 		free(tmp);
 	}

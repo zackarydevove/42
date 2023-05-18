@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:34:15 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/18 13:10:07 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/18 14:22:46 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,6 @@ int special_char(char c)
 {
     return !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || 
              (c >= '0' && c <= '9') || (c == '_'));
-
-//     char *special_chars = "!@#$%^&*()\\+=-~{}[]:;'<>,.?/|";
-//     int i;
-
-//     i = 0;
-//     while (special_chars[i])
-//     {
-//         if (c == special_chars[i])
-//             return 1;
-//         i++;
-//     }
-//     return 0;
 }
 
 static char    *replace_env_var2(char *token, int key_len, t_env *head, int i)
@@ -77,7 +65,7 @@ static char    *replace_env_var2(char *token, int key_len, t_env *head, int i)
 
     before = ft_substr(token, 0, i);
     after = ft_strdup(token + i + key_len);
-	printf("\nbefore: %s\nafter; %s\n", before, after);
+	printf("\nbefore: %s\nafter: %s\n", before, after);
     temp = token;
 	if (head)
             token = ft_strjoin(before, head->value);
@@ -86,8 +74,9 @@ static char    *replace_env_var2(char *token, int key_len, t_env *head, int i)
 	free(temp);
 	temp = token;
     token = ft_strjoin(token, after);
-    free(temp);
-    free(before);
+    // free(temp);
+	if (before)
+    	free(before);
     free(after);
 	return (token);
 }
