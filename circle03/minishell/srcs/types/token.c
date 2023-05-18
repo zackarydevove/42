@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:31:08 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/09 16:11:19 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/18 13:15:57 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,19 @@ static char	*get_next_token(char **line, t_env *envs)
     while ((*line)[i] && !is_space((*line)[i]))
 	{
 		if ((*line)[i] == '\'' || (*line)[i] == '"')
-            quote = (*line)[i];
+        {
+            if (!quote)
+                quote = (*line)[i];
+            if (!handle_quotes((*line), &i))
+				return (printf("error: quote not closed\n"), NULL);
+        }
 		else if ((*line)[i] == ' ' || (*line)[i] == '|' || (*line)[i + 1] == '|')
 		{
 			i++;
 			break ;
 		}
-		i++;
+        else
+		    i++;
 	}
 	token = ft_substr(*line, 0, i);
     if (quote)
