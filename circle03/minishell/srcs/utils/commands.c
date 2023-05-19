@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   commands.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/19 15:45:53 by zdevove           #+#    #+#             */
+/*   Updated: 2023/05/19 15:47:15 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
 /// @brief Check if the line contains pipes
@@ -5,7 +17,7 @@
 /// @return 1 if the line contains pipes, 0 otherwise
 int	has_pipes(char *str)
 {
-    int	i;
+	int	i;
 
 	i = 0;
 	if (str[i] == '\'' || str[i] == '"')
@@ -23,18 +35,18 @@ int	has_pipes(char *str)
 /// @param tokens The array of tokens (parsed command line)
 /// @param i The index of the command in the array to validate
 /// @return 1 if the command is valid, 0 otherwise
-int valid_last_command(char **tokens, int i)
+int	valid_last_command(char **tokens, int i)
 {
-    if (tokens[i][0] == '|' && tokens[i + 1][0] == '>' && !tokens[i + 3])
-        return (0);
-    return (1);
+	if (tokens[i][0] == '|' && tokens[i + 1][0] == '>' && !tokens[i + 3])
+		return (0);
+	return (1);
 }
 
 /// @brief Set the has_pipe attribute to 1 for each command in the linked list
 /// @param cmds A pointer to the first command in the linked list
 void	cmds_has_pipes(t_cmd *cmds)
 {
-	t_cmd *head;
+	t_cmd	*head;
 
 	head = cmds;
 	while (head)

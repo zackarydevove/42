@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/05 14:30:39 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/18 13:35:14 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/19 15:37:15 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 /// @param start The start index of the command in the tokens array
 /// @param name The name of the command
 /// @return 1 on successful initialization, 0 otherwise
-static int cmd_init(t_cmd **cmd, size_t end, size_t start, char *name)
+static int	cmd_init(t_cmd **cmd, size_t end, size_t start, char *name)
 {
 	(*cmd) = (t_cmd *)malloc(sizeof(t_cmd));
 	if (!(*cmd))
@@ -50,17 +50,17 @@ t_cmd	*new_cmd(char **tokens, size_t start, size_t end)
 	i = 0;
 	while (start + i < end)
 	{
-        if (tokens[start + i][0] == '>' || tokens[start + i][0] == '<')
-        {
-            if (!handle_redirection(tokens, start + i, cmd))
-                return (NULL);
-            start += 2;
-        }
-        else
-        {
-            cmd->args[i] = tokens[start + i];
-            i++;
-        }
+		if (tokens[start + i][0] == '>' || tokens[start + i][0] == '<')
+		{
+			if (!handle_redirection(tokens, start + i, cmd))
+				return (NULL);
+			start += 2;
+		}
+		else
+		{
+			cmd->args[i] = tokens[start + i];
+			i++;
+		}
 	}
 	if (i > 0 && cmd->args[i - 1][0] == '|')
 		i--;
@@ -95,6 +95,7 @@ void	add_cmd(t_cmd **cmds, t_cmd *new)
 void	free_cmds(t_cmd *cmds)
 {
 	t_cmd	*tmp;
+
 	while (cmds)
 	{
 		tmp = cmds;
