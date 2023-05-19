@@ -20,10 +20,5 @@ void	skip_spaces(char *line, size_t *i);
 int		skip_quotes(char *line);
 int		handle_quotes(char *line, size_t *i);
 void    increase_token_index(size_t *count, size_t *i);
-int		has_pipes(char *str);
-int		valid_last_command(char **tokens, int i);
-void	cmds_has_pipes(t_cmd *cmds);
-char 	*trim_token_quote(char **token, char quote, int len, t_env *envs);
-char    *replace_env_var(t_env *envs, char *token);
 
 #endif

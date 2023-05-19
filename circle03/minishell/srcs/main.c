@@ -118,7 +118,6 @@ static int	readentry(t_cmd **cmds, t_env **envs)
                 jj++;
             }
 
-			// If there is a next, then there is pipes, set has pipe true to every nodes
 			if ((*cmds)->next)
 				cmds_has_pipes(*cmds);
 
@@ -133,7 +132,6 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 			// if (g_force_exit != -1)
 			// 	return (g_force_exit);
 		}
-		// free_cmds(*cmds);
 		free_tokens(tokens);
     }
     return (1);
@@ -152,7 +150,6 @@ int	main(int argc, char **argv, char **envp)
 	g_force_exit = -1;
 	envs = init_envs(envp);
 	exit_status = readentry(&cmds, &envs);
-	printf("test");
 	if (cmds)
 		free_cmds(cmds);
 	if (envs)

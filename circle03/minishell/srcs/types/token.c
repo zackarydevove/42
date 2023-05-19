@@ -12,8 +12,37 @@
 
 #include "minishell.h"
 
+
+/// @brief Iterates over line to find the next token.
+/// @param line Input string to parse.
+/// @param quote Keeps track of the type of quotes (' or ") encountered.
+/// @param i Index for iteration.
+/// @return Returns 1 on successful parsing, 0 on encountering an error.
+static int    loop_get_next_token(char *line, char *quote, size_t *i)
+{
+    while (line[(*i)] && !is_space(line[(*i)]))
+	{
+		if (line[(*i)] == '\'' || line[(*i)] == '"')
+        {
+            if (!(*quote))
+                (*quote) = line[(*i)];
+            if (!handle_quotes(line, i))
+				return (printf("error: quote not closed\n"), 0);
+        }
+		else if (line[(*i)] == ' ' || line[(*i)] == '|' || line[(*i) + 1] == '|')
+		{
+			(*i)++;
+			break ;
+		}
+        else
+		    (*i)++;
+	}
+    return (1);
+}
+
 /// @brief Get next token with space ' or " as delimiter
 /// @param line_ptr The line's pointer to parse
+/// @param envs The environment variables to replace by their values if double quotes
 /// @return char* The next token
 static char	*get_next_token(char **line, t_env *envs)
 {
@@ -26,23 +55,10 @@ static char	*get_next_token(char **line, t_env *envs)
     *line += i;
     i = 0;
     quote = 0;
-    while ((*line)[i] && !is_space((*line)[i]))
-	{
-		if ((*line)[i] == '\'' || (*line)[i] == '"')
-        {
-            if (!quote)
-                quote = (*line)[i];
-            if (!handle_quotes((*line), &i))
-				return (printf("error: quote not closed\n"), NULL);
-        }
-		else if ((*line)[i] == ' ' || (*line)[i] == '|' || (*line)[i + 1] == '|')
-		{
-			i++;
-			break ;
-		}
-        else
-		    i++;
-	}
+    if (!loop_get_next_token((*line), &quote, &i))
+    {
+        return (NULL);
+    }
 	token = ft_substr(*line, 0, i);
     if (quote)
         token = trim_token_quote(&token, quote, i, envs);
@@ -51,7 +67,9 @@ static char	*get_next_token(char **line, t_env *envs)
 	return (token);
 }
 
-// Count the number of tokens in the line
+/// @brief Count the number of tokens in the input line
+/// @param line The input line to count tokens in
+/// @return The number of tokens in the line
 static size_t	count_tokens(char *line)
 {
     size_t	i;
@@ -93,6 +111,7 @@ static size_t	count_tokens(char *line)
 
 /// @brief Tokenize a line
 /// @param line The line to tokenize
+/// @param envs The environment variables to consider during tokenization
 /// @return An array of tokens
 char	**tokenize(char *line, t_env *envs) {
     size_t	i;

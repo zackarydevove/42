@@ -20,12 +20,19 @@ int	is_space(char c)
 	return ((c >= 9 && c <= 13) || c == 32);
 }
 
+/// @brief Skip all space characters in a line starting from a given index
+/// @param line The line of text to process
+/// @param i Pointer to the index in line from where to start skipping spaces
+/// @return This function doesn't return a value. The index i is updated in place to the next non-space character.
 void	skip_spaces(char *line, size_t *i)
 {
     while (is_space(line[(*i)]))
         (*i)++;
 }
 
+/// @brief Determine the length of a quoted string in a line, including the quotes
+/// @param line The line of text that starts with a quote
+/// @return The length of the quoted string including the quotes. If the closing quote is not found, returns -1.
 int	skip_quotes(char *line)
 {
 	int		i;
@@ -40,6 +47,10 @@ int	skip_quotes(char *line)
 	return (-1);
 }
 
+/// @brief Handle quoted strings in a line starting from a given index
+/// @param line The line of text to process
+/// @param i Pointer to the index in line where the quoted string starts
+/// @return 1 if a quoted string was successfully processed. 0 if the quoted string was not correctly formatted (i.e., it was missing a closing quote).
 int handle_quotes(char *line, size_t *i)
 {
     int skip;
@@ -51,132 +62,12 @@ int handle_quotes(char *line, size_t *i)
     return (1);
 }
 
-int special_char(char c)
-{
-    return !((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || 
-             (c >= '0' && c <= '9') || (c == '_'));
-}
-
-static char    *replace_env_var2(char *token, int key_len, t_env *head, int i)
-{
-	char    *before;
-    char    *after;
-    char    *temp;
-
-    before = ft_substr(token, 0, i);
-    after = ft_strdup(token + i + key_len);
-	printf("\nbefore: %s\nafter: %s\n", before, after);
-    temp = token;
-	if (head)
-            token = ft_strjoin(before, head->value);
-	else
-			token = before;
-	free(temp);
-	temp = token;
-    token = ft_strjoin(token, after);
-    // free(temp);
-	if (before)
-    	free(before);
-    free(after);
-	return (token);
-}
-
-char    *replace_env_var(t_env *envs, char *token)
-{
-    t_env   *head;
-    size_t  i;
-    size_t  key_len;
-    char    *key;
-
-    i = 0;
-    while (token[++i])
-    {
-        if (token[i] == '$')
-        {
-            key_len = 1;
-            while (!special_char(token[i + key_len]))
-                key_len++;
-            key = ft_substr(token, i + 1, key_len - 1);
-            head = envs;
-            while (head && ft_strncmp(key, head->key, ft_strlen(key)) != 0)
-            	head = head->next;
-			token = replace_env_var2(token, key_len, head, i);
-            free(key);
-        }
-    }
-    return (token);
-}
-
-char 	*trim_token_quote(char **token, char quote, int len, t_env *envs)
-{
-	int i;
-	int j;
-	char *src;
-	char *dst;
-
-	i = 0;
-	j = 0;
-	src = *token;
-	while (src[i])
-		if (src[i++] == quote)
-			j++;
-	dst = malloc((len - j + 3) * sizeof(char));
-	if (!dst)
-		return (0);
-	i = -1;
-	j = 1;
-	dst[0] = quote;
-	while (++i < len)
-		if (src[i] != quote)
-			dst[j++] = src[i];
-	dst[j++] = quote;
-	dst[j] = '\0';
-	free(*token);
-	if (quote == '"' && ft_strchr(dst, '$'))
-		return (replace_env_var(envs, dst));
-	return (dst);
-}
-
+/// @brief Increase a count variable and an index variable by one
+/// @param count Pointer to the count variable to be increased
+/// @param i Pointer to the index variable to be increased
+/// @return This function doesn't return a value. Both count and i are updated in place.
 void    increase_token_index(size_t *count, size_t *i)
 {
     (*count)++;
     (*i)++;
-}
-
-/// @brief Check if the line contains pipes
-/// @param str The line to check
-/// @return 1 if the line contains pipes, 0 otherwise
-int	has_pipes(char *str)
-{
-    int	i;
-
-	i = 0;
-	if (str[i] == '\'' || str[i] == '"')
-		return (0);
-	while (str[i])
-	{
-		if (str[i] == '|')
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-int valid_last_command(char **tokens, int i)
-{
-    if (tokens[i][0] == '|' && tokens[i + 1][0] == '>' && !tokens[i + 3])
-        return (0);
-    return (1);
-}
-
-void	cmds_has_pipes(t_cmd *cmds)
-{
-	t_cmd *head;
-
-	head = cmds;
-	while (head)
-	{
-		head->has_pipe = 1;
-		head = head->next;
-	}
 }

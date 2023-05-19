@@ -12,6 +12,12 @@
 
 #include "minishell.h"
 
+/// @brief Initialize a command structure
+/// @param cmd The pointer to a command structure
+/// @param end The end index of the command in the tokens array
+/// @param start The start index of the command in the tokens array
+/// @param name The name of the command
+/// @return 1 on successful initialization, 0 otherwise
 static int cmd_init(t_cmd **cmd, size_t end, size_t start, char *name)
 {
 	(*cmd) = (t_cmd *)malloc(sizeof(t_cmd));

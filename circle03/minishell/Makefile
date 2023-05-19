@@ -39,6 +39,8 @@ INCS		:= includes				\
 SRCS_DIR	:= srcs
 SRCS		:= main.c				\
 			   exec.c				\
+			   utils/commands.c		\
+			   utils/env.c			\
 			   utils/handle_files.c \
 			   utils/parsing.c		\
 			   utils/path.c			\

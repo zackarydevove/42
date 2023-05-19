@@ -16,6 +16,8 @@
 # include "types/command.h"
 # include "types/env.h"
 # include "types/token.h"
+# include "utils/commandutils.h"
+# include "utils/envutils.h"
 # include "utils/parsing.h"
 # include "utils/path.h"
 # include "utils/signal.h"
