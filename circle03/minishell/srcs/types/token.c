@@ -29,6 +29,13 @@ static int    loop_get_next_token(char *line, char *quote, size_t *i)
             if (!handle_quotes(line, i))
 				return (ft_errorendl("unclosed quotes ", 0), 0);
         }
+        else if ((line[(*i)] == '<' || line[(*i)] == '>'))
+		{
+			if ((*i) > 0 && !is_space(line[(*i)-1]))
+				break;
+			(*i)++;
+			break ;
+		}
 		else if (line[(*i)] == ' ' || line[(*i)] == '|' || line[(*i) + 1] == '|')
 		{
 			(*i)++;
@@ -85,18 +92,18 @@ static size_t	count_tokens(char *line)
             if (!handle_quotes(line, &i))
                 return (ft_errorendl("unclosed quotes ", 0), 0);
         }
-        // else if (line[i] == '<' || line[i] == '>')
-        // {
-        //     if ((line[i] == '<' || line[i] == '>') && line[i - 1] != ' ')
-        //         count++;
-        //     increase_token_index(&count, &i);
-        //     while (line[i] && line[i] != '|' && line[i] != ' ')
-        //         i++;
-        //     skip_spaces(line, &i);
-        // }
+        else if (line[i] == '<' || line[i] == '>')
+        {
+            if (line[i - 1] != ' ')
+                count++;
+            increase_token_index(&count, &i);
+            // while (line[i] && line[i] != '|' && line[i] != ' ')
+            //     i++;
+            skip_spaces(line, &i);
+        }
 		else if (line[i] == ' ' || line[i] == '|')
         {
-            if (line[i] == '|' && line[i - 1] != ' ')
+            if (line[i] == '|' && line[i - 1] != ' ' && line[i - 1] != '<' && line[i - 1] != '>' )
                 count++;
             increase_token_index(&count, &i);
             skip_spaces(line, &i);
