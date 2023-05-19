@@ -30,7 +30,7 @@ static int	handle_heredoc(char *delimiter, t_cmd *node)
     {
 		line = readline("> ");
 		if (!line)
-			return (printf("minishell: warning: here-document delimited by end-of-file (wanted `%s')", delimiter), EXIT_FAILURE);
+			return (heredoc_error(delimiter), EXIT_FAILURE);
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter)) == 0)
 			return (free(line), EXIT_SUCCESS);
 		ft_putendl_fd(line, node->infile);

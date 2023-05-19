@@ -23,7 +23,6 @@ static char    *replace_env_var2(char *token, int key_len, t_env *head, int i)
 
     before = ft_substr(token, 0, i);
     after = ft_strdup(token + i + key_len);
-	printf("\nbefore: %s\nafter: %s\n", before, after);
     temp = token;
 	if (head)
             token = ft_strjoin(before, head->value);

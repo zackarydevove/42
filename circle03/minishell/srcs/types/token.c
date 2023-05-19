@@ -27,7 +27,7 @@ static int    loop_get_next_token(char *line, char *quote, size_t *i)
             if (!(*quote))
                 (*quote) = line[(*i)];
             if (!handle_quotes(line, i))
-				return (printf("error: quote not closed\n"), 0);
+				return (ft_errorendl("unclosed quotes ", 0), 0);
         }
 		else if (line[(*i)] == ' ' || line[(*i)] == '|' || line[(*i) + 1] == '|')
 		{

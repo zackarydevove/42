@@ -2,6 +2,7 @@
 
 # define ERROR_H
 
-int    ft_errorendl(char *msg, char *more);
+void    ft_errorendl(char *msg, char *more);
+void    heredoc_error(char *delimiter);
 
 #endif
