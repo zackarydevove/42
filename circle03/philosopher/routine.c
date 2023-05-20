@@ -25,7 +25,9 @@ static void	ft_eat(t_philo *philo)
 	pthread_mutex_lock(&philo->philo_mutex);
 	ft_print(philo, "is eating");
 	philo->last_meal = timestamp();
+	pthread_mutex_unlock(&philo->philo_mutex);
 	ft_usleep(philo->data->time_to_eat);
+	pthread_mutex_lock(&philo->philo_mutex);
 	philo->eat_time++;
 	pthread_mutex_unlock(&philo->philo_mutex);
 	pthread_mutex_unlock(&philo->data->forks[philo->rfork]);
@@ -53,6 +55,7 @@ void	*routine(void *ph)
 		ft_print(philo, "is sleeping");
 		ft_usleep(philo->data->time_to_sleep);
 		ft_print(philo, "is thinking");
+		ft_usleep(philo->data->time_to_eat / 50);
 	}
 	return (0);
 }

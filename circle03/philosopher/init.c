@@ -23,6 +23,11 @@ static int	philo_init(t_data *data)
 		data->philo[i].eat_time = 0;
 		data->philo[i].lfork = i;
 		data->philo[i].rfork = (i + 1) % data->nb_philo;
+		if (data->philo[i].num % 2 == 0)
+		{
+			data->philo[i].lfork = (i + 1) % data->nb_philo;
+			data->philo[i].rfork = i;
+		}
 		data->philo[i].data = data;
 		data->philo[i].last_meal = timestamp();
 	}
