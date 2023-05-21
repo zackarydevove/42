@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:30:09 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/19 17:09:10 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/19 15:36:38 by mnouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ static t_env	*init_envs(char **envp)
 		while ((*envp)[i] != '=')
 			i++;
 		name = ft_substr(*envp, 0, i);
-		set_env(&env, name, ft_strdup(getenv(name)));
+		set_env(&env, name, getenv(name));
+		free(name);
 		envp++;
 	}
 	return (env);
@@ -42,7 +43,6 @@ static t_env	*init_envs(char **envp)
 t_cmd	*init_cmds(char **tokens)
 {
 	t_cmd	*cmds;
-	t_cmd	*new;
 	size_t	start;
 	size_t	i;
 
@@ -53,17 +53,13 @@ t_cmd	*init_cmds(char **tokens)
 	{
 		if (has_pipes(tokens[i]) && valid_last_command(tokens, i))
 		{
-			new = new_cmd(tokens, start, i);
-			add_cmd(&cmds, new);
+			add_cmd(&cmds, new_cmd(tokens, start, i));
 			start = i + 1;
 		}
 		i++;
 	}
 	if (tokens[start])
-	{
-		new = new_cmd(tokens, start, i);
-		add_cmd(&cmds, new);
-	}
+		add_cmd(&cmds, new_cmd(tokens, start, i));
 	return (cmds);
 }
 
@@ -75,62 +71,54 @@ static int	readentry(t_cmd **cmds, t_env **envs)
 {
 	char	*line;
 	char	**tokens;
-	// int		exit_status;
-	(void)envs;
+	int		exit_status;
 
 	while (1)
 	{
 		signal(SIGINT, &signal_handler);
 		line = readline("minishell$ ");
-		// printf("line: %s\n", line);
-		if (line == NULL)
-		{
-			// printf("test");	// ne s'affiche pas ???????????
-			break;
-		}
+		if (!line)
+			return (EXIT_FAILURE);
 		add_history(line);
 		tokens = tokenize(line, *envs);
 		free(line);
 		if (!tokens)
 			continue ;
-		// A delete c'est juste pour print les tokens
+
+        // A delete c'est juste pour print les tokens
 		// print line
 		// print tokens
-		if (tokens)
+        if (tokens)
 			for (int k = 0; tokens[k]; k++)
-				printf("tokens[%d]: %s\n", k, tokens[k]);
+                printf("tokens[%d]: %s\n", k, tokens[k]);
 		*cmds = init_cmds(tokens);
+		free_tokens(tokens);
 		if (*cmds)
 		{
-			// A delete c'est juste pour print les nodes
+	        // A delete c'est juste pour print les nodes
 			// print nodes
 			t_cmd *head;
-			head = *cmds;
-			int jj = 0;
-			while (head)
-			{
-				printf("node[%d]: infile: %d\toutfile: %d\n", jj, head->infile, head->outfile);
-				for (int dd = 0; head->args[dd]; dd++)
-					printf("node[%d]: args[%d]: %s\n", jj, dd, head->args[dd]);
-				head = head->next;
-				jj++;
-			}
+            head = *cmds;
+            int jj = 0;
+            while (head)
+            {
+                printf("node[%d]: infile: %d\toutfile: %d\n", jj, head->infile, head->outfile);
+                for (int dd = 0; head->args[dd]; dd++)
+                    printf("node[%d]: args[%d]: %s\n", jj, dd, head->args[dd]);
+                head = head->next;
+                jj++;
+            }
 			if ((*cmds)->next)
 				cmds_has_pipes(*cmds);
-			// (void)envs;
-			// exit_status = exec(*cmds, envs);
-			// if ((*cmds)->pid == 0)
-			// {
-			// 	free_cmds(*cmds);
-			// 	return (exit_status);
-			// }
-			// free_cmds(*cmds);
-			// if (g_force_exit != -1)
-			// 	return (g_force_exit);
+			exit_status = exec_cmds(*cmds, envs);
+			if ((*cmds)->pid == 0)
+				return (free_cmds(*cmds), exit_status);
+			free_cmds(*cmds);
+			if (g_force_exit != -1)
+				return (g_force_exit);
 		}
-		free_tokens(tokens);
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -138,17 +126,20 @@ int	main(int argc, char **argv, char **envp)
 	t_env	*envs;
 	t_cmd	*cmds;
 	int		exit_status;
+	t_env	*tmp;
 
 	(void)argc;
 	(void)argv;
-	(void)envp;
 	cmds = NULL;
 	g_force_exit = -1;
 	envs = init_envs(envp);
 	exit_status = readentry(&cmds, &envs);
-	if (cmds)
-		free_cmds(cmds);
-	if (envs)
-		free_envs(envs);
+	rl_clear_history();
+	while (envs)
+	{
+		tmp = envs;
+		envs = envs->next;
+		free_env(tmp);
+	}
 	return (exit_status);
 }
