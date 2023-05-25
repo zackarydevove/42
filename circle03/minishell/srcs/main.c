@@ -30,10 +30,11 @@ static t_env	*init_envs(char **envp)
 		while ((*envp)[i] != '=')
 			i++;
 		name = ft_substr(*envp, 0, i);
-		set_env(&env, name, getenv(name));
+		set_env(&env, name, ft_strdup(getenv(name)));
 		free(name);
 		envp++;
 	}
+	set_env(&env, "?", ft_strdup("0"));
 	return (env);
 }
 
@@ -86,10 +87,6 @@ static int	readentry(t_env *envs, t_cmd **cmds)
 	free(line);
 	if (!tokens)
 		return (0);
-	///
-	for (int a = 0; tokens[a]; a++)
-		printf("token[%d]: %s\n", a, tokens[a]);
-	///
 	*cmds = init_cmds(tokens);
 	free_tokens(tokens);
 	return (1);
@@ -115,17 +112,8 @@ static int	program(t_cmd **cmds, t_env **envs)
 			continue ;
 		if (*cmds)
 		{
-			/// del
-			int e = 0;
-			for (t_cmd *head = *cmds; head; head = head->next)
-			{
-				for (int a = 0; head->args[a]; a++)
-					printf("node[%d]: args[%d]: %s\n", e, a, head->args[a]);
-				e++;
-			}
-			///
 			exit_status = exec_cmds(*cmds, envs);
-			if ((*cmds)->pid == 0)
+			if (is_child_process(*cmds))
 				return (free_cmds(*cmds), exit_status);
 			free_cmds(*cmds);
 		}

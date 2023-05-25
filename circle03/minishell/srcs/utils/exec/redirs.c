@@ -6,11 +6,18 @@
 /*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 00:51:58 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/19 17:14:47 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/05/24 16:25:50 by mnouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+// I know, it's trash doing like that...
+static void	reopen_heredoc(t_cmd *cmd)
+{
+	close(cmd->infile);
+	cmd->infile = open(HEREDOC_FILE, O_RDONLY);
+}
 
 /// @brief Read entry from stdin until the end of file,
 /// and write it in the file descriptor fd.
@@ -22,7 +29,8 @@ static bool	redir_heredoc(char *delimiter, t_cmd *cmd)
 {
 	char	*line;
 
-	cmd->infile = open(HEREDOC_FILE, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	cmd->infile = open(HEREDOC_FILE, O_WRONLY | O_CREAT
+			| O_TRUNC, 0644);
 	if (cmd->infile < 0)
 		return (error("heredoc", strerror(errno)), false);
 	cmd->has_heredoc = true;
@@ -30,12 +38,11 @@ static bool	redir_heredoc(char *delimiter, t_cmd *cmd)
 	{
 		signal(SIGINT, &signal_handler);
 		signal(SIGQUIT, SIG_IGN);
-		rl_getc_function = getc;
 		line = readline("> ");
 		if (!line)
-			return (error_heredoc(delimiter), EXIT_FAILURE);
+			return (reopen_heredoc(cmd), error_heredoc(delimiter), true);
 		if (ft_strcmp(line, delimiter) == 0)
-			return (free(line), true);
+			return (reopen_heredoc(cmd), free(line), true);
 		ft_putendl_fd(line, cmd->infile);
 		free(line);
 	}
@@ -79,6 +86,7 @@ bool	init_redirs(char **tokens, size_t i, t_cmd *cmd)
 }
 
 /// @brief Redirect the input and output of the command
+/// on STDIN and STDOUT.
 /// @param cmd The command
 void	redirs(t_cmd *cmd)
 {
@@ -88,6 +96,9 @@ void	redirs(t_cmd *cmd)
 		dup2(cmd->outfile, STDOUT_FILENO);
 }
 
+/// @brief Close the input and output redirections of the command
+/// and delete the temporary file containing the heredoc input.
+/// @param cmd The command
 void	close_redirs(t_cmd *cmd)
 {
 	if (cmd->infile > 2)
