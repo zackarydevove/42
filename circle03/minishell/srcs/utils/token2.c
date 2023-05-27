@@ -31,7 +31,7 @@ void	unexpected_token_error(char *token)
 {
 	ft_putstr_fd("unexpected token `", STDERR_FILENO);
 	ft_putstr_fd(token, STDERR_FILENO);
-	ft_putstr_fd("`\n", STDERR_FILENO);
+	ft_putstr_fd("'\n", STDERR_FILENO);
 }
 
 int	unexpected_token(char **tokens)

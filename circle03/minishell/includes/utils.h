@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 16:46:24 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/24 16:52:09 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/05/26 02:00:50 by mnouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,11 @@
 // utils/error.c
 void	error(char *msg, char *more);
 void	error_heredoc(char *delimiter);
+void	error_numerical_arg(char *name, char *arg);
 
 // utils/signal.c
-void	signal_handler(int signal);
+void	main_signal(int signal);
+void	cmd_signal(int signal);
 
 // utils/str.c
 bool	is_space(char c);
@@ -36,7 +38,7 @@ bool	valid_last_command(char **tokens, size_t i);
 void	cmds_has_pipes(t_cmd *cmds);
 
 // utils/token.c
-char	*trim_token_quote(char **token, char quote, int len, t_env *envs);
+char	*trim_token_quote(char **token);
 void	free_tokens(char **tokens);
 char	*replace_env_var(t_env *envs, char *token);
 

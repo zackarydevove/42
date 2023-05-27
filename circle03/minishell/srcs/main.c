@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:30:09 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/23 16:02:29 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/26 02:01:06 by mnouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,18 @@ static int	readentry(t_env *envs, t_cmd **cmds)
 	char	*line;
 	char	**tokens;
 
-	line = readline("minishell$ ");
+	line = readline("minishell# ");
 	if (!line)
 		return (2);
 	add_history(line);
 	if (line[0] == '\0')
-	{
-		free(line);
-		return (0);
-	}
+		return (free(line), 0);
 	tokens = tokenize(line, envs);
 	free(line);
 	if (!tokens)
 		return (0);
+	for (int j = 0; tokens[j]; j++)
+		printf("token[%d]: %s\n", j, tokens[j]);
 	*cmds = init_cmds(tokens);
 	free_tokens(tokens);
 	return (1);
@@ -103,7 +102,7 @@ static int	program(t_cmd **cmds, t_env **envs)
 
 	while (1)
 	{
-		signal(SIGINT, &signal_handler);
+		signal(SIGINT, &main_signal);
 		signal(SIGQUIT, SIG_IGN);
 		res = readentry(*envs, cmds);
 		if (res == 2)
