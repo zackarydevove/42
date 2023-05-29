@@ -1,32 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/25 16:01:48 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/08 16:26:18 by mnouchet         ###   ########.fr       */
+/*   Created: 2023/05/27 00:55:15 by mnouchet          #+#    #+#             */
+/*   Updated: 2023/05/27 00:55:20 by mnouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-/// @brief Execute the pwd builtin command
-/// @param cmd The command data structure
-/// @param envs The environment variables
-/// @return EXIT_SUCCESS or EXIT_FAILURE if an error occured
-int	builtin_pwd(t_cmd *cmd, t_env **envs)
+/// @brief Free tokens
+/// @param tokens The tokens to free
+void	free_tokens(char **tokens)
 {
-	char	path[1024];
+	size_t	i;
 
-	(void)envs;
-	(void)cmd;
-	if (!getcwd(path, 1024))
-	{
-		perror("pwd");
-		return (EXIT_FAILURE);
-	}
-	printf("%s\n", path);
-	return (EXIT_SUCCESS);
+	i = 0;
+	while (tokens[i])
+		free(tokens[i++]);
+	free(tokens);
 }

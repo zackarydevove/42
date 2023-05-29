@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:31:08 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/23 16:21:40 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/29 17:03:30 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static bool	loop_get_next_token(char *line, int *quote, size_t *i)
 static char	*get_next_token(char **line, t_env *envs, bool *split_token)
 {
 	char	*token;
-	int	quote;
+	int		quote;
 	size_t	i;
 
 	i = 0;
@@ -119,8 +119,9 @@ static size_t	count_tokens(char *line)
 		if (!loop_count_tokens(line, &i, &count))
 			return (0);
 	}
-	if (line[i] == '\0' && !is_space(line[i - 1]) && line[i - 1] != '<'
-		&& line[i - 1] != '>')
+	if ((line[i] == '\0' && !is_space(line[i - 1]) && line[i - 1] != '<'
+			&& line[i - 1] != '>')
+		|| (check_end_by_quote(line, i) && count == 0))
 		count++;
 	return (count);
 }
@@ -141,7 +142,6 @@ char	**tokenize(char *line, t_env *envs)
 	i = 0;
 	j = 0;
 	tokens_count = count_tokens(line);
-	printf("count: %ld\n", tokens_count);
 	if (tokens_count <= 0)
 		return (NULL);
 	tokens = (char **)malloc(sizeof(char *) * (tokens_count + 1));
@@ -154,7 +154,9 @@ char	**tokenize(char *line, t_env *envs)
 			tokens = token_split(tokens, &j, &split_token, tokens_count);
 	}
 	tokens[j] = NULL;
-	if (!unexpected_token(tokens))
+	for (int i = 0; tokens[i]; i++)
+		printf("tokens[%d]: %s\n", i, tokens[i]);
+	if (!handle_unexpected(tokens))
 		return (free_tokens(tokens), NULL);
 	return (tokens);
 }

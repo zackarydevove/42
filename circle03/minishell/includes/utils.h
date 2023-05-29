@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 16:46:24 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/26 02:00:50 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/05/29 15:37:34 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,45 +16,6 @@
 # include "types.h"
 # include <stddef.h>
 # include <stdbool.h>
-
-// utils/error.c
-void	error(char *msg, char *more);
-void	error_heredoc(char *delimiter);
-void	error_numerical_arg(char *name, char *arg);
-
-// utils/signal.c
-void	main_signal(int signal);
-void	cmd_signal(int signal);
-
-// utils/str.c
-bool	is_space(char c);
-void	skip_spaces(char *line, size_t *i);
-bool	handle_quotes(char *line, size_t *i);
-void	increase_token_index(size_t *count, size_t *i);
-
-// utils/pipes.c
-bool	has_pipes(char *str);
-bool	valid_last_command(char **tokens, size_t i);
-void	cmds_has_pipes(t_cmd *cmds);
-
-// utils/token.c
-char	*trim_token_quote(char **token);
-void	free_tokens(char **tokens);
-char	*replace_env_var(t_env *envs, char *token, bool *split_token);
-
-// utils/token2.c
-int		unexpected_token(char **tokens);
-void	unexpected_token_error(char *token);
-void	isquotefill(char *quote, char c);
-bool	special_char(char c);
-char	**token_split(char **tokens, size_t *i, bool *split_token, int k);
-
-// utils/env.c
-char	**format_env(t_env *envs);
-
-// utils/path.c
-char	*join_path(char *s1, char *s2);
-char	*resolve_path(char *file, t_env *envs);
 
 // utils/exec/redirs.c
 # define HEREDOC_FILE ".heredoc"
@@ -76,5 +37,48 @@ bool	is_child_process(t_cmd *cmds);
 int		exec_builtin(t_cmd *cmd, t_env **envs);
 int		exec_relative(t_cmd *cmd, t_env **envs);
 int		exec_cmds(t_cmd *cmds, t_env **envs);
+
+// utils/parse/errors.c
+bool	handle_unexpected(char **tokens);
+
+// utils/parse/free.c
+void	free_tokens(char **tokens);
+
+// utils/parse/str.c
+bool	is_space(char c);
+void	skip_spaces(char *line, size_t *i);
+bool	handle_quotes(char *line, size_t *i);
+void	increase_token_index(size_t *count, size_t *i);
+
+// utils/parse/trim.c
+char	*replace_env_var(t_env *envs, char *token, bool *split_token);
+char	*trim_token_quote(char **token);
+
+// utils/env.c
+char	**format_env(t_env *envs);
+
+// utils/error.c
+void	error(char *msg, char *more);
+void	error_heredoc(char *delimiter);
+void	error_invalid_identifier(char *name, char *arg);
+
+// utils/path.c
+char	*join_path(char *s1, char *s2);
+char	*resolve_path(char *file, t_env *envs, int perms);
+
+// utils/pipes.c
+bool	has_pipes(char *str);
+bool	valid_last_command(char **tokens, size_t i);
+void	cmds_has_pipes(t_cmd *cmds);
+
+// utils/signal.c
+void	main_signal(int signal);
+void	cmd_signal(int signal);
+
+// utils/token.c
+char	**token_split(char **tokens, size_t *i, bool *split_token, int k);
+int		check_end_by_quote(char *line, int i);
+bool	special_char(char c);
+int		isinquote(char *token, size_t *i);
 
 #endif

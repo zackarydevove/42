@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   path.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 23:16:48 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/08 16:27:33 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/05/29 16:07:03 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,16 @@ char	*join_path(char *s1, char *s2)
 /// @param file The file name to resolve
 /// @param envs The environment variables
 /// @return The resolved path, or NULL if an error occured
-char	*resolve_path(char *file, t_env *envs)
+char	*resolve_path(char *file, t_env *envs, int perms)
 {
 	t_env	*path;
 	char	**paths;
 	size_t	i;
 	char	*output;
 
-	if (!file)
+	if (!file || !file[0])
 		return (NULL);
-	if (access(file, F_OK) >= 0)
+	if (access(file, perms) >= 0)
 		return (ft_strdup(file));
 	path = get_env(envs, "PATH");
 	if (!path)
@@ -64,7 +64,7 @@ char	*resolve_path(char *file, t_env *envs)
 	while (paths[i])
 	{
 		output = join_path(paths[i], file);
-		if (access(output, F_OK) >= 0)
+		if (access(output, perms) >= 0)
 			break ;
 		free(output);
 		output = NULL;
