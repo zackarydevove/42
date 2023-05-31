@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:30:09 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/29 17:03:35 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/30 14:31:20 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ static t_env	*init_envs(char **envp)
 	t_env	*env;
 	char	*name;
 	size_t	i;
+	char	path[1024];
 
 	env = NULL;
 	while (*envp)
@@ -35,6 +36,8 @@ static t_env	*init_envs(char **envp)
 		envp++;
 	}
 	set_env(&env, "?", ft_strdup("0"));
+	if (getcwd(path, 1024))
+		set_env(&env, "PWD", ft_strdup(path));
 	return (env);
 }
 
@@ -80,7 +83,7 @@ static int	readentry(t_env **envs, t_cmd **cmds)
 	add_history(line);
 	if (line[0] == '\0')
 		return (free(line), 0);
-	tokens = tokenize(line, *envs);
+	tokens = tokenize(line, *envs, NULL);
 	free(line);
 	if (!tokens)
 	{
@@ -113,13 +116,6 @@ static int	program(t_cmd **cmds, t_env **envs)
 		if (*cmds)
 		{
 			set_env(envs, "_", ft_strdup(last_cmd_arg(*cmds)));
-			int k = 0;
-			for (t_cmd *head = *cmds; head; head = head->next)
-			{
-				for (int i = 0; head->args[i]; i++)
-					printf("node[%d]: args[%d]: %s\n", k, i, head->args[i]);
-				k++;
-			}
 			exit_status = exec_cmds(*cmds, envs);
 			if (is_child_process(*cmds))
 				return (free_cmds(*cmds), exit_status);

@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/27 00:36:04 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/29 17:09:53 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/30 14:49:33 by mnouchet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static bool	check_tokens(char **tokens, int i)
 			if ((tokens[i][0] == '<' || tokens[i][0] == '>') && !tokens[i + 1])
 				return (error_unexpected("newline", 7), false);
 			if ((tokens[i][0] == '<' || tokens[i][0] == '>') && tokens[i + 1]
-				&& (tokens[i + 1][0] == '<' || tokens[i + 1][0] == '>') )
+				&& (tokens[i + 1][0] == '<' || tokens[i + 1][0] == '>'))
 				return (error_unexpected(tokens[i + 1], 1), false);
 		}
 		i++;
@@ -72,11 +72,19 @@ static bool	check_newline(char **tokens)
 /// @brief Handle unexpected characters in a token string.
 /// @param tokens The token string to check.
 /// @return true if the token string is valid, false otherwise.
-bool	handle_unexpected(char **tokens)
+bool	handle_unexpected(char ***tokens)
 {
-	if (!check_tokens(tokens, 0))
+	if (!check_tokens(*tokens, 0))
+	{
+		free_tokens(*tokens);
+		*tokens = NULL;
 		return (false);
-	if (!check_newline(tokens))
+	}
+	if (!check_newline(*tokens))
+	{
+		free_tokens(*tokens);
+		*tokens = NULL;
 		return (false);
+	}
 	return (true);
 }

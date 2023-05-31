@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/01 16:36:16 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/29 13:57:44 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/30 15:37:24 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,12 @@ void	main_signal(int signal)
 		rl_replace_line("", 0);
 		rl_redisplay();
 	}
+}
+
+void	heredoc_handler(int signal)
+{
+	if (signal == SIGINT)
+		g_force_exit = 128 + SIGINT;
 }
 
 /// @brief Handle the signals for the command execution

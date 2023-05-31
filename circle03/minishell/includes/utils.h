@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/21 16:46:24 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/29 15:37:34 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/05/30 15:35:00 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ int		exec_relative(t_cmd *cmd, t_env **envs);
 int		exec_cmds(t_cmd *cmds, t_env **envs);
 
 // utils/parse/errors.c
-bool	handle_unexpected(char **tokens);
+bool	handle_unexpected(char ***tokens);
 
 // utils/parse/free.c
 void	free_tokens(char **tokens);
@@ -51,7 +51,8 @@ bool	handle_quotes(char *line, size_t *i);
 void	increase_token_index(size_t *count, size_t *i);
 
 // utils/parse/trim.c
-char	*replace_env_var(t_env *envs, char *token, bool *split_token);
+char	*replace_env_var(t_env *envs, char *token,
+			bool *split_token, char *tokenpre);
 char	*trim_token_quote(char **token);
 
 // utils/env.c
@@ -61,6 +62,7 @@ char	**format_env(t_env *envs);
 void	error(char *msg, char *more);
 void	error_heredoc(char *delimiter);
 void	error_invalid_identifier(char *name, char *arg);
+void	error_write(char *cmd);
 
 // utils/path.c
 char	*join_path(char *s1, char *s2);
@@ -74,6 +76,7 @@ void	cmds_has_pipes(t_cmd *cmds);
 // utils/signal.c
 void	main_signal(int signal);
 void	cmd_signal(int signal);
+void	heredoc_handler(int signal);
 
 // utils/token.c
 char	**token_split(char **tokens, size_t *i, bool *split_token, int k);
