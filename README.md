@@ -41,6 +41,9 @@ cpp modules - 5 set of exercices in CPP <br>
 cub3d - 3D FPS Game coded in C inspired by the world-famous Wolfenstein 3D game <br>
 netpractice - System Administration related exercise to discover networking
 
+<h3>Circle05</h3>
+cpp modules - 5 set of exercices in CPP
+
 
 <h2>Installation</h2>
 All of these projects were made to run on Ubuntu. Depending on the project, there might be different dependencies and compilation methods. But most run with make using Makefile. Please refer to the README file in each individual project's directory for specific installation instructions.
