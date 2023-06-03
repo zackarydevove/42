@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   process.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/24 16:51:22 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/24 16:51:49 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:14:02 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,19 @@
 
 /// @brief Waits for all the processes to finish
 /// @param cmds The commands to execute
-void	wait_processes(t_cmd *cmds, t_env **envs)
+/// @return The exit code of the last process to finish, or failed
+int	wait_processes(t_cmd *cmds)
 {
 	int		status;
 
 	status = 0;
 	while (cmds)
 	{
-		waitpid(cmds->pid, &status, 0);
-		set_env(envs, "?", ft_itoa(WEXITSTATUS(status)));
+		if (waitpid(cmds->pid, &status, 0) == -1)
+			return (perror("waitpid"), WEXITSTATUS(status));
 		cmds = cmds->next;
 	}
+	return (WEXITSTATUS(status));
 }
 
 bool	is_child_process(t_cmd *cmds)

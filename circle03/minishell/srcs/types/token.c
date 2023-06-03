@@ -66,6 +66,8 @@ static char	*get_next_token(char **line, t_env *envs,
 	if (!loop_get_next_token((*line), &quote, &i))
 		return (NULL);
 	token = ft_substr(*line, 0, i);
+	if (!token)
+		return (NULL);
 	if (ft_strchr(token, '$'))
 		token = replace_env_var(envs, token, split_token, tokenpre);
 	if (quote)

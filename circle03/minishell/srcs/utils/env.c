@@ -47,6 +47,8 @@ char	**format_env(t_env *envs)
 	while (tmp)
 	{
 		key = ft_strjoin(tmp->key, "=");
+		if (!key)
+			return (NULL);
 		output[i] = ft_strjoin(key, tmp->value);
 		free(key);
 		i++;

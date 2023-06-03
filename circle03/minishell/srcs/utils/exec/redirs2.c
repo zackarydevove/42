@@ -1,23 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
+/*   redirs2.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zdevove <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/08 10:16:46 by zdevove           #+#    #+#             */
-/*   Updated: 2022/11/09 16:10:51 by zdevove          ###   ########.fr       */
+/*   Created: 2023/06/01 18:11:35 by zdevove           #+#    #+#             */
+/*   Updated: 2023/06/01 18:13:47 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-int	ft_putstr_fd(char *s, int fd)
+void	redir_heredoc2(t_cmd *cmd)
 {
-	if (s)
-	{
-		if (write(fd, s, ft_strlen(s)) < 0)
-			return (0);
-	}
-	return (1);
+	rl_getc_function = rl_getc;
+	close(cmd->infile);
+	unlink(HEREDOC_FILE);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   redirs.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mnouchet <mnouchet@student.42.fr>          +#+  +:+       +#+        */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/17 00:51:58 by mnouchet          #+#    #+#             */
-/*   Updated: 2023/05/26 02:01:43 by mnouchet         ###   ########.fr       */
+/*   Updated: 2023/06/01 18:13:06 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,20 @@ static bool	redir_heredoc(char *delimiter, t_cmd *cmd)
 	cmd->has_heredoc = true;
 	while (1)
 	{
-		signal(SIGINT, &heredoc_handler);
+		signal(SIGINT, &heredoc_signal);
 		signal(SIGQUIT, SIG_IGN);
 		rl_getc_function = getc;
 		line = readline("> ");
-		if (!line)
+		if (!line && g_minishell.signal == SIGINT)
+			break ;
+		else if (!line)
 			return (reopen_heredoc(cmd), error_heredoc(delimiter), true);
 		if (ft_strcmp(line, delimiter) == 0)
 			return (reopen_heredoc(cmd), free(line), true);
 		ft_putendl_fd(line, cmd->infile);
 		free(line);
 	}
+	redir_heredoc2(cmd);
 	return (true);
 }
 
@@ -100,13 +103,17 @@ void	redirs(t_cmd *cmd)
 
 /// @brief Close the input and output redirections of the command
 /// and delete the temporary file containing the heredoc input.
-/// @param cmd The command
-void	close_redirs(t_cmd *cmd)
+/// @param cmds The command list
+void	close_redirs(t_cmd *cmds)
 {
-	if (cmd->infile > 2)
-		close(cmd->infile);
-	if (cmd->outfile > 2)
-		close(cmd->outfile);
-	if (cmd->has_heredoc)
-		unlink(HEREDOC_FILE);
+	while (cmds)
+	{
+		if (cmds->infile > 2)
+			close(cmds->infile);
+		if (cmds->outfile > 2)
+			close(cmds->outfile);
+		if (cmds->has_heredoc)
+			unlink(HEREDOC_FILE);
+		cmds = cmds->next;
+	}
 }

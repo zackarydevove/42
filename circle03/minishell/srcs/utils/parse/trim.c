@@ -26,7 +26,11 @@ static char	*replace_env_var2(char *token, int key_len, t_env *head, int i)
 	char	*temp;
 
 	before = ft_substr(token, 0, i);
+	if (!before)
+		return (NULL);
 	after = ft_strdup(token + i + key_len);
+	if (!after)
+		return (NULL);
 	temp = token;
 	if (head)
 	{
@@ -58,6 +62,8 @@ static char	*replace_env_var_ext(char *token, int i,
 		|| token[i + 1] == '"' || token[i + 1] == '\'')
 		key_len = 2;
 	key = ft_substr(token, i + 1, key_len - 1);
+	if (!key)
+		return (NULL);
 	token = replace_env_var2(token, key_len, get_env(envs, key), i);
 	free(key);
 	while (token[y] && !isspace(token[y]))

@@ -20,6 +20,8 @@ static void	error_unexpected(char *token, size_t len)
 	char	*str;
 
 	str = ft_substr(token, 0, len);
+	if (!str)
+		return ;
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	ft_putstr_fd("syntax error near unexpected token `", STDERR_FILENO);
 	ft_putstr_fd(str, STDERR_FILENO);
