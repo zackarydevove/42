@@ -1,7 +1,7 @@
-NO ./textures/north64.xpm
-SO ./textures/south64.xpm
-WE ./textures/west64.xpm
-EA ./textures/east64.xpm
+NO ./textures/north.xpm
+SO ./textures/south.xpm
+WE ./textures/west.xpm
+EA ./textures/east.xpm
 F 211,211,211
 C 192,120,57
         1111111111111111111111111
