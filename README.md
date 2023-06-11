@@ -48,8 +48,6 @@ ft_irc - Develop my own IRC server in C++
 
 <h3>Circle06</h3>
 
-<h3>Circle06</h3>
-
 
 <h2>Installation</h2>
 All of these projects were made to run on Ubuntu. Depending on the project, there might be different dependencies and compilation methods. But most run with make using Makefile. Please refer to the README file in each individual project's directory for specific installation instructions.
