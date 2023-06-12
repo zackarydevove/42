@@ -58,6 +58,8 @@ static char	*get_next_token(char **line, t_env *envs,
 	int		quote;
 	size_t	i;
 
+	if (!*line)
+		return (NULL);
 	i = 0;
 	skip_spaces(*line, &i);
 	*line += i;

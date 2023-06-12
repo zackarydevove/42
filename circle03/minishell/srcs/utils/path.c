@@ -60,8 +60,6 @@ char	*resolve_path(char *file, t_env *envs, int perms)
 	if (!path)
 		return (NULL);
 	paths = ft_split(path->value, ':');
-	if (!paths)
-		return (NULL);
 	i = 0;
 	while (paths[i])
 	{

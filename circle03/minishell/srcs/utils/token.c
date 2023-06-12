@@ -39,11 +39,7 @@ char	**token_split(char **tokens, size_t *i, bool *split_token, int k)
 	while (!is_space(tokens[(*i) - 1][k]))
 		k++;
 	new_tokens[j++] = ft_substr(tokens[(*i) - 1], 0, k);
-	if (!new_tokens[j - 1])
-		return (0);
 	new_tokens[j] = ft_strdup(tokens[(*i) - 1] + k + 1);
-	if (!new_tokens[j])
-		return (0);
 	free(tokens[(*i) - 1]);
 	free(tokens);
 	(*i)++;
