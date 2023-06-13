@@ -11,15 +11,14 @@ int main() {
         std::cout << "Enter a command (ADD, SEARCH, or EXIT): ";
         std::getline(std::cin, command);
 
-        if (command == "ADD") {
+        if (command == "ADD")
             phonebook.addContact();
-        } else if (command == "SEARCH") {
+        else if (command == "SEARCH")
             phonebook.searchContact();
-        } else if (command == "EXIT") {
+        else if (command == "EXIT")
             break;
-        } else {
+        else
             std::cout << "Invalid command, please try again." << std::endl;
-        }
     }
 
     return 0;

@@ -2,16 +2,16 @@ SRCS				=			megaphone.cpp
 
 NAME				=			megaphone
 
-CC					=			g++
+CC					=			c++
 
-CFLAGS				=			-Wall -Wextra -Werror
+CFLAGS				=			-Wall -Wextra -Werror -std=c++98
 
 OBJS				=			$(SRCS:.cpp=.o)
 
 all					:			$(NAME) 
 
 $(NAME)				:			$(OBJS)
-								$(CC) -o $(NAME) $(OBJS)
+								$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 								@echo "===== megaphone has been created ====="
 
 clean				:

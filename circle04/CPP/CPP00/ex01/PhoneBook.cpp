@@ -29,23 +29,19 @@ void PhoneBook::addContact() {
     std::getline(std::cin, input);
     _contacts[index].setDarkestSecret(input);
 
-    if (_contactCount == 8) {
+    if (_contactCount == 8)
         _oldestContact++;
-    }
 
-    if (_contactCount < 8) {
+    if (_contactCount < 8)
         _contactCount++;
-    }
 
-    if (_oldestContact >= 8) {
-        _oldestContact = 0;
-    }
+    if (_oldestContact >= 8)
+        _oldestContact = -1;
 }
 
 std::string truncateAndFormat(const std::string &output) {
-    if (output.length() > 10) {
+    if (output.length() > 10)
         return output.substr(0, 9) + ".";
-    }
     return output;
 }
 
@@ -65,14 +61,13 @@ void PhoneBook::searchContact() const {
     int index;
     std::cout << "Enter the index of the contact you want to display: ";
     
-    if (std::cin >> index && index >= 0 && index < _contactCount) {
+    if (std::cin >> index && index >= 0 && index < _contactCount)
         printContact(index);
-    } else {
+    else {
         std::cout << "Invalid contact index." << std::endl;
         std::cin.clear();
     }
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); 
-
 }
 
 void PhoneBook::printContact(int index) const {
