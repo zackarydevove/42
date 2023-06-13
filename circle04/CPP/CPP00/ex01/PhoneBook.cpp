@@ -36,7 +36,7 @@ void PhoneBook::addContact() {
         _contactCount++;
 
     if (_oldestContact >= 8)
-        _oldestContact = -1;
+        _oldestContact = 0;
 }
 
 std::string truncateAndFormat(const std::string &output) {
