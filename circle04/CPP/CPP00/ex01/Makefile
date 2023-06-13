@@ -10,6 +10,9 @@ OBJS				=			$(SRCS:.cpp=.o)
 
 all					:			$(NAME) 
 
+%.o					:			%.cpp
+								$(CC) $(CFLAGS) -c $< -o $@
+
 $(NAME)				:			$(OBJS)
 								$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 								@echo "===== phonebook has been created ====="

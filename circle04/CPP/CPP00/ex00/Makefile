@@ -14,6 +14,9 @@ $(NAME)				:			$(OBJS)
 								$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 								@echo "===== megaphone has been created ====="
 
+%.o					:			%.cpp
+								$(CC) $(CFLAGS) -c $< -o $@
+
 clean				:
 								rm -rf $(OBJS)
 								@echo "===== temporary files has been deleted ====="

@@ -14,6 +14,9 @@ $(NAME)		:		$(OBJS)
 						$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 						@echo "===== Harl has been created ====="
 
+%.o					:			%.cpp
+								$(CC) $(CFLAGS) -c $< -o $@
+
 clean		:
 						rm -rf $(OBJS)
 						@echo "===== Temporary files have been deleted ====="
