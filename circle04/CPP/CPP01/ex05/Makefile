@@ -4,7 +4,7 @@ OBJS		=		$(SRCS:.cpp=.o)
 
 NAME		=		harl
 
-CC			=		g++
+CC			=		c++
 
 CFLAGS		=		-Wall -Wextra -Werror
 

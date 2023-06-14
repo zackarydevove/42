@@ -4,7 +4,7 @@ OBJS 		=		$(SRCS:.cpp=.o)
 
 NAME 		=		ex03
 
-CC 			=		g++
+CC 			=		c++
 
 CFLAGS 		=		-Wall -Wextra -Werror
 

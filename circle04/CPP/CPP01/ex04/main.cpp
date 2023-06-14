@@ -46,7 +46,6 @@ int main(int ac, char* av[]) {
 
     std::string replaced_content = replace_all(content, s1, s2);
 
-
     std::ofstream output_file(filename + ".replace");
     if (!output_file) {
         std::cerr << "Error: Cannot create file " << filename + ".replace" << std::endl;

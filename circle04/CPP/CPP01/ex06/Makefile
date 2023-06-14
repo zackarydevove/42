@@ -4,7 +4,7 @@ OBJS		=		$(SRCS:.cpp=.o)
 
 NAME		=		harlFilter
 
-CC			=		g++
+CC			=		c++
 
 CFLAGS		=		-Wall -Wextra -Werror
 

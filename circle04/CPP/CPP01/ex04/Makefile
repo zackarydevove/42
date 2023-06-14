@@ -4,7 +4,7 @@ OBJS 		=		$(SRCS:.cpp=.o)
 
 NAME 		=		replace
 
-CC 			=		g++
+CC 			=		c++
 
 CFLAGS 		=		-Wall -Wextra -Werror
 
