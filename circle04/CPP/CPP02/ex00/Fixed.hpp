@@ -9,13 +9,13 @@ class Fixed {
         static const int _fractionalBits = 8;
 
     public:
-        Fixed(); // default constructor
-        Fixed(const Fixed& other); // copy constructor
-        Fixed& operator=(const Fixed& other); // copy assignment operator
-        ~Fixed(); // destructor
+        Fixed();
+        Fixed(const Fixed& other);
+        Fixed& operator=(const Fixed& other);
+        ~Fixed();
 
         int getRawBits( void ) const;
         void setRawBits( int const raw );
 };
 
-#endif`
+#endif

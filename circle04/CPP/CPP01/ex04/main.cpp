@@ -32,7 +32,7 @@ int main(int ac, char* av[]) {
         return 1;
     }
 
-    std::ifstream input_file(filename);
+    std::ifstream input_file(filename.c_str());
     if (!input_file) {
         std::cerr << "Error: Cannot open file " << filename << std::endl;
         return 1;
@@ -46,7 +46,7 @@ int main(int ac, char* av[]) {
 
     std::string replaced_content = replace_all(content, s1, s2);
 
-    std::ofstream output_file(filename + ".replace");
+    std::ofstream output_file((filename + ".replace").c_str());
     if (!output_file) {
         std::cerr << "Error: Cannot create file " << filename + ".replace" << std::endl;
         return 1;
