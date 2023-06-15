@@ -79,7 +79,7 @@ Fixed& Fixed::operator++() {
 
 Fixed Fixed::operator++(int) {
     Fixed temp(*this);
-    ++_fixedPointValue;
+    _fixedPointValue++;
     return temp;
 }
 
@@ -90,7 +90,7 @@ Fixed& Fixed::operator--() {
 
 Fixed Fixed::operator--(int) {
     Fixed temp(*this);
-    --_fixedPointValue;
+    _fixedPointValue--;
     return temp;
 }
 

@@ -14,6 +14,7 @@ Fixed::Fixed(const float floatValue) : _fixedPointValue(roundf(floatValue * (1 <
 
 Fixed::Fixed(const Fixed& other) : _fixedPointValue(other._fixedPointValue) {
     std::cout << "Copy constructor called" << std::endl;
+    *this = other;
 }
 
 Fixed& Fixed::operator=(const Fixed& other) {

@@ -41,13 +41,20 @@ int main( void ) {
     std::cout << "min(a, b) = " << Fixed::min(a, b) << std::endl;
     std::cout << "max(a, b) = " << Fixed::max(a, b) << std::endl;
 
+    std::cout << "a > b " << (a > b) << std::endl;
+    std::cout << "b < c " << (b < c) << std::endl;
+    std::cout << "c >= d " << (c >= d) << std::endl;
+    std::cout << "d <= a " << (d <= a) << std::endl;
+    std::cout << "a == b " << (a == b) << std::endl;
+    std::cout << "b != c " << (b != c) << std::endl;
+
     std::cout << "a++ is " << a++ << std::endl;
     std::cout << "a is " << a << std::endl;
 
-    std::cout << "++a is " << ++a << std::endl;
+    std::cout << "a-- is " << a-- << std::endl;
     std::cout << "a is " << a << std::endl;
 
-    std::cout << "a-- is " << a-- << std::endl;
+    std::cout << "++a is " << ++a << std::endl;
     std::cout << "a is " << a << std::endl;
 
     std::cout << "--a is " << --a << std::endl;
