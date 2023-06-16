@@ -18,9 +18,9 @@ static int  get_textures(t_data *data, char *line, int fd)
 {
     while (!check_textures(data) && get_next_line(fd, &line))
     {
-        if (*line && *line != '\n')
-            line[ft_strlen(line)] = '\0';
-        if ((!ft_strncmp(line, "C ", 2) && get_color(line + 2, data->color_roof))
+		if ((size_t)ft_skip_spaces(line) == ft_strlen(line) || line[0] == '\n')
+            free(line);
+        else if ((!ft_strncmp(line, "C ", 2) && get_color(line + 2, data->color_roof))
             || (!ft_strncmp(line, "F ", 2) && get_color(line + 2, data->color_floor))
             || (!ft_strncmp(line, "NO ", 3) && get_img(data, line, &data->n))
             || (!ft_strncmp(line, "SO ", 3) && get_img(data, line, &data->s))
@@ -39,8 +39,12 @@ static int  get_map(t_data *data, char *line, int fd, int i)
 {
 	while (get_next_line(fd, &line))
     {
-		if (i == 0 && (size_t)ft_skip_spaces(line) == ft_strlen(line))
+		if ((size_t)ft_skip_spaces(line) == ft_strlen(line))
+        {
             free(line);
+            if (i != 0)
+                return (ft_putendl_fd("Error\nInvalid map", 2), 0);
+        }
         else
         {
             data->map = realloc_map(data->map, sizeof(char *) * (i + 1), sizeof(char *) * (i + 2));
@@ -48,7 +52,7 @@ static int  get_map(t_data *data, char *line, int fd, int i)
                     return (0);
             line[ft_strlen(line)] = '\0';
             data->map[i++] = line;
-            data->map[i] = '\0';
+            data->map[i] = NULL;
         }
     }
 	if (i == 0)

@@ -7,6 +7,8 @@
 # include <fcntl.h>
 # include <math.h>
 
+# include <stdio.h> // a delete
+
 # define ESC 65307
 # define A 97
 # define W 119

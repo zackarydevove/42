@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/22 17:35:07 by zdevove           #+#    #+#             */
-/*   Updated: 2023/02/15 11:33:59 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/06/16 14:57:39 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ char	*get_line(char *buffer)
 	i = 0;
 	while (buffer[i] != '\0' && buffer[i] != '\n')
 		i++;
-	if (buffer[i] == '\n')
-		return (ft_substr(buffer, 0, i));
 	return (ft_substr(buffer, 0, i));
 }
 
@@ -76,11 +74,12 @@ char	*get_next_line(int fd, char **line)
 		return (0);
 	*line = get_line(buffer);
 	buffer = get_rest(buffer);
-	if (line[0][0] == '\n' && buffer)
-		free(buffer);
-	if (!**line)
+	// if (line[0][0] == '\n' && buffer)
+	// 	free(buffer);
+	if (!line[0][0])
 	{
 		free(*line);
+		free(buffer);
 		return (0);
 	}
 	return (*line);
