@@ -6,8 +6,11 @@ void	free_split(char **split)
 
     i = 0;
     while (split[i])
-        free(split[i++]);
-    free(split);
+    {
+		free(split[i++]);
+	}
+	if (split)
+		free(split);
 }
 
 void	free_all(t_data *data)
@@ -25,7 +28,8 @@ void	free_all(t_data *data)
 	mlx_clear_window(data->mlx, data->win);
 	mlx_destroy_window(data->mlx, data->win);
 	mlx_destroy_display(data->mlx);
-	free_split(data->map);
+	if (data->map)
+		free_split(data->map);
 	free(data->mlx);
 }
 

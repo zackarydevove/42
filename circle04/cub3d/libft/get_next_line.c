@@ -57,16 +57,24 @@ char	*get_rest(char *buffer)
 	{
 		i = ft_strlen(ftt_strchr(buffer, '\n')) + 1;
 		ftt_strlcpy(buffer, ftt_strchr(buffer, '\n'), i);
-		return (buffer);
 	}
-	free(buffer);
-	return (0);
+	else
+	{
+		free(buffer);
+		buffer = NULL;
+	}
+	return (buffer);
 }
 
-char	*get_next_line(int fd, char **line)
+char	*get_next_line(int fd, char **line, int freebuff)
 {
 	static char		*buffer;
 
+	if (freebuff)
+	{
+		free(buffer);
+		return (0);
+	}
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
 	buffer = get_rd_to_buffer(fd, buffer);
@@ -74,13 +82,5 @@ char	*get_next_line(int fd, char **line)
 		return (0);
 	*line = get_line(buffer);
 	buffer = get_rest(buffer);
-	// if (line[0][0] == '\n' && buffer)
-	// 	free(buffer);
-	if (!line[0][0])
-	{
-		free(*line);
-		free(buffer);
-		return (0);
-	}
 	return (*line);
 }

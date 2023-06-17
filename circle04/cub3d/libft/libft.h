@@ -40,7 +40,7 @@ char	*get_line(char *buffer);
 
 char	*get_rest(char *buffer);
 
-char	*get_next_line(int fd, char **line);
+char	*get_next_line(int fd, char **line, int freebuff);
 
 // LIBFT
 

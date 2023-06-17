@@ -13,6 +13,7 @@
 SRCS				=			srcs/main.c \
 								srcs/parsing/parsing.c \
 								srcs/parsing/parsing_utils.c \
+								srcs/parsing/check_walls.c \
 								srcs/game/hooks.c \
 								srcs/game/background.c \
 								srcs/game/textures.c \

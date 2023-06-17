@@ -16,7 +16,7 @@ static int  check_name(char *path)
 
 static int  get_textures(t_data *data, char *line, int fd)
 {
-    while (!check_textures(data) && get_next_line(fd, &line))
+    while (!check_textures(data) && get_next_line(fd, &line, 0))
     {
 		if ((size_t)ft_skip_spaces(line) == ft_strlen(line) || line[0] == '\n')
             free(line);
@@ -28,7 +28,8 @@ static int  get_textures(t_data *data, char *line, int fd)
             || (!ft_strncmp(line, "EA ", 3) && get_img(data, line, &data->e)))
             free(line);
         else
-            return (free(line), ft_putendl_fd("Error\nMissing colors or textures or invalid arguments", 2), 0);
+            return (free(line), get_next_line(fd, &line, 1), 
+                ft_putendl_fd("Error\nMissing colors or textures or invalid arguments", 2), 0);
     }
     if (!check_textures(data) && !line)
             return (free(line), ft_putendl_fd("Error\nMissing colors or textures or invalid arguments", 2), 0);
@@ -37,13 +38,14 @@ static int  get_textures(t_data *data, char *line, int fd)
 
 static int  get_map(t_data *data, char *line, int fd, int i)
 {
-	while (get_next_line(fd, &line))
+	while (get_next_line(fd, &line, 0))
     {
 		if ((size_t)ft_skip_spaces(line) == ft_strlen(line))
         {
             free(line);
             if (i != 0)
-                return (ft_putendl_fd("Error\nInvalid map", 2), 0);
+                return (get_next_line(fd, &line, 1), 
+                    ft_putendl_fd("Error\nInvalid map", 2), 0);
         }
         else
         {
@@ -87,6 +89,8 @@ static int  check_map(t_data *data, int i, int j, int player_count)
 int parsing(t_data *data, char *path)
 {
     int fd;
+	char **map_cpy;
+
 
     fd = open(path, O_RDONLY);
     if (fd < 0)
@@ -98,6 +102,14 @@ int parsing(t_data *data, char *path)
     if (!get_map(data, NULL, fd, 0))
         return (0);
     if (!check_map(data, -1, -1, 0))
-        return (0);
+		return (0);
+
+	map_cpy = copy_map(data->map);
+	if (!map_cpy)
+		return (0);
+	if (!check_walls(map_cpy, data->ray.posx - 0.5, data->ray.posy - 0.5))
+		return (free_split(map_cpy), ft_putendl_fd("Error\nMap not surrounded by walls", 2), 0);
+	free_split(map_cpy);
+
     return (1);
 }
