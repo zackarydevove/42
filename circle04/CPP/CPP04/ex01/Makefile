@@ -4,9 +4,9 @@ OBJS 		=		$(SRCS:.cpp=.o)
 
 NAME 		=		ex01
 
-CC 			=		g++
+CC 			=		c++
 
-CFLAGS 		=		-Wall -Wextra -Werror
+CFLAGS 		=		-Wall -Wextra -Werror -std=c++98
 
 all			:		 $(NAME)
 

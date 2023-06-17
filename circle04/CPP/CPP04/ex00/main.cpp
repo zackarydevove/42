@@ -14,7 +14,7 @@ int main()
 	std::cout << "type: " << meta->getType() << " " << std::endl; 
     std::cout << "type: " << j->getType() << " " << std::endl;
     std::cout << "type: " << i->getType() << " " << std::endl;
-    i->makeSound(); //will output the cat sound!
+    i->makeSound();
     j->makeSound();
     meta->makeSound();
 
@@ -22,12 +22,14 @@ int main()
     delete j;
     delete i;
 
+    std::cout << "========WRONG ANIMAL========" << std::endl;
+
     const WrongAnimal *wrongMeta = new WrongAnimal();
     const WrongAnimal *wrongI = new WrongCat();
 
     std::cout << "type: " << wrongMeta->getType() << " " << std::endl;
     std::cout << "type: " << wrongI->getType() << " " << std::endl;
-    wrongI->makeSound(); //will output the WrongAnimal sound
+    wrongI->makeSound();
     wrongMeta->makeSound();
    
     delete wrongMeta;

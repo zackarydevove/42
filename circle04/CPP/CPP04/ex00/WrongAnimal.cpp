@@ -13,9 +13,8 @@ WrongAnimal::~WrongAnimal() {
 }
 
 WrongAnimal &WrongAnimal::operator=(const WrongAnimal &other) {
-    if (this != &other) {
+    if (this != &other)
         type = other.type;
-    }
     return *this;
 }
 
