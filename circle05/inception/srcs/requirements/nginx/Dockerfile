@@ -2,7 +2,7 @@
 FROM Debian:buster
 
 # Update and Install packages, -y for automatic yes to any prompts
-RUN apt-get update
+RUN apt-get update -y
 RUN apt-get install -y nginx openssl 
 
 # Create directory for SSL certificates
