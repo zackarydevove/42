@@ -1,21 +1,24 @@
 # Start from a debian image base
-FROM Debian:buster
+FROM debian:buster
 
 # Update and Install packages, -y for automatic yes to any prompts
 RUN apt-get update -y
 RUN apt-get install -y nginx openssl 
 
 # Create directory for SSL certificates
-RUN mkdir /etc/nginx/ssl
-
-# Copy the nginx.conf file from your local machine to the docker image.
-COPY conf/nginx.conf /etc/nginx/nginx.conf
+RUN mkdir -p /etc/nginx/ssl
 
 # Generate self-signed SSL certificate and key
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -subj \
-    "/C=FR/ST=Paris/L=Paris/O=42/CN=localhost" \
-    -keyout /etc/nginx/ssl/nginx-selfsigned.key \
-    -out /etc/nginx/ssl/nginx-selfsigned.crt
+RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
+       -out /etc/nginx/ssl/zdevove.crt \
+       -keyout /etc/nginx/ssl/zdevove.key \
+       -subj "/C=FR/ST=Paris/L=Paris/O=42/OU=zdevove/CN=zdevove/"
+
+# Copy the conf file inside nginx
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+
+# Create a run file to stock the temporary files from nginx
+RUN mkdir -p /run/nginx
 
 # Expose port 443 for HTTPS
 EXPOSE 443

@@ -3,24 +3,27 @@ FROM debian:buster
 
 # Update and Install packages, -y for automatic yes to any prompts
 RUN apt-get update -y
-RUN apt-get install -y php php-fpm
+RUN apt-get install -y wget \
+    php \
+    php-cgi \
+    php-mysql \
+    php-fpm \
+    php-pdo \
+    php-gd \
+    php-cli \
+    php-mbstring
 
-# Install WP-CLI on my Wordpress Website
-RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-    && chmod +x wp-cli.phar \
-    && mv wp-cli.phar /usr/local/bin/wp
-
-# Copy the .conf in the html directory
+# Copy the .conf in the html directory (necessary tools to download wordpress)
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
 
-# Create php directory to enable php-fpm to run
-RUN mkdir /run/php
+# Create php directory to enable php-fpm to run and store the temporary files from php
+RUN mkdir -p /run/php
 
-# Copy the script and launch it
-COPY /tools/script.sh
+# Copy the script, give the right to launch it in local on our computer, and launch it
+COPY ./conf/script.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/script.sh
 
-RUN cd /run/php
+# Expose the 9000 port
+EXPOSE 9000
 
-# Run php-fpm
-CMD [""]
-
+ENTRYPOINT ["bash", "/usr/local/bin/script.sh"]
