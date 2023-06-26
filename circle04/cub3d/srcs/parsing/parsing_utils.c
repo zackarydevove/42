@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 14:50:37 by zdevove           #+#    #+#             */
+/*   Updated: 2023/06/26 14:51:58 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3d.h"
 
 void	init_player_pos(t_data *data, int y, int x)
@@ -22,14 +34,14 @@ void	init_player_pos(t_data *data, int y, int x)
 		data->ray.planey = -0.66;
 	else if (data->ray.dirx == 1)
 		data->ray.planey = 0.66;
-    data->map[data->ray.mapy][data->ray.mapx] = '0';
+	data->map[data->ray.mapy][data->ray.mapx] = '0';
 }
 
 int	check_textures(t_data *data)
 {
-	if (!data->n.img 
+	if (!data->n.img
 		|| !data->s.img
-		|| !data->w.img 
+		|| !data->w.img
 		|| !data->e.img
 		|| data->color_roof[0] == -1
 		|| data->color_floor[0] == -1)
@@ -50,13 +62,13 @@ int	get_color(char *line, int *colors)
 		i++;
 	if (i != 3)
 		return (ft_putendl_fd("Error\nRGB values not valid", 2),
-                free_split(split), 0);
+			free_split(split), 0);
 	while (i--)
 	{
 		colors[i] = ft_atoi(split[i]);
 		if (colors[i] < 0 || colors[i] > 255 || !ft_isdigit(split[i][0]))
 			return (ft_putendl_fd("Error\nRGB values not valid", 2),
-                free_split(split), 0);
+				free_split(split), 0);
 	}
 	free_split(split);
 	return (1);
@@ -67,11 +79,11 @@ int	get_img(t_data *data, char *line, t_img *img)
 	int		height;
 	int		width;
 
-    img->img = mlx_xpm_file_to_image(data->mlx,
+	img->img = mlx_xpm_file_to_image(data->mlx,
 			line + 3 + ft_skip_spaces(line + 3), &width, &height);
 	if (!img->img)
-        return (ft_putendl_fd("Error\nImage not valid", 2), 0);
-    return (1);
+		return (ft_putendl_fd("Error\nImage not valid", 2), 0);
+	return (1);
 }
 
 void	*realloc_map(void *ptr, size_t ptrsize, size_t newsize)

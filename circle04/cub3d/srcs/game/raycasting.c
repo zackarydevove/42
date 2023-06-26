@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycasting.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 15:21:42 by zdevove           #+#    #+#             */
+/*   Updated: 2023/06/26 15:21:49 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3d.h"
 
 static void	init_step(t_data *data)
@@ -67,7 +79,6 @@ void	init_dda(t_data *data)
 			data->ray.hit = 1;
 	}
 }
-
 
 static void	init_perp_wall_dist(t_data *data)
 {

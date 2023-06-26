@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   check_walls.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 14:52:07 by zdevove           #+#    #+#             */
+/*   Updated: 2023/06/26 14:52:46 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/cub3d.h"
 
-char **copy_map(char **map_src)
+char	**copy_map(char **map_src)
 {
-	char **map_dst;
-	int i;
+	char	**map_dst;
+	int		i;
 
 	i = 0;
 	while (map_src[i])
@@ -57,10 +69,10 @@ void	handle_blank_line(char *line, int *flag, int i)
 		*flag = 1;
 }
 
-int  handle_flagged_line(char *line, int fd)
+int	handle_flagged_line(char *line, int fd)
 {
-    free(line);
+	free(line);
 	get_next_line(fd, &line, 1);
-    ft_putendl_fd("Error\nInvalid map", 2);
-    return 0;
+	ft_putendl_fd("Error\nInvalid map", 2);
+	return (0);
 }

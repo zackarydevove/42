@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 15:32:19 by zdevove           #+#    #+#             */
+/*   Updated: 2023/06/26 15:33:37 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 
 # define CUB3D_H
@@ -20,7 +32,7 @@
 # define WIN_WIDTH	1920
 # define WIN_HEIGHT	1080
 
-typedef struct	s_img 
+typedef struct s_img
 {
 	void		*img;
 	char		*addr;
@@ -31,7 +43,7 @@ typedef struct	s_img
 	int			width;
 }				t_img;
 
-typedef struct	s_ray
+typedef struct s_ray
 {	
 	double		posx;
 	double		posy;
@@ -50,7 +62,7 @@ typedef struct	s_ray
 	double		deltadisty;
 	int			stepx;
 	int			stepy;
-	int			texHeight;
+	int			texheight;
 	int			hit;
 	int			side;
 	double		perpwalldist;
@@ -65,7 +77,7 @@ typedef struct	s_ray
 	int			texy;
 }				t_ray;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	void		*mlx;
 	void		*win;

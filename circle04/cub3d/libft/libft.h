@@ -6,7 +6,7 @@
 /*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/08 13:51:43 by zdevove           #+#    #+#             */
-/*   Updated: 2023/01/28 11:10:17 by zdevove          ###   ########.fr       */
+/*   Updated: 2023/06/26 15:34:21 by zdevove          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,6 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *));
 void	ft_lstadd_back(t_list **lst, t_list *new);
 
 void	ft_lstadd_front(t_list **lst, t_list *new);
-
 
 // MORE
 

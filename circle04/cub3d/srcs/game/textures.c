@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   textures.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 15:20:03 by zdevove           #+#    #+#             */
+/*   Updated: 2023/06/26 15:33:29 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../includes/cub3d.h"
 
@@ -19,12 +30,12 @@ static void	init_texture_pixel(t_data *data)
 		data->ray.wallx = data->ray.posx
 			+ data->ray.perpwalldist * data->ray.raydirx;
 	data->ray.wallx -= floor(data->ray.wallx);
-	data->ray.texx = (int)(data->ray.wallx * (double)(data->ray.texHeight));
+	data->ray.texx = (int)(data->ray.wallx * (double)(data->ray.texheight));
 	if (data->ray.side == 0 && data->ray.raydirx > 0)
-		data->ray.texx = data->ray.texHeight - data->ray.texx - 1;
+		data->ray.texx = data->ray.texheight - data->ray.texx - 1;
 	if (data->ray.side == 1 && data->ray.raydiry < 0)
-		data->ray.texx = data->ray.texHeight - data->ray.texx - 1;
-	data->ray.step = 1.0 * data->ray.texHeight / data->ray.lineheight;
+		data->ray.texx = data->ray.texheight - data->ray.texx - 1;
+	data->ray.step = 1.0 * data->ray.texheight / data->ray.lineheight;
 	data->ray.texpos = (data->ray.drawstart - (double)WIN_HEIGHT / 2
 			+ (double)data->ray.lineheight / 2) * data->ray.step;
 }
@@ -34,10 +45,10 @@ static void	put_pixel(t_data *data, t_img *img)
 	t_img			tmp;
 	char			*pos;
 
-	tmp.addr = mlx_get_data_addr(img->img, &tmp.bits_per_pixel, &tmp.line_length,
-			&tmp.endian);
-	pos = tmp.addr + (data->ray.texy * tmp.line_length + data->ray.texx *
-		(tmp.bits_per_pixel / 8));
+	tmp.addr = mlx_get_data_addr(img->img, &tmp.bits_per_pixel,
+			&tmp.line_length, &tmp.endian);
+	pos = tmp.addr + (data->ray.texy * tmp.line_length
+			+ data->ray.texx * (tmp.bits_per_pixel / 8));
 	my_mlx_pixel_put(&data->img, data->ray.x, data->ray.drawstart,
 		*(unsigned int *)pos);
 }
@@ -47,7 +58,7 @@ void	draw_textures(t_data *data)
 	init_texture_pixel(data);
 	while (data->ray.drawstart < data->ray.drawend)
 	{
-		data->ray.texy = (int)data->ray.texpos & (data->ray.texHeight - 1);
+		data->ray.texy = (int)data->ray.texpos & (data->ray.texheight - 1);
 		data->ray.texpos += data->ray.step;
 		if (data->ray.side == 1 && data->ray.raydiry > 0)
 			put_pixel(data, &data->n);

@@ -1,12 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zdevove <zdevove@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/26 15:19:27 by zdevove           #+#    #+#             */
+/*   Updated: 2023/06/26 15:33:12 by zdevove          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/cub3d.h"
 
 void	free_split(char **split)
 {
-    int	i;
+	int	i;
 
-    i = 0;
-    while (split[i])
-    {
+	i = 0;
+	while (split[i])
+	{
 		free(split[i++]);
 	}
 	if (split)
@@ -51,23 +63,23 @@ static void	init_movement(t_data *data)
 	data->ray.camerax = 0;
 	data->ray.posx = 0;
 	data->ray.posy = 0;
-	data->ray.texHeight = 64;
+	data->ray.texheight = 64;
 }
 
 static int	init_data(t_data *data)
 {
-    data->mlx = mlx_init();
-    if (!data->mlx)
-        return (0);
-    data->win = mlx_new_window(data->mlx, WIN_WIDTH, WIN_HEIGHT, "cub3d");
-    data->map = 0;
+	data->mlx = mlx_init();
+	if (!data->mlx)
+		return (0);
+	data->win = mlx_new_window(data->mlx, WIN_WIDTH, WIN_HEIGHT, "cub3d");
+	data->map = 0;
 	data->n.img = NULL;
 	data->e.img = NULL;
 	data->s.img = NULL;
 	data->w.img = NULL;
 	init_movement(data);
 	data->color_roof[0] = -1;
-	data->color_floor[0] = -1;	
+	data->color_floor[0] = -1;
 	data->img.img = mlx_new_image(data->mlx, WIN_WIDTH, WIN_HEIGHT);
 	if (!data->img.img)
 		return (0);
@@ -80,13 +92,13 @@ static int	init_data(t_data *data)
 
 int	main(int ac, char **av)
 {
-    t_data data;
+	t_data	data;
 
-    if (ac != 2)
-        return (1);
-    if (!init_data(&data))
+	if (ac != 2)
+		return (1);
+	if (!init_data(&data))
 		return (free_all(&data), 1);
-    if (!parsing(&data, av[1]))
+	if (!parsing(&data, av[1]))
 		return (free_all(&data), 1);
 	mlx_loop_hook(data.mlx, start_game, &data);
 	mlx_hook(data.win, 2, 1L << 0, handle_keypress, &data);
