@@ -38,15 +38,15 @@ static int  get_textures(t_data *data, char *line, int fd)
 
 static int  get_map(t_data *data, char *line, int fd, int i)
 {
+    int	flag;
+
+    flag = 0;
 	while (get_next_line(fd, &line, 0))
     {
 		if ((size_t)ft_skip_spaces(line) == ft_strlen(line))
-        {
-            free(line);
-            if (i != 0)
-                return (get_next_line(fd, &line, 1), 
-                    ft_putendl_fd("Error\nInvalid map", 2), 0);
-        }
+			handle_blank_line(line, &flag, i);
+		else if (flag)
+			return (handle_flagged_line(line, fd));
         else
         {
             data->map = realloc_map(data->map, sizeof(char *) * (i + 1), sizeof(char *) * (i + 2));
@@ -58,7 +58,7 @@ static int  get_map(t_data *data, char *line, int fd, int i)
         }
     }
 	if (i == 0)
-		return (ft_putendl_fd("Error\nInvalid map", 2), 0);
+		return (ft_putendl_fd("Error\nNot valid map", 2), 0);
     return (1);
 }
 

@@ -48,3 +48,19 @@ int	check_walls(char **map, int x, int y)
 		return (0);
 	return (1);
 }
+
+void	handle_blank_line(char *line, int *flag, int i)
+{
+	free(line);
+	line = NULL;
+	if (i != 0)
+		*flag = 1;
+}
+
+int  handle_flagged_line(char *line, int fd)
+{
+    free(line);
+	get_next_line(fd, &line, 1);
+    ft_putendl_fd("Error\nInvalid map", 2);
+    return 0;
+}

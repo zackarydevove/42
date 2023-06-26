@@ -106,6 +106,8 @@ void			*realloc_map(void *ptr, size_t ptrsize, size_t newsize);
 // check_walls.c
 int				check_walls(char **map, int x, int y);
 char			**copy_map(char **map_src);
+void			handle_blank_line(char *line, int *flag, int i);
+int				handle_flagged_line(char *line, int fd);
 
 // hooks.c
 int				start_game(t_data *data);
