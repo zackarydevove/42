@@ -22,7 +22,7 @@ DEPS_DIR	=		obj/
 OBJS		:=		$(addprefix $(OBJS_DIR), $(OBJS))
 DEPS		:=		$(addprefix $(DEPS_DIR), $(DEPS))
 
-NAME 		=		ex01
+NAME 		=		ircserv
 
 CC 			=		c++
 
