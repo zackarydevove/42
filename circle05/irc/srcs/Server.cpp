@@ -10,10 +10,6 @@ Server::Server(int port, std::string password) :
 	_password(password),
 	_operatorPassword(password)
 {
-    // createSocket();
-    // bindSocket();
-	// createPoll();
-	// initCommands();
     std::cout << "Server created" << std::endl;
 }
 
@@ -28,72 +24,6 @@ Server::~Server()
 // --------------------SERVER--------------------
 
 
-// // Create new socket for the server
-// void Server::createSocket()
-// {
-//     // Create socket
-//     // Creates a TCP socket using IPv4 and return a socket fd that will be used to refer to this socket
-//     // AF_INET specifies to use IPv4 address, which is used for creating internet-based sockets
-//     // SOCK_STREAM is the type of socket, this type is a two-way connection-based byte streams
-//     // 0 protocol to use, 0 indicate that the OS will choose the according one to the sock_stream (so TCP)
-// 	_socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-//     if (_socket_fd == -1)
-//         throw std::runtime_error("error: cannot create socket");
-// 	// This is to set some options for the socket
-// 	// SOL_SOCKET
-// 	// REUSEADDR allow server to reuse the address directly after server socket is closed
-// 	// enable
-// 	// size of enable
-// 	int enable = 1;
-// 	if (setsockopt(_socket_fd, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(enable)) < 0)
-// 		throw std::runtime_error("error: cannot set socket");
-
-// 	if (fcntl(_socket_fd, F_SETFL, O_NONBLOCK) < 0)
-// 		exit(error("fcntl", 1));
-// }
-
-// // This function will bind the socket to a specific port and address
-// // it set address to INADDR_ANY which tells the socket to listen on all network interfaces on the machine
-// // set port to _port (the port we gave in the terminal)
-// // we need to use struct because
-// // we listen because
-// void Server::bindSocket()
-// {
-//     // bind socket
-// 	struct sockaddr_in	addr;
-// 	addr.sin_family = AF_INET;
-// 	addr.sin_addr.s_addr = INADDR_ANY;
-// 	addr.sin_port = htons(_port);
-
-// 	if (bind(_socket_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-// 		throw std::runtime_error("error: cannot bind");
-
-// 	if (listen(_socket_fd, addr.sin_port) < 0)
-// 		throw std::runtime_error("error: cannot listen");
-// }
-
-// // Setup the epoll interface for managing client connections
-// // epoll_create create epoll instance
-// // backlog
-// // 
-// void Server::createPoll()
-// {
-// 	if ((_epoll_fd = epoll_create(BACKLOG)) < 0)
-// 		throw std::runtime_error("error: cannot create epoll");
-// 	_epoll_event.data.fd = _socket_fd;
-// 	_epoll_event.events = EPOLLIN;
-// 	if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _socket_fd, &_epoll_event) < 0)
-// 		throw std::runtime_error("error: cannot control epoll");
-// }
-
-// void Server::startServer()
-// {
-//     while (!g_shutdown)
-//     {
-//         // listen to new clients, or clients leaving
-// 		// listen to commands
-//     }
-// }
 
 
 // --------------------CLIENT--------------------
