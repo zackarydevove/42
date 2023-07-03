@@ -1,27 +1,37 @@
-NAME		=		ex03
-
 SRCS		=		main.cpp Bureaucrat.cpp AForm.cpp ShrubberyCreationForm.cpp RobotomyRequestForm.cpp PresidentialPardonForm.cpp Intern.cpp
 
 OBJS 		=		$(SRCS:.cpp=.o)
+DEPS 		=		$(SRCS:.cpp=.d)
+
+OBJS_DIR	=		obj/
+DEPS_DIR	=		obj/
+
+OBJS		:=		$(addprefix $(OBJS_DIR), $(OBJS))
+DEPS		:=		$(addprefix $(DEPS_DIR), $(DEPS))
+
+NAME 		=		ex03
 
 CC 			=		c++
 
-CFLAGS 		=		-Wall -Wextra -Werror -std=c++98
+CFLAGS 		=		-Wall -Wextra -Werror -std=c++98 -MMD
 
-all			:		 $(NAME)
+all			:		$(NAME)
 
-$(NAME)		:		 $(OBJS)
+$(NAME)		:		$(OBJS)
 					$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
-%.o					:			%.cpp
-								$(CC) $(CFLAGS) -c $< -o $@
+$(OBJS_DIR)%.o	:	%.cpp
+					mkdir -p $(@D)
+					$(CC) $(CFLAGS) -c $< -o $@
 
 clean		:		
-					rm -rf $(OBJS)
+					rm -rf $(OBJS) $(DEPS) $(OBJS_DIR)
 
-fclean		:		 clean
+fclean		:		clean
 					rm -rf $(NAME)
 
-re			:		 fclean all
+re			:		fclean all
 
-.PHONY		:		 all clean fclean re
+.PHONY		:		all clean fclean re
+
+-include $(DEPS)
