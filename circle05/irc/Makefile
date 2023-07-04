@@ -33,8 +33,10 @@ all			:		$(NAME)
 $(NAME)		:		$(OBJS)
 					$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
-$(OBJS_DIR)%.o	:	%.cpp
-					mkdir -p $(@D)
+$(OBJS_DIR):
+					mkdir -p $(OBJS_DIR)
+
+$(OBJS_DIR)%.o	:	%.cpp | $(OBJS_DIR)
 					$(CC) $(CFLAGS) -c $< -o $@
 
 clean		:		
