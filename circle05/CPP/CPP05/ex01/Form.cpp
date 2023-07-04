@@ -2,6 +2,12 @@
 #include "Bureaucrat.hpp"
 #include <iostream>
 
+Form::Form() : 
+    _name("default"),
+    _isSigned(false),
+    _gradeToSign(150), 
+    _gradeToExecute(150) {}
+
 Form::Form(std::string const & name, int gradeToSign, int gradeToExecute) : _name(name), _isSigned(false), _gradeToSign(gradeToSign), _gradeToExecute(gradeToExecute)
 {
     if (gradeToSign < 1 || gradeToExecute < 1)
@@ -12,10 +18,12 @@ Form::Form(std::string const & name, int gradeToSign, int gradeToExecute) : _nam
 
 Form::~Form() {}
 
-Form::Form(Form const & src) : _name(src._name), _isSigned(src._isSigned), _gradeToSign(src._gradeToSign), _gradeToExecute(src._gradeToExecute)
-{
-    *this = src;
-}
+Form::Form(Form const & src) : 
+    _name(src._name),
+    _isSigned(src._isSigned),
+    _gradeToSign(src._gradeToSign),
+    _gradeToExecute(src._gradeToExecute)
+{}
 
 Form & Form::operator=(Form const & rhs)
 {

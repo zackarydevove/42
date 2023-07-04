@@ -6,6 +6,9 @@ int main()
 {
     try
     {
+        // Bureaucrat Dim("Dim", 151); // too low
+        // Bureaucrat Kim("Kim", 0); // too high
+
         Bureaucrat jim("Jim", 150);
         std::cout << jim << std::endl;
         Form form1("Form1", 149, 149);
