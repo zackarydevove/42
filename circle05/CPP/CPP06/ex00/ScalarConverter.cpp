@@ -15,15 +15,17 @@ void ScalarConverter::convert(std::string const &input)
     char *endptr = NULL;
 
     // CHAR
-    if(input[0] && std::isprint(input[0]))
-        std::cout << "char: " << '\'' << input[0] << '\'' << std::endl;
+    int num = std::atoi(input.c_str());
+    char c = num;
+    if (num >= 0 && num <= 127 && std::isprint(c))
+        std::cout << "char: " << '\'' << c << '\'' << std::endl;
     else
         std::cout << "char: impossible" << std::endl;
 
     // INT
-    std::strtol(input.c_str(), &endptr, 10);
-    if (endptr == &input[0] + input.length())
-        std::cout << "int: " << std::atol(input.c_str()) << std::endl;
+    long int nb = std::strtol(input.c_str(), &endptr, 10);
+    if (nb >= -2147483648 && nb <= 2147483647)
+        std::cout << "int: " << nb << std::endl;
     else
         std::cout << "int: impossible" << std::endl;
 
