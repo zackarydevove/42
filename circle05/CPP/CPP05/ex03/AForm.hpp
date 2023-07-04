@@ -10,6 +10,7 @@ class Bureaucrat;
 class AForm
 {
     private:
+        AForm();
         const std::string _name;
         bool _isSigned;
         const int _gradeToSign;

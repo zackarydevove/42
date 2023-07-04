@@ -1,7 +1,17 @@
 #include "AForm.hpp"
 #include <iostream>
 
-AForm::AForm(std::string const & name, int gradeToSign, int gradeToExecute) : _name(name), _isSigned(false), _gradeToSign(gradeToSign), _gradeToExecute(gradeToExecute)
+AForm::AForm() : 
+    _name("default"),
+    _isSigned(false),
+    _gradeToSign(150), 
+    _gradeToExecute(150) {}
+
+AForm::AForm(std::string const & name, int gradeToSign, int gradeToExecute) : 
+    _name(name),
+    _isSigned(false),
+    _gradeToSign(gradeToSign),
+    _gradeToExecute(gradeToExecute)
 {
     if (gradeToSign < 1 || gradeToExecute < 1)
         throw AForm::GradeTooHighException();
@@ -11,10 +21,11 @@ AForm::AForm(std::string const & name, int gradeToSign, int gradeToExecute) : _n
 
 AForm::~AForm() {}
 
-AForm::AForm(AForm const & src) : _name(src._name), _isSigned(src._isSigned), _gradeToSign(src._gradeToSign), _gradeToExecute(src._gradeToExecute)
-{
-    *this = src;
-}
+AForm::AForm(AForm const & src) :
+    _name(src._name),
+    _isSigned(src._isSigned),
+    _gradeToSign(src._gradeToSign),
+    _gradeToExecute(src._gradeToExecute) {}
 
 AForm & AForm::operator=(AForm const & rhs)
 {

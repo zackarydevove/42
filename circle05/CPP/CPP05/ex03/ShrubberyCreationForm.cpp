@@ -1,6 +1,9 @@
 #include "ShrubberyCreationForm.hpp"
 #include <fstream>
 
+ShrubberyCreationForm::ShrubberyCreationForm()
+    : AForm("ShrubberyCreationForm", 145, 137), _target("default") {}
+
 ShrubberyCreationForm::ShrubberyCreationForm(std::string const & target) 
     : AForm("ShrubberyCreationForm", 145, 137), _target(target) {}
 
@@ -23,7 +26,7 @@ void ShrubberyCreationForm::execute(Bureaucrat const & executor) const
 {
     AForm::execute(executor);
 
-    std::ofstream ofs((_target + "_shrubbery").c_str());
+    std::ofstream ofs((this->getTarget() + "_shrubbery").c_str());
     if (!ofs)
         throw std::runtime_error("Failed to open the file for writing");
     else {

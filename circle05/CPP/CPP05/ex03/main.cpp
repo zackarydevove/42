@@ -14,8 +14,9 @@ int main()
         Intern mike;
         AForm *form;
 
-        form = mike.makeForm("robotomy request", "tom");
+        form = mike.makeForm("presidential pardon", "Tom");
         john.signForm(*form);
+        john.executeForm(*form);
         delete form;
 
         form = mike.makeForm(" yes", "tom");
