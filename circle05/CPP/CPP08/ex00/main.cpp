@@ -13,5 +13,16 @@ int main() {
     easyfind(numbers, 3);
     easyfind(numbers, 6);
 
+
+    std::vector<char> characters;
+    characters.push_back('x');
+    characters.push_back('1');
+    characters.push_back('e');
+    characters.push_back('d');
+    characters.push_back('0');
+
+    easyfind(characters, '0');
+    easyfind(characters, 'z');
+
     return 0;
 }
