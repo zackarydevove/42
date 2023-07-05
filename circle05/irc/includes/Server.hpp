@@ -49,6 +49,7 @@ class Server {
 
 		void		handleNewConnection(int epoll_fd, struct sockaddr_in &client_address, socklen_t &client_len);
 		void		handleClientData(int client_fd);
+        void		parseAndExecuteCommand(Client *client, const std::string &message);
 
         void		broadcastMessage(const std::string &message);
 

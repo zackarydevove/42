@@ -11,10 +11,10 @@ Server::Server(int port, std::string password) :
 	_operatorPassword(password),
 	_epoll_fd(-1)
 {
-    std::cout << "Server created" << std::endl;
 	openSocket();
 	bindSocket();
 	listenSocket();
+    std::cout << "Server created" << std::endl;
 	startServer();
 }
 
@@ -135,6 +135,55 @@ void Server::handleClientData(int client_fd) {
         return;
     }
 }
+
+
+// // Function to handle a new client connection
+// void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_address, socklen_t &client_len) {
+//     int client_fd = accept(_socket_fd, (struct sockaddr*)&client_address, &client_len);
+//     if (client_fd < 0) {
+//         std::cerr << "Failed to accept client: " << std::endl;
+//         return;
+//     }
+
+//     // Add the new socket to the epoll instance
+//     struct epoll_event event;
+//     event.events = EPOLLIN;
+//     event.data.fd = client_fd;
+//     if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_fd, &event)) {
+//         throw std::runtime_error("Failed to add client socket file descriptor to epoll");
+//     }
+// }
+
+// // Function to handle data from a client
+// void Server::handleClientData(int client_fd) {
+//     char buffer[1024];
+//     memset(buffer, 0, sizeof(buffer));
+
+//     ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer) - 1);
+//     if (bytes_read < 0) {
+//         std::cerr << "Failed to read from client: " << std::endl;
+//         return;
+//     }
+//     else if (bytes_read == 0) {
+//         // The client has closed the connection, so we should remove it from epoll and close the socket
+//         if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, client_fd, NULL) == -1) {
+//             throw std::runtime_error("Failed to delete client file descriptor from epoll");
+//         }
+//         close(client_fd);
+//         return;
+//     }
+
+//     // Get the client who sent the message
+//     Client *client = getClientByFd(client_fd);  // You would need to implement getClientByFileDescriptor()
+//     if (!client) {
+//         std::cerr << "Failed to find client for file descriptor: " << client_fd << std::endl;
+//         return;
+//     }
+
+//     // Handle the data received from the client.
+//     parseAndExecuteCommand(client, std::string(buffer));
+// }
+
 
 // --------------------CLIENT--------------------
 

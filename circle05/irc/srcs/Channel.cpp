@@ -23,6 +23,7 @@ void	Channel::broadcastMessage(const std::string &message) {
 
 void Channel::addClient(Client *client)
 {
+	(void)_server;
 	if (!client)
 		return ;
     if (_limit > 0 && _clients.size() >= _limit)
