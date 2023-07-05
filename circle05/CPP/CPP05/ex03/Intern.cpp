@@ -20,19 +20,21 @@ AForm * Intern::makeForm(std::string const & formName, std::string const & targe
         "robotomy request",
         "presidential pardon"
     };
-    AForm *formFuncs[3] = {
-		new ShrubberyCreationForm(target), 
-		new RobotomyRequestForm(target), 
-		new PresidentialPardonForm(target)
-    };
 
-    for (int i = 0; i < 3; i++) {
-        if (formName == formNames[i]) {
-            std::cout << "Intern creates " << formName << std::endl;
-            return (formFuncs[i]);
-        }
-        else
-            delete formFuncs[i];
+    int i = 0;
+    while (i < 3 && formNames[i] != formName)
+        i++;
+
+    switch (i)
+    {
+        case 0:
+                return (new ShrubberyCreationForm(target));
+        case 1:
+                return (new RobotomyRequestForm(target));
+        case 2:
+                return (new PresidentialPardonForm(target));
+        default:
+            break ;
     }
 
     std::cout << "Invalid form request" << std::endl;
