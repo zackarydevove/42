@@ -1,52 +1,49 @@
-SRCS 		=		srcs/main.cpp \
-					srcs/Channel.cpp \
-					srcs/Client.cpp \
-					srcs/Server.cpp \
-					srcs/commands/die.cpp \
-					srcs/commands/invite.cpp \
-					srcs/commands/join.cpp \
-					srcs/commands/kick.cpp \
-					srcs/commands/mode.cpp \
-					srcs/commands/msg.cpp \
-					srcs/commands/nick.cpp \
-					srcs/commands/oper.cpp \
-					srcs/commands/quit.cpp \
-					srcs/commands/topic.cpp
+SRCS        =       srcs/main.cpp \
+                    srcs/Channel.cpp \
+                    srcs/Client.cpp \
+                    srcs/Server.cpp \
+                    srcs/commands/die.cpp \
+                    srcs/commands/invite.cpp \
+                    srcs/commands/join.cpp \
+                    srcs/commands/kick.cpp \
+                    srcs/commands/mode.cpp \
+                    srcs/commands/msg.cpp \
+                    srcs/commands/nick.cpp \
+                    srcs/commands/oper.cpp \
+                    srcs/commands/quit.cpp \
+                    srcs/commands/topic.cpp
 
-OBJS 		=		$(SRCS:.cpp=.o)
-DEPS 		=		$(SRCS:.cpp=.d)
+DIRS        =       $(sort $(dir $(SRCS)))
 
-OBJS_DIR	=		obj/
-DEPS_DIR	=		obj/
+OBJS_DIR    =       obj/
 
-OBJS		:=		$(addprefix $(OBJS_DIR), $(OBJS))
-DEPS		:=		$(addprefix $(DEPS_DIR), $(DEPS))
+OBJS        =       $(addprefix $(OBJS_DIR), $(SRCS:.cpp=.o))
 
-NAME 		=		ircserv
+NAME        =       ircserv
 
-CC 			=		c++
+CC          =       c++
 
-CFLAGS 		=		-Wall -Wextra -Werror -std=c++98 -MMD
+CFLAGS      =       -Wall -Wextra -Werror -std=c++98 -MMD
 
-all			:		$(NAME)
+all         :       $(NAME)
 
-$(NAME)		:		$(OBJS)
-					$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+$(NAME)     :       $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
-$(OBJS_DIR):
-					mkdir -p $(OBJS_DIR)
+$(OBJS_DIR)%.o :    %.cpp | dirs
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OBJS_DIR)%.o	:	%.cpp | $(OBJS_DIR)
-					$(CC) $(CFLAGS) -c $< -o $@
+dirs:
+	mkdir -p $(addprefix $(OBJS_DIR), $(DIRS))
 
-clean		:		
-					rm -rf $(OBJS) $(DEPS) $(OBJS_DIR)
+clean       :
+	rm -rf $(OBJS_DIR)
 
-fclean		:		clean
-					rm -rf $(NAME)
+fclean      :       clean
+	rm -rf $(NAME)
 
-re			:		fclean all
+re          :       fclean all
 
-.PHONY		:		all clean fclean re
+.PHONY      :       all clean fclean re dirs
 
--include $(DEPS)
+-include $(OBJS:.o=.d)

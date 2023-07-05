@@ -19,7 +19,7 @@ int	main(int ac, char **av)
 	if (ac != 3)
 		return (std::cerr << "Error: Usage: ./ircserv <port> <password>" << std::endl, 0);
 
-	// Convert av[1] (port) to a long
+	// Convert av[1] to an int (port) 
 	int port = std::atoi(av[1]);
 	// Take av[2] (password)
 	std::string password = av[2];
@@ -31,7 +31,7 @@ int	main(int ac, char **av)
 	}
 	// If a problem happened, print the error
 	catch (const std::exception &e) {
-		std::cerr << e.what();
+		std::cerr << e.what() << std::endl;
 	}
 
 	return (0);
