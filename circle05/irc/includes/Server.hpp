@@ -12,6 +12,7 @@
 # include <netinet/in.h>
 # include <cstring>
 # include <unistd.h>
+# include <netdb.h> // genameinfo
 
 
 # include "Channel.hpp"
@@ -48,8 +49,8 @@ class Server {
 		void		startServer();
 
 		void		handleNewConnection(int epoll_fd, struct sockaddr_in &client_address, socklen_t &client_len);
-		void		handleClientData(int client_fd);
-        void		parseAndExecuteCommand(Client *client, const std::string &message);
+		void		handleNewMessage(int client_fd);
+        void        parseAndExecuteCommand(Client *client, const std::string &message);
 
         void		broadcastMessage(const std::string &message);
 
@@ -57,6 +58,7 @@ class Server {
         std::string getPassword() { return _password; };
         std::string getOperatorPassword() { return _operatorPassword; };
     	int	getEpollfd() { return _epoll_fd; };
+        Client *getClientByFd(int fd);
 
 		void setEpollfd(int epoll_fd) { _epoll_fd = epoll_fd; };
 

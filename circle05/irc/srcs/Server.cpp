@@ -14,6 +14,7 @@ Server::Server(int port, std::string password) :
 	openSocket();
 	bindSocket();
 	listenSocket();
+    initCommands();
     std::cout << "Server created" << std::endl;
 	startServer();
 }
@@ -81,7 +82,7 @@ void Server::startServer() {
                 handleNewConnection(_epoll_fd, client_address, client_len);
             } else {
                 // Handle data from a client
-                handleClientData(events[i].data.fd);
+                handleNewMessage(events[i].data.fd);
             }
         }
     }
@@ -96,17 +97,31 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
         return;
     }
 
-    // Add the new socket to the epoll instance
+    // Use getnameinfo to get the hostname of the client
+    char host[NI_MAXHOST];
+    if (getnameinfo((struct sockaddr*)&client_address, client_len, host, sizeof(host), NULL, 0, NI_NUMERICHOST) != 0) {
+        std::cerr << "Failed to get hostname of client" << std::endl;
+        return;
+    }
+    std::string hostname(host);
+
+    // Create a new Client object for the new client.
+    Client* newClient = new Client(client_fd, hostname);
+
+    // Add it in the client vector 
+    addClient(newClient);
+
+    // Add the new client fd (socket) to the epoll instance
     struct epoll_event event;
     event.events = EPOLLIN;
     event.data.fd = client_fd;
-    if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_fd, &event)) {
+    if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_fd, &event))
         throw std::runtime_error("Failed to add client socket file descriptor to epoll");
-    }
+    std::cout << "New client connected!" << std::endl;
 }
 
 // Function to handle data from a client
-void Server::handleClientData(int client_fd) {
+void Server::handleNewMessage(int client_fd) {
     char buffer[1024];
     memset(buffer, 0, sizeof(buffer));
 
@@ -117,72 +132,53 @@ void Server::handleClientData(int client_fd) {
     }
     else if (bytes_read == 0) {
         // The client has closed the connection, so we should remove it from epoll and close the socket
-        if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, client_fd, NULL) == -1) {
+        if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, client_fd, NULL) == -1)
             throw std::runtime_error("Failed to delete client file descriptor from epoll");
-        }
         close(client_fd);
         return;
     }
 
-    // Handle the data received from the client. This would typically involve parsing it,
-    // executing some commands based on the input, and possibly sending a response back to the client.
-    // For now, we'll just print the data we received.
-    std::cout << "Received data from client: " << buffer << std::endl;
-
-    // To send a response, use the write() function. For example, to send the client's message back to them:
-    if (write(client_fd, buffer, bytes_read) < 0) {
-        std::cerr << "Failed to write to client: " << std::endl;
+    // Get the client who sent the message
+    Client *client = getClientByFd(client_fd);  // You would need to implement getClientByFileDescriptor()
+    if (!client) {
+        std::cerr << "Failed to find client for file descriptor: " << client_fd << std::endl;
         return;
     }
+
+    // Print received message for debugging purposes
+    std::cout << "Received message from client: " << buffer << std::endl;
+    // Parse and execute command
+    parseAndExecuteCommand(client, std::string(buffer));
 }
 
+# include <sstream>
 
-// // Function to handle a new client connection
-// void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_address, socklen_t &client_len) {
-//     int client_fd = accept(_socket_fd, (struct sockaddr*)&client_address, &client_len);
-//     if (client_fd < 0) {
-//         std::cerr << "Failed to accept client: " << std::endl;
-//         return;
-//     }
+// Handle the data received from the client.
+void Server::parseAndExecuteCommand(Client *client, const std::string &message){
+    // Split the message into command and arguments.
+    std::vector<std::string> tokens;
+    std::stringstream ss(message);
+    std::string token;
+    while (std::getline(ss, token, ' ')) {  // We're splitting by spaces here. Update if your command syntax is different.
+        tokens.push_back(token);
+    }
 
-//     // Add the new socket to the epoll instance
-//     struct epoll_event event;
-//     event.events = EPOLLIN;
-//     event.data.fd = client_fd;
-//     if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_fd, &event)) {
-//         throw std::runtime_error("Failed to add client socket file descriptor to epoll");
-//     }
-// }
+    // The command is the first token. Convert to upper case to handle case-insensitive commands.
+    std::string command = tokens[0];
+    std::transform(command.begin(), command.end(), command.begin(), ::toupper);
 
-// // Function to handle data from a client
-// void Server::handleClientData(int client_fd) {
-//     char buffer[1024];
-//     memset(buffer, 0, sizeof(buffer));
+    // Look up the command in the map.
+    std::map<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>::iterator it = _commands.find(command);
 
-//     ssize_t bytes_read = read(client_fd, buffer, sizeof(buffer) - 1);
-//     if (bytes_read < 0) {
-//         std::cerr << "Failed to read from client: " << std::endl;
-//         return;
-//     }
-//     else if (bytes_read == 0) {
-//         // The client has closed the connection, so we should remove it from epoll and close the socket
-//         if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, client_fd, NULL) == -1) {
-//             throw std::runtime_error("Failed to delete client file descriptor from epoll");
-//         }
-//         close(client_fd);
-//         return;
-//     }
-
-//     // Get the client who sent the message
-//     Client *client = getClientByFd(client_fd);  // You would need to implement getClientByFileDescriptor()
-//     if (!client) {
-//         std::cerr << "Failed to find client for file descriptor: " << client_fd << std::endl;
-//         return;
-//     }
-
-//     // Handle the data received from the client.
-//     parseAndExecuteCommand(client, std::string(buffer));
-// }
+    // If the command exists, call the corresponding function.
+    if (it != _commands.end()) {
+        // Remove the command name from the tokens vector before passing it as arguments.
+        tokens.erase(tokens.begin());
+        it->second(*this, *client, tokens);
+    } else {
+        std::cout << "Invalid command received from client: " << command << std::endl;
+    }
+}
 
 
 // --------------------CLIENT--------------------
@@ -219,6 +215,14 @@ Client *Server::getClientByUsername(std::string &username)
 {
     for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
         if ((*it)->getUsername() == username)
+            return *it;
+    return (NULL);
+}
+
+Client *Server::getClientByFd(int fd)
+{
+    for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+        if ((*it)->getFd() == fd)
             return *it;
     return (NULL);
 }

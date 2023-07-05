@@ -1,6 +1,7 @@
 #include "../includes/Client.hpp"
 
-Client::Client(std::string hostname) : 
+Client::Client(int fd, std::string hostname) : 
+	_fd(fd),
     _hostname(hostname),
     _isAuth(false)
     { }
@@ -40,6 +41,6 @@ void	Client::leaveAllChannels() {
 }
 
 void	Client::sendMessage(const std::string &message) {
-    if (_socket)
-	    send(_socket, message.c_str(), message.size(), 0);
+    if (_fd)
+	    send(_fd, message.c_str(), message.size(), 0);
 }

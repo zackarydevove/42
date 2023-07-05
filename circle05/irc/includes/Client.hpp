@@ -15,7 +15,7 @@ class Server;
 
 class Client {
     private:
-		int						_socket;
+		int						_fd;
         std::string				_hostname; // Name of the computer client is connecting from
         std::string				_username; // Name used for authentication purposes (unique)
         std::string				_nickname; // Name used to identify user in chat
@@ -24,10 +24,11 @@ class Client {
 		bool					_isOp;
 
     public:
-        Client(const std::string name);
+        Client(int fd, const std::string name);
         ~Client();
 		
 		// Getters
+		int			getFd() { return _fd; };
 		std::string getHostname() { return _hostname; };
 		std::string getUsername() { return _username; };
 		std::string getNickname() { return _nickname; };
@@ -36,6 +37,7 @@ class Client {
 		bool 		getOp() { return _isOp; };
 
 		// Setters
+		void 		setFd(int &fd ) { _fd = fd; };
 		void 		setHostname(std::string const &hostname ) { _hostname = hostname; };
 		void 		setUsername(std::string const &username ) { _username = username; };
 		void 		setNickname(std::string const &nickname ) { _nickname = nickname; };
