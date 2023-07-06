@@ -1,11 +1,8 @@
 #include "../../includes/commands.hpp"
 
-// La commande /msg te permet d'envoyer un message en privé à un utilisateur 
-// ou un message normal sur un channel sur lequel tu  es présent ou pas 
-// (dernier cas possible uniquement si le channel n'est pas en mode +n, pas de messages extérieures).
 // input[0] = msg command
-// input[1] = client / channel receive
-// input[2] = client who send msg
+// input[1] = receiver (client / channel)
+// input[2] = message to send
 int msg(Server &server, Client &client, std::vector<std::string> &input)
 {
     if (input.size() < 3)
@@ -35,19 +32,19 @@ int msg(Server &server, Client &client, std::vector<std::string> &input)
         std::vector<Client *> clients = channel->getClients();
         for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
         {
-            Client *otherClient = *it;
-            if (otherClient != &client)  // Do not send the message to the client who sent it.
-                otherClient->sendMessage(client.getNickname() + ": " + message + "\n");
+            Client *receiverClient = *it;
+            if (receiverClient != &client)  // Do not send the message to the client who sent it.
+                receiverClient->sendMessage(client.getNickname() + ": " + message + "\n");
         }
         return 1;
     }
 
     // If the receiver is not a channel, assume it is a client.
-    Client *otherClient = server.getClientByNickname(receiver);
-    if (otherClient)
+    Client *receiverClient = server.getClientByNickname(receiver);
+    if (receiverClient)
     {
         // Send the message to the other client.
-        otherClient->sendMessage(client.getNickname() + ": " + message + "\n");
+        receiverClient->sendMessage(client.getNickname() + ": " + message + "\n");
         return 1;
     }
 

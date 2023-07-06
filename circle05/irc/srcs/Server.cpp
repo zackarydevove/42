@@ -167,12 +167,11 @@ void Server::parseAndExecuteCommand(Client *client, const std::string &message){
     if (!tokens.empty()) {
         std::string &lastToken = tokens.back();
         size_t pos = lastToken.find_last_not_of("\n");
-        if (pos != std::string::npos) {
+        if (pos != std::string::npos)
             lastToken.erase(pos + 1);
-        } else {
-            // This case would be if the string only contained '\n' characters
+        else
+            // If token only contain '\n' character
             lastToken.clear();
-        }
     }
 
     // Look up the command in the map
