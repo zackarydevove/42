@@ -9,7 +9,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     if (input.size() < 2)
     {
         // The client didn't provide a channel name to join.
-        client.sendMessage("ERROR: You must provide the name of a channel.");
+        client.sendMessage("ERROR: You must provide the name of a channel.\n");
         return (0);
     }
 
@@ -24,7 +24,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
         if (input.size() < 3 || channel->getPassword() != input[2])
         {
             // Incorrect or missing password for this channel.
-            client.sendMessage("ERROR: Incorrect password for this channel.");
+            client.sendMessage("ERROR: Incorrect password for this channel.\n");
             return (0);
         }
     }
@@ -33,7 +33,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     channel->addClient(&client);
 
     // Send a message to the channel that the client has joined.
-    std::string joinMessage = client.getNickname() + " has joined " + channelName;
+    std::string joinMessage = client.getNickname() + " has joined " + channelName + "\n";
     channel->broadcastMessage(joinMessage);
 
     return (1);

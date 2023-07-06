@@ -28,7 +28,7 @@ void Channel::addClient(Client *client)
 		return ;
     if (_limit > 0 && _clients.size() >= _limit)
     {
-        client->sendMessage("ERROR: The specified channel is full.");
+        client->sendMessage("ERROR: The specified channel is full.\n");
         return ;
     }
 	std::vector<Client *>::iterator it = std::find(_clients.begin(), _clients.end(), client);

@@ -8,7 +8,7 @@ int invite(Server &server, Client &client, std::vector<std::string> &input)
     if (input.size() < 3)
     {
         // The client didn't provide enough arguments.
-        client.sendMessage("ERROR: You must provide the name of a channel and the nickname of the user to invite.");
+        client.sendMessage("ERROR: You must provide the name of a channel and the nickname of the user to invite.\n");
         return (0);
     }
 
@@ -17,7 +17,7 @@ int invite(Server &server, Client &client, std::vector<std::string> &input)
     if (!channel)
     {
         // The channel doesn't exist.
-        client.sendMessage("ERROR: The specified channel does not exist.");
+        client.sendMessage("ERROR: The specified channel does not exist.\n");
         return (0);
     }
 
@@ -25,7 +25,7 @@ int invite(Server &server, Client &client, std::vector<std::string> &input)
     if (!channel->isClient(&client))
     {
         // The client is not part of the specified channel.
-        client.sendMessage("ERROR: You are not part of the specified channel.");
+        client.sendMessage("ERROR: You are not part of the specified channel.\n");
         return (0);
     }
 
@@ -34,7 +34,7 @@ int invite(Server &server, Client &client, std::vector<std::string> &input)
     if (!clientToInvite)
     {
         // The user to invite doesn't exist.
-        client.sendMessage("ERROR: The specified user does not exist.");
+        client.sendMessage("ERROR: The specified user does not exist.\n");
         return (0);
     }
 
@@ -42,7 +42,7 @@ int invite(Server &server, Client &client, std::vector<std::string> &input)
     channel->addInvited(clientToInvite);
 
     // Send a message to the invited client.
-    clientToInvite->sendMessage("You have been invited to join the channel " + channelName + " by " + client.getNickname());
+    clientToInvite->sendMessage("You have been invited to join the channel " + channelName + " by " + client.getNickname() + "\n");
 
     return (1);
 }

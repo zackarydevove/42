@@ -11,7 +11,7 @@ int msg(Server &server, Client &client, std::vector<std::string> &input)
     if (input.size() < 3)
     {
         // Not enough parameters were provided.
-        client.sendMessage("ERROR: Not enough parameters. Syntax: MSG <receiver> <text>");
+        client.sendMessage("ERROR: Not enough parameters. Syntax: MSG <receiver> <text>\n");
         return 0;
     }
 
@@ -27,7 +27,7 @@ int msg(Server &server, Client &client, std::vector<std::string> &input)
         if (!channel->isClient(&client))
         {
             // The client is not a member of the channel.
-            client.sendMessage("ERROR: You are not a member of the channel " + receiver);
+            client.sendMessage("ERROR: You are not a member of the channel " + receiver + "\n");
             return 0;
         }
 
@@ -37,7 +37,7 @@ int msg(Server &server, Client &client, std::vector<std::string> &input)
         {
             Client *otherClient = *it;
             if (otherClient != &client)  // Do not send the message to the client who sent it.
-                otherClient->sendMessage(client.getNickname() + ": " + message);
+                otherClient->sendMessage(client.getNickname() + ": " + message + "\n");
         }
         return 1;
     }
@@ -47,11 +47,11 @@ int msg(Server &server, Client &client, std::vector<std::string> &input)
     if (otherClient)
     {
         // Send the message to the other client.
-        otherClient->sendMessage(client.getNickname() + ": " + message);
+        otherClient->sendMessage(client.getNickname() + ": " + message + "\n");
         return 1;
     }
 
     // The receiver does not exist.
-    client.sendMessage("ERROR: The receiver " + receiver + " does not exist.");
+    client.sendMessage("ERROR: The receiver " + receiver + " does not exist.\n");
     return 0;
 }

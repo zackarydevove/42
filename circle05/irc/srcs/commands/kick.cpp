@@ -10,7 +10,7 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     if (input.size() < 3)
     {
         // The client didn't provide enough arguments.
-        client.sendMessage("ERROR: You must provide the name of a channel and the nickname of the user to kick.");
+        client.sendMessage("ERROR: You must provide the name of a channel and the nickname of the user to kick.\n");
         return (0);
     }
 
@@ -19,7 +19,7 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     if (!channel)
     {
         // The channel doesn't exist.
-        client.sendMessage("ERROR: The specified channel does not exist.");
+        client.sendMessage("ERROR: The specified channel does not exist.\n");
         return (0);
     }
 
@@ -27,7 +27,7 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     if (!channel->isOperator(&client))
     {
         // The client is not an operator in the specified channel.
-        client.sendMessage("ERROR: You are not an operator of the specified channel.");
+        client.sendMessage("ERROR: You are not an operator of the specified channel.\n");
         return (0);
     }
 
@@ -36,7 +36,7 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     if (!clientToKick)
     {
         // The user to kick doesn't exist.
-        client.sendMessage("ERROR: The specified user does not exist.");
+        client.sendMessage("ERROR: The specified user does not exist.\n");
         return (0);
     }
 
@@ -44,7 +44,7 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     if (!channel->isClient(clientToKick))
     {
         // The user to kick doesn't exist.
-        client.sendMessage("ERROR: You are not part of the specified channel.");
+        client.sendMessage("ERROR: You are not part of the specified channel.\n");
         return (0);
 
     }
@@ -53,11 +53,11 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     channel->removeClient(clientToKick);
 
     // Send a message to the channel that the user has been kicked.
-    std::string kickMessage = clientToKickNickname + " has been kicked from " + channelName + " by " + client.getNickname();
+    std::string kickMessage = clientToKickNickname + " has been kicked from " + channelName + " by " + client.getNickname() + "\n";
     channel->broadcastMessage(kickMessage);
 
     // Notify the kicked client.
-    clientToKick->sendMessage("You have been kicked from " + channelName + " by " + client.getNickname());
+    clientToKick->sendMessage("You have been kicked from " + channelName + " by " + client.getNickname() + ".\n") ;
 
     return (1);
 }

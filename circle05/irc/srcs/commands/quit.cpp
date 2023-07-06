@@ -6,7 +6,7 @@
 int quit(Server &server, Client &client, std::vector<std::string> &input)
 {
     // If an argument was provided, it's used as the quit message.
-    std::string quitMessage = "Client disconnected";
+    std::string quitMessage = "Client disconnected\n";
     if (input.size() >= 2)
     {
         quitMessage = input[1];
@@ -18,9 +18,11 @@ int quit(Server &server, Client &client, std::vector<std::string> &input)
     for (std::vector<Channel *>::iterator it = channels.begin(); it != channels.end(); ++it)
     {
         Channel *channel = *it;
-        std::string message = "QUIT :Client " + client.getNickname() + " has disconnected: " + quitMessage;
+        std::string message = "QUIT :Client " + client.getNickname() + " has disconnected: " + quitMessage + "\n";
         channel->broadcastMessage(message);
     }
+
+    std::cout << "Client " << client.getHostname() << " has left the server." << std::endl;
 
     // Disconnect the client.
     server.removeClient(&client);

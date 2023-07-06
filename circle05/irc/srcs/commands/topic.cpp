@@ -10,7 +10,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
 	{
         // The client didn't provide enough arguments.
         // Send a message back to the client to let them know.
-        client.sendMessage("ERROR: You must provide the name of a channel.");
+        client.sendMessage("ERROR: You must provide the name of a channel.\n");
         return (0);
     }
 
@@ -20,7 +20,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
 	{
         // The specified channel does not exist.
         // Send a message back to the client to let them know.
-        client.sendMessage("ERROR: The specified channel does not exist.");
+        client.sendMessage("ERROR: The specified channel does not exist.\n");
         return (0);
     }
 
@@ -29,7 +29,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
     {
         // The client is not part of the specified channel.
         // Send a message back to the client to let them know.
-        client.sendMessage("ERROR: You are not part of the specified channel.");
+        client.sendMessage("ERROR: You are not part of the specified channel.\n");
         return (0);
     }
     
@@ -37,7 +37,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
     if (input.size() == 2)
     {
         std::string currentTopic = channel->getTopic();
-        client.sendMessage("The topic for " + channelName + " is '" + currentTopic + "'.");
+        client.sendMessage("The topic for " + channelName + " is '" + currentTopic + "'.\n");
     }
     else // A new topic was provided. Set the new topic.
     {
@@ -46,7 +46,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
         {
             // The client is not an operator of the specified channel.
             // Send a message back to the client to let them know.
-            client.sendMessage("ERROR: You are not an operator of the specified channel.");
+            client.sendMessage("ERROR: You are not an operator of the specified channel.\n");
             return (0);
         }
         
@@ -55,7 +55,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
         channel->setTopic(newTopic);
 
         // Notify the client that the topic was successfully changed.
-        client.sendMessage("The topic for " + channelName + " has been set to '" + newTopic + "'.");
+        client.sendMessage("The topic for " + channelName + " has been set to '" + newTopic + "'.\n");
 	}
 
 	return (1);

@@ -8,7 +8,7 @@ int nick(Server &server, Client &client, std::vector<std::string> &input)
     // Check if the necessary arguments are provided
     if (input.size() < 2)
     {
-        client.sendMessage("ERROR: You must provide a new nickname.");
+        client.sendMessage("ERROR: You must provide a new nickname.\n");
         return 0;
     }
 
@@ -17,7 +17,7 @@ int nick(Server &server, Client &client, std::vector<std::string> &input)
     // Check if the new nickname is already in use
     if (server.getClientByNickname(newNickname))
     {
-        client.sendMessage("ERROR: The nickname '" + newNickname + "' is already in use.");
+        client.sendMessage("ERROR: The nickname '" + newNickname + "' is already in use.\n");
         return 0;
     }
 
@@ -25,7 +25,7 @@ int nick(Server &server, Client &client, std::vector<std::string> &input)
     client.setNickname(newNickname);
 
     // Notify the client that the nickname change was successful
-    client.sendMessage("Your nickname has been changed to '" + newNickname + "'.");
+    client.sendMessage("Your nickname has been changed to '" + newNickname + "'.\n");
 
     return 1;
 }

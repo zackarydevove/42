@@ -10,7 +10,7 @@ int oper(Server &server, Client &client, std::vector<std::string> &input)
     if (input.size() < 3)
     {
         // Not enough parameters were provided.
-        client.sendMessage("ERROR: Not enough parameters. Syntax: OPER <name> <password>");
+        client.sendMessage("ERROR: Not enough parameters. Syntax: OPER <name> <password>\n");
         return 0;
     }
 
@@ -21,7 +21,7 @@ int oper(Server &server, Client &client, std::vector<std::string> &input)
     if (!clientToSetOp)
     {
         // Client not found.
-        client.sendMessage("ERROR: Client not found");
+        client.sendMessage("ERROR: Client not found\n");
         return 0;
     }
 
@@ -29,12 +29,12 @@ int oper(Server &server, Client &client, std::vector<std::string> &input)
     if (server.getPassword() != password)
     {
         // The credentials are not valid.
-        client.sendMessage("ERROR: Invalid operator credentials.");
+        client.sendMessage("ERROR: Invalid operator credentials.\n");
         return (0);
     }
     // The credentials are valid. Give the client operator privileges.
     clientToSetOp->setOp(true);
-    clientToSetOp->sendMessage("You are now an IRC operator.");
+    clientToSetOp->sendMessage("You are now an IRC operator.\n");
 
     return 1;
 }

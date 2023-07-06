@@ -13,7 +13,7 @@
 # include <cstring>
 # include <unistd.h>
 # include <netdb.h> // genameinfo
-
+# include <sstream>
 
 # include "Channel.hpp"
 # include "commands.hpp"

@@ -11,12 +11,12 @@ Server::Server(int port, std::string password) :
 	_operatorPassword(password),
 	_epoll_fd(-1)
 {
-	openSocket();
-	bindSocket();
-	listenSocket();
+    openSocket();
+    bindSocket();
+    listenSocket();
     initCommands();
     std::cout << "Server created" << std::endl;
-	startServer();
+    startServer();
 }
 
 Server::~Server() 
@@ -53,16 +53,14 @@ void Server::listenSocket() {
 // Function to set up the epoll instance and add the server socket to it
 int Server::setupEpoll() {
     setEpollfd(epoll_create1(0));
-    if (_epoll_fd == -1) {
+    if (_epoll_fd == -1)
         throw std::runtime_error("Failed to create epoll file descriptor");
-    }
 
     struct epoll_event event;
     event.events = EPOLLIN;
     event.data.fd = _socket_fd;
-    if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _socket_fd, &event)) {
+    if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, _socket_fd, &event))
         throw std::runtime_error("Failed to add socket file descriptor to epoll");
-    }
 
     return _epoll_fd;
 }
@@ -77,13 +75,12 @@ void Server::startServer() {
     while (!g_shutdown) {
         int num_fds = epoll_wait(_epoll_fd, events, MAX_EVENTS, 100); // timeout of 100ms
         for (int i = 0; i < num_fds; i++) {
-            if (events[i].data.fd == _socket_fd) {
-                // Handle new connection
+            // Handle new connection
+            if (events[i].data.fd == _socket_fd)
                 handleNewConnection(_epoll_fd, client_address, client_len);
-            } else {
-                // Handle data from a client
+            // Handle data from a client
+            else
                 handleNewMessage(events[i].data.fd);
-            }
         }
     }
     close(_epoll_fd);
@@ -151,33 +148,41 @@ void Server::handleNewMessage(int client_fd) {
     parseAndExecuteCommand(client, std::string(buffer));
 }
 
-# include <sstream>
-
 // Handle the data received from the client.
 void Server::parseAndExecuteCommand(Client *client, const std::string &message){
     // Split the message into command and arguments.
     std::vector<std::string> tokens;
     std::stringstream ss(message);
     std::string token;
-    while (std::getline(ss, token, ' ')) {  // We're splitting by spaces here. Update if your command syntax is different.
+    
+    // Split by spaces
+    while (std::getline(ss, token, ' '))
         tokens.push_back(token);
-    }
 
-    // The command is the first token. Convert to upper case to handle case-insensitive commands.
+    // Convert command to uppercase
     std::string command = tokens[0];
     std::transform(command.begin(), command.end(), command.begin(), ::toupper);
 
-    // Look up the command in the map.
+    // Erase the trailing newline character from the last token if it exists
+    if (!tokens.empty()) {
+        std::string &lastToken = tokens.back();
+        size_t pos = lastToken.find_last_not_of("\n");
+        if (pos != std::string::npos) {
+            lastToken.erase(pos + 1);
+        } else {
+            // This case would be if the string only contained '\n' characters
+            lastToken.clear();
+        }
+    }
+
+    // Look up the command in the map
     std::map<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>::iterator it = _commands.find(command);
 
     // If the command exists, call the corresponding function.
-    if (it != _commands.end()) {
-        // Remove the command name from the tokens vector before passing it as arguments.
-        tokens.erase(tokens.begin());
+    if (it != _commands.end())
         it->second(*this, *client, tokens);
-    } else {
+    else
         std::cout << "Invalid command received from client: " << command << std::endl;
-    }
 }
 
 

@@ -8,7 +8,7 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
 {
     if (input.size() < 3)
     {
-        client.sendMessage("ERROR: You must provide the name of a channel and a mode.");
+        client.sendMessage("ERROR: You must provide the name of a channel and a mode.\n");
         return 0;
     }
 
@@ -17,13 +17,13 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
 
     if (!channel)
     {
-        client.sendMessage("ERROR: The specified channel does not exist.");
+        client.sendMessage("ERROR: The specified channel does not exist.\n");
         return 0;
     }
 
     if (!channel->isOperator(&client))
     {
-        client.sendMessage("ERROR: You are not an operator of the specified channel.");
+        client.sendMessage("ERROR: You are not an operator of the specified channel.\n");
         return 0;
     }
 
@@ -53,7 +53,7 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
             {
                 if (input.size() < 4)
                 {
-                    client.sendMessage("ERROR: You must provide a password.");
+                    client.sendMessage("ERROR: You must provide a password.\n");
                     return 0;
                 }
                 channel->setPassword(input[3]);
@@ -65,13 +65,13 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
             // Give/take channel operator privilege
             if (input.size() < 4)
             {
-                client.sendMessage("ERROR: You must provide the nickname of a client.");
+                client.sendMessage("ERROR: You must provide the nickname of a client.\n");
                 return 0;
             }
             op = channel->getClientByNickname(input[3]);
             if (!op)
             {
-                client.sendMessage("ERROR: The specified client does not exist.");
+                client.sendMessage("ERROR: The specified client does not exist.\n");
                 return 0;
             }
             if (add)
@@ -85,7 +85,7 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
             {
                 if (input.size() < 4)
                 {
-                    client.sendMessage("ERROR: You must provide a user limit.");
+                    client.sendMessage("ERROR: You must provide a user limit.\n");
                     return 0;
                 }
                 int limit = std::atoi(input[3].c_str());  // Use atoi instead of stoi
@@ -95,10 +95,10 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
                 channel->setLimit(0);
             break;
         default:
-            client.sendMessage("ERROR: Invalid mode.");
+            client.sendMessage("ERROR: Invalid mode.\n");
             return 0;
     }
 
-    client.sendMessage("The mode for " + channelName + " has been changed successfully.");
+    client.sendMessage("The mode for " + channelName + " has been changed successfully.\n");
     return 1;
 }
