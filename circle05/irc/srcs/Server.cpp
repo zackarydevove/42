@@ -66,19 +66,24 @@ int Server::setupEpoll() {
 }
 
 void Server::startServer() {
+    // Will contain client information when new connection
     struct sockaddr_in client_address;
+    // Calcule the len for accept()
     socklen_t client_len = sizeof(client_address);
 
     int _epoll_fd = setupEpoll();
 
+    // Create array of epoll events that will be filled by epoll_wait()
     struct epoll_event events[MAX_EVENTS];
     while (!g_shutdown) {
+        // Wait for an event, block until event and if no event after 100ms return 0
         int num_fds = epoll_wait(_epoll_fd, events, MAX_EVENTS, 100); // timeout of 100ms
+        // Loop over all fd that had events
         for (int i = 0; i < num_fds; i++) {
-            // Handle new connection
+            // Handle new connection // If event occured on server fd it means new connection
             if (events[i].data.fd == _socket_fd)
                 handleNewConnection(_epoll_fd, client_address, client_len);
-            // Handle data from a client
+            // Handle data from a client // Else event occured on client fd
             else
                 handleNewMessage(events[i].data.fd);
         }
@@ -95,6 +100,7 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
     }
 
     // Use getnameinfo to get the hostname of the client
+    // NI_MAXHOST specify the max size of a hostname
     char host[NI_MAXHOST];
     if (getnameinfo((struct sockaddr*)&client_address, client_len, host, sizeof(host), NULL, 0, NI_NUMERICHOST) != 0) {
         std::cerr << "Failed to get hostname of client" << std::endl;
