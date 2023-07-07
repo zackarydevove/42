@@ -33,8 +33,7 @@ int msg(Server &server, Client &client, std::vector<std::string> &input)
         for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
         {
             Client *receiverClient = *it;
-            if (receiverClient != &client)  // Do not send the message to the client who sent it.
-                receiverClient->sendMessage(client.getNickname() + ": " + message + "\n");
+            receiverClient->sendMessage(client.getNickname() + ": " + message + "\n");
         }
         return 1;
     }

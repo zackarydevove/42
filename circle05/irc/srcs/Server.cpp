@@ -24,6 +24,8 @@ Server::~Server()
     close(_socket_fd);
 	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 		delete *it;
+	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+		delete *it;
 }
 
 // --------------------SERVER--------------------
