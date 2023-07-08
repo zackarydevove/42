@@ -188,6 +188,14 @@ void Server::parseAndExecuteCommand(Client *client, const std::string &message){
     std::string command = tokens[0];
     std::transform(command.begin(), command.end(), command.begin(), ::toupper);
 
+    // Erase the trailing newline character from the command if it exists
+    size_t pos = command.find_last_not_of("\n");
+    if (pos != std::string::npos)
+        command.erase(pos + 1);
+    else
+        // If command only contain '\n' character
+        command.clear();
+
     // Erase the trailing newline character from the last token if it exists
     if (!tokens.empty()) {
         std::string &lastToken = tokens.back();
@@ -206,7 +214,10 @@ void Server::parseAndExecuteCommand(Client *client, const std::string &message){
     if (it != _commands.end())
         it->second(*this, *client, tokens);
     else
+    {
+        client->sendMessage("Invalid command.\n");
         std::cout << "Invalid command received from client: " << command << std::endl;
+    }
 }
 
 
