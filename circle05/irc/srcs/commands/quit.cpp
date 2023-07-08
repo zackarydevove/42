@@ -5,6 +5,12 @@
 // input[1] = message why quit (optional)
 int quit(Server &server, Client &client, std::vector<std::string> &input)
 {
+    if (!client.getAuth())
+    {
+        // Client already authenticate
+        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        return 0;
+    }
     // If an argument was provided, it's used as the quit message.
     std::string quitMessage = "Client disconnected\n";
     if (input.size() >= 2)

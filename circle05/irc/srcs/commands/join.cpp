@@ -5,6 +5,12 @@
 // input[2] = password (optional)
 int join(Server &server, Client &client, std::vector<std::string> &input)
 {
+    if (!client.getAuth())
+    {
+        // Client already authenticate
+        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        return 0;
+    }
     // Check that we have at least one argument (channel)
     if (input.size() < 2)
     {

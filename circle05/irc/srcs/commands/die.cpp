@@ -7,7 +7,12 @@ int die(Server &server, Client &client, std::vector<std::string> &input)
 {
     (void)server;
     (void)input;
-
+    if (!client.getAuth())
+    {
+        // Client already authenticate
+        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        return 0;
+    }
     // Only allow IRC operators to use this command.
     if (!client.getOp()) 
     {

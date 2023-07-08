@@ -6,6 +6,12 @@
 // input[3] = message / reason for the kick (optional)
 int kick(Server &server, Client &client, std::vector<std::string> &input)
 {
+    if (!client.getAuth())
+    {
+        // Client already authenticate
+        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        return 0;
+    }
     // Check that we have at least channel name and nickname of user
     if (input.size() < 3)
     {

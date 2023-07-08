@@ -1,10 +1,16 @@
 #include "../../includes/commands.hpp"
 
-// Commad to change nickname
-// input[0] = nick msg
+// Command to change nickname
+// input[0] = nick command
 // input[1] = new nickname
 int nick(Server &server, Client &client, std::vector<std::string> &input)
 {
+    if (!client.getAuth())
+    {
+        // Client already authenticate
+        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        return 0;
+    }
     // Check if the necessary arguments are provided
     if (input.size() < 2)
     {

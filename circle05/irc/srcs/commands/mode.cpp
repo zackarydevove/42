@@ -6,6 +6,12 @@
 // input[3] = password / nickname (optional)
 int mode(Server &server, Client &client, std::vector<std::string> &input)
 {
+    if (!client.getAuth())
+    {
+        // Client already authenticate
+        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        return 0;
+    }
     if (input.size() < 3)
     {
         client.sendMessage("ERROR: You must provide the name of a channel and a mode.\n");

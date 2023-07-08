@@ -6,6 +6,12 @@
 // input[2] = message
 int topic(Server &server, Client &client, std::vector<std::string> &input)
 {
+    if (!client.getAuth())
+    {
+        // Client already authenticate
+        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        return 0;
+    }
     if (input.size() < 2)
 	{
         // The client didn't provide enough arguments.

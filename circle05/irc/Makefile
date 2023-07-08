@@ -10,8 +10,10 @@ SRCS        =       srcs/main.cpp \
                     srcs/commands/msg.cpp \
                     srcs/commands/nick.cpp \
                     srcs/commands/oper.cpp \
+                    srcs/commands/pass.cpp \
                     srcs/commands/quit.cpp \
-                    srcs/commands/topic.cpp
+                    srcs/commands/topic.cpp \
+                    srcs/commands/user.cpp
 
 DIRS        =       $(sort $(dir $(SRCS)))
 

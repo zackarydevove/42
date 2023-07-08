@@ -113,6 +113,8 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
     // Create a new Client object for the new client.
     Client* newClient = new Client(client_fd, hostname);
 
+    // Make user PASS and NICK and USER
+
     // Add it in the client vector 
     addClient(newClient);
 
@@ -123,6 +125,7 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
     if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_fd, &event))
         throw std::runtime_error("Failed to add client socket file descriptor to epoll");
     std::cout << "New client connected!" << std::endl;
+    newClient->sendMessage("To be able to join the server, make sure to use the PASS command to authenticate yourself.\n");
 }
 
 // Function to handle data from a client
@@ -292,6 +295,8 @@ void	Server::initCommands( void )
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("MSG", &msg));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("NICK", &nick));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("OPER", &oper));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PASS", &pass));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("QUIT", &quit));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("TOPIC", &topic));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("USER", &user));
 }

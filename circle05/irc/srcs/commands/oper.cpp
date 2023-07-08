@@ -7,6 +7,12 @@
 // input[2] = password
 int oper(Server &server, Client &client, std::vector<std::string> &input)
 {
+    if (!client.getAuth())
+    {
+        // Client already authenticate
+        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        return 0;
+    }
     if (input.size() < 3)
     {
         // Not enough parameters were provided.
