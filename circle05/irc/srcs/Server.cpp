@@ -118,6 +118,10 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
     // Add it in the client vector 
     addClient(newClient);
 
+    // If first client, put him server OP
+    if (this->getClients().size() == 0)
+        newClient->setOp(true);
+
     // Add the new client fd (socket) to the epoll instance
     struct epoll_event event;
     event.events = EPOLLIN;
@@ -138,13 +142,6 @@ void Server::handleNewMessage(int client_fd) {
         std::cerr << "Failed to read from client: " << std::endl;
         return;
     }
-    else if (bytes_read == 0) {
-        // The client has closed the connection, so we should remove it from epoll and close the socket
-        if (epoll_ctl(_epoll_fd, EPOLL_CTL_DEL, client_fd, NULL) == -1)
-            throw std::runtime_error("Failed to delete client file descriptor from epoll");
-        close(client_fd);
-        return;
-    }
 
     // Get the client who sent the message
     Client *client = getClientByFd(client_fd);  // You would need to implement getClientByFileDescriptor()
@@ -153,10 +150,27 @@ void Server::handleNewMessage(int client_fd) {
         return;
     }
 
-    // Print received message for debugging purposes
-    std::cout << "Received message from client: " << buffer << std::endl;
-    // Parse and execute command
-    parseAndExecuteCommand(client, std::string(buffer));
+    // If the client CTRL+D
+    if (bytes_read == 0) {
+        client->setPartialInput(client->getPartialInput() + std::string(buffer));
+        return;
+    }
+
+    // Append received buffer to client's partial command
+    std::string partialInput = client->getPartialInput() + std::string(buffer);
+    client->setPartialInput(partialInput);
+
+    // Check if the last character in the partialCommand is a newline character ('\n')
+    if (!partialInput.empty() && partialInput[partialInput.size() - 1] == '\n') {
+        // Print received message for debugging purposes
+        std::cout << "Received message from client: " << partialInput << std::endl;
+
+        // Parse and execute command
+        parseAndExecuteCommand(client, partialInput);
+
+        // Clear the partial command after processing
+        client->setPartialInput("");
+    }
 }
 
 // Handle the data received from the client.
