@@ -293,10 +293,13 @@ void	Server::initCommands( void )
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("KICK", &kick));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("MODE", &mode));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("MSG", &msg));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("NAMES", &names));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("NICK", &nick));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("OPER", &oper));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PART", &part));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PASS", &pass));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("QUIT", &quit));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("TOPIC", &topic));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("USER", &user));
 }
+

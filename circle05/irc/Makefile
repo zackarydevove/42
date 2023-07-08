@@ -8,8 +8,10 @@ SRCS        =       srcs/main.cpp \
                     srcs/commands/kick.cpp \
                     srcs/commands/mode.cpp \
                     srcs/commands/msg.cpp \
+                    srcs/commands/names.cpp \
                     srcs/commands/nick.cpp \
                     srcs/commands/oper.cpp \
+                    srcs/commands/part.cpp \
                     srcs/commands/pass.cpp \
                     srcs/commands/quit.cpp \
                     srcs/commands/topic.cpp \

@@ -59,6 +59,7 @@ class Server {
         std::string getOperatorPassword() { return _operatorPassword; };
     	int	getEpollfd() { return _epoll_fd; };
         Client *getClientByFd(int fd);
+        std::vector<Client *> getClients() { return _clients; };
 
 		void setEpollfd(int epoll_fd) { _epoll_fd = epoll_fd; };
 

@@ -45,6 +45,10 @@ void Channel::removeClient(Client *client)
     if (it == _clients.end())
         return ;
     _clients.erase(it);
+	if (this->isInvited(*it))
+		this->removeInvited(*it);
+	if (this->isOperator(*it))
+		this->removeOperator(*it);
 }
 
 Client *Channel::getClientByNickname(std::string &nickname)

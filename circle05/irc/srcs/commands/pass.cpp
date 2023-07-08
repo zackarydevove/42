@@ -11,7 +11,7 @@ int pass(Server &server, Client &client, std::vector<std::string> &input)
         return 0;
     }
 
-    if (client.getAuth())
+    if (!client.getAuth())
     {
         // Client already authenticate
         client.sendMessage("ERROR: You are already authenticated.\n");
