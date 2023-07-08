@@ -115,12 +115,13 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
 
     // Make user PASS and NICK and USER
 
-    // Add it in the client vector 
-    addClient(newClient);
-
     // If first client, put him server OP
     if (this->getClients().size() == 0)
         newClient->setOp(true);
+
+    // Add it in the client vector 
+    addClient(newClient);
+
 
     // Add the new client fd (socket) to the epoll instance
     struct epoll_event event;
