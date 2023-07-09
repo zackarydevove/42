@@ -7,7 +7,9 @@ Channel::Channel(Server &server, Client *client, std::string name) :
 	_limit(0),
 	_inviteOnly(false),
 	_topicRestricted(false)
-	{ }
+	{
+		this->addOperator(client);
+	}
 
 Channel::~Channel() {
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
@@ -43,12 +45,14 @@ void Channel::removeClient(Client *client)
 		return ;
 	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), client);
     if (it == _clients.end())
+	{
         return ;
-    _clients.erase(it);
+	}
 	if (this->isInvited(*it))
 		this->removeInvited(*it);
 	if (this->isOperator(*it))
 		this->removeOperator(*it);
+    _clients.erase(it);
 }
 
 Client *Channel::getClientByNickname(std::string &nickname)

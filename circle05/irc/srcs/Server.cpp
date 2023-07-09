@@ -122,7 +122,6 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
     // Add it in the client vector 
     addClient(newClient);
 
-
     // Add the new client fd (socket) to the epoll instance
     struct epoll_event event;
     event.events = EPOLLIN;
@@ -145,7 +144,7 @@ void Server::handleNewMessage(int client_fd) {
     }
 
     // Get the client who sent the message
-    Client *client = getClientByFd(client_fd);  // You would need to implement getClientByFileDescriptor()
+    Client *client = getClientByFd(client_fd);
     if (!client) {
         std::cerr << "Failed to find client for file descriptor: " << client_fd << std::endl;
         return;
@@ -241,7 +240,10 @@ void Server::removeClient(Client *client)
 	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), client);
     if (it == _clients.end())
         return ;
+    (*it)->leaveAllChannels();
     _clients.erase(it);
+    close(client->getFd());
+    delete client;
 }
 
 Client *Server::getClientByNickname(std::string &nickname)

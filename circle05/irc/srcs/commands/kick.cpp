@@ -2,7 +2,7 @@
 
 // input[0] = kick command
 // input[1] = Channel name
-// input[2] = nickname of user kicekd
+// input[2] = nickname of user kicked
 // input[3] = message / reason for the kick (optional)
 int kick(Server &server, Client &client, std::vector<std::string> &input)
 {
@@ -59,11 +59,10 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     channel->removeClient(clientToKick);
 
     // Send a message to the channel that the user has been kicked.
-    std::string kickMessage = clientToKickNickname + " has been kicked from " + channelName + " by " + client.getNickname() + "\n";
-    channel->broadcastMessage(kickMessage);
+    channel->broadcastMessage(clientToKickNickname + " has been kicked from " + channelName + " by " + client.getNickname() + ".\n");
 
     // Notify the kicked client.
-    clientToKick->sendMessage("You have been kicked from " + channelName + " by " + client.getNickname() + ".\n") ;
+    clientToKick->sendMessage("You have been kicked from " + channelName + " by " + client.getNickname() + ".\n");
 
     return (1);
 }
