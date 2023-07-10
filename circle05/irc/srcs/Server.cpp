@@ -113,8 +113,6 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
     // Create a new Client object for the new client.
     Client* newClient = new Client(client_fd, hostname);
 
-    // Make user PASS and NICK and USER
-
     // If first client, put him server OP
     if (this->getClients().size() == 0)
         newClient->setOp(true);

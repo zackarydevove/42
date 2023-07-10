@@ -34,6 +34,7 @@ int part(Server &server, Client &client, std::vector<std::string> &input)
 
             // Broadcast the part message
             channel->broadcastMessage(client.getNickname() + " has left the channel. " + message + "\n");
+            client.sendMessage("You have left channel " + channel->getName() + " successfully.\n");
             return 1;
         }
         else 
