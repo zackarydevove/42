@@ -47,8 +47,8 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
     }
     else // A new topic was provided. Set the new topic.
     {
-        // Only operator can change topic.
-        if (!channel->isOperator(&client))
+        // if topicRestricted, then Only operator can change topic.
+        if (channel->getTopicRestricted() && !channel->isOperator(&client))
         {
             client.sendMessage("ERROR: You are not an operator of the specified channel.\n");
             return (0);
