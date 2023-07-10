@@ -5,34 +5,26 @@
 // input[1] = message why quit (optional)
 int quit(Server &server, Client &client, std::vector<std::string> &input)
 {
-    if (!client.getAuth())
-    {
-        // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
-        return 0;
-    }
-    // If an argument was provided, it's used as the quit message.
-    std::string quitMessage = "Client disconnected\n";
-    if (input.size() >= 2)
-    {
-        quitMessage = input[1];
-    }
-
-	std::vector<Channel *>	channels = client.getChannels();
+    (void)server;
+	std::vector<Channel *> channels = client.getChannels();
 
     // Notify other clients in the channels that this client is part of.
     for (std::vector<Channel *>::iterator channel = channels.begin(); channel != channels.end(); ++channel)
     {
-        std::string message = "QUIT :Client " + client.getNickname() + " has disconnected: " + quitMessage + "\n";
+        std::string message = "Client " + client.getNickname() + " has disconnected.\n";
+        if (input.size() > 1)
+            message += "Reason: " + input[1] + ".\n";
         (*channel)->broadcastMessage(message);
+        // Remove client from the channel.
+        (*channel)->removeClient(&client);
     }
 
-    std::cout << "Client " << client.getHostname() << " has left the server." << std::endl;
-
-    std::string nickname = client.getNickname();
+    std::cout << "Client " << client.getNickname() << " has left the server." << std::endl;
+    client.sendMessage("You have successfully left the server.\n");
 
     // Disconnect the client.
-    server.removeClient(server.getClientByNickname(nickname));
+    // server.removeClient(&client);
+    client.setAuth(false);
 
     return 1;
 }

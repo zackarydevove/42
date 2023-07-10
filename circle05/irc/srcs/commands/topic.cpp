@@ -61,6 +61,5 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
         // Notify the client that the topic was successfully changed.
         client.sendMessage("The topic for " + channelName + " has been set to '" + newTopic + "'.\n");
 	}
-
 	return (1);
 }

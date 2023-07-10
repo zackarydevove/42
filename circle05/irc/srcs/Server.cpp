@@ -22,9 +22,9 @@ Server::Server(int port, std::string password) :
 Server::~Server() 
 {
     close(_socket_fd);
-	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-		delete *it;
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+		delete *it;
+	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 		delete *it;
 }
 
@@ -231,18 +231,11 @@ void Server::addClient(Client *client)
     _clients.push_back(client);
 }
 
-void Server::removeClient(Client *client)
-{
-	if (!client)
-		return ;
-	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), client);
-    if (it == _clients.end())
-        return ;
-    (*it)->leaveAllChannels();
-    _clients.erase(it);
-    close(client->getFd());
-    delete client;
-}
+// void Server::removeClient(Client *client)
+// {
+//     if (!client)
+//         return;
+// }
 
 Client *Server::getClientByNickname(std::string &nickname)
 {

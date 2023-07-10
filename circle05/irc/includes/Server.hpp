@@ -64,7 +64,7 @@ class Server {
 		void setEpollfd(int epoll_fd) { _epoll_fd = epoll_fd; };
 
         void 		addClient(Client *client);
-        void 		removeClient(Client *client);
+        // void 		removeClient(Client *client);
         Client 		*getClientByNickname(std::string &nickname);
         Client 		*getClientByUsername(std::string &username);
 

@@ -28,7 +28,12 @@ void	Client::leaveChannel(Channel *channel)
 {
 	if (!channel)
 		return ;
-    channel->removeClient(this);
+	std::vector<Channel*>::iterator it = std::find(_channels.begin(), _channels.end(), channel);
+	if (it != _channels.end())
+	{
+    	(*it)->removeClient(this);
+		_channels.erase(it);
+	}
 }
 
 void	Client::leaveAllChannels() {
