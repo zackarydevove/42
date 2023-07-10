@@ -30,11 +30,14 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     // Else, check password, mode, etc.
     else
     {
-        if (channel->getPassword().length() > 0 && input.size() > 2 && channel->getPassword() != input[2])
+        if (channel->getPassword().size() > 0)
         {
-            // Password is wrong.
-            client.sendMessage("ERROR: The password provided is wrong.\n");
-            return (0);
+            if (input.size() < 2 || channel->getPassword() != input[2])
+            {
+                // Password is missing or wrong.
+                client.sendMessage("ERROR: The password provided is wrong.\n");
+                return (0);
+            }
         }
         if (channel->getInviteOnly() && !channel->isInvited(&client))
         {
