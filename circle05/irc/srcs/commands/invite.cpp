@@ -48,7 +48,7 @@ int invite(Server &server, Client &client, std::vector<std::string> &input)
     channel->addInvited(clientToInvite);
 
     // Send a message to the invited client.
-    clientToInvite->sendMessage("You have been invited to join the channel " + channelName + " by " + client.getNickname() + "\n");
+    clientToInvite->sendMessage("You have been invited to join the channel " + channelName + " by " + client.getNickname() + "\n" + "Write JOIN " + channelName + " to accept the invitation.\n");
 
     return (1);
 }

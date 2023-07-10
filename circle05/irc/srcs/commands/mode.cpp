@@ -33,13 +33,8 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
         return 0;
     }
 
-    char mode = input[2][0];
-    bool add = true; // +
-    if (mode == '-')
-    {
-        add = false; // -
-        mode = input[2][1];
-    }
+    bool add = (input[2][0] == '+') ; // + = true - = false
+    char mode = input[2][1]; // i t k o l
 
     Client *op = NULL;
 
