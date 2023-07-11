@@ -5,7 +5,7 @@
 // input[2] = nickname of user to invite
 int invite(Server &server, Client &client, std::vector<std::string> &input)
 {
-    if (!client.getAuth())
+    if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
         client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");

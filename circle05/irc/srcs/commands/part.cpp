@@ -5,7 +5,7 @@
 // input[2] = message (optional)
 int part(Server &server, Client &client, std::vector<std::string> &input)
 {
-    if (!client.getAuth())
+    if (!client.getAuth() && !client.getRegistered())
     {
         client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
         return 0;

@@ -160,9 +160,6 @@ void Server::handleNewMessage(int client_fd) {
 
     // Check if the last character in the partialCommand is a newline character ('\n')
     if (!partialInput.empty() && partialInput[partialInput.size() - 1] == '\n') {
-        // Print received message for debugging purposes
-        std::cout << "Received message from client: " << partialInput << std::endl;
-
         // Parse and execute command
         parseAndExecuteCommand(client, partialInput);
 
@@ -183,6 +180,9 @@ void Server::parseAndExecuteCommand(Client *client, const std::string &message){
         // Erase all \n and ^M
         commandStr.erase(std::remove(commandStr.begin(), commandStr.end(), '\n'), commandStr.end());
         commandStr.erase(std::remove(commandStr.begin(), commandStr.end(), '\r'), commandStr.end());
+        
+        // Print received message for debugging purposes
+        std::cout << "Received message from client: " << commandStr << std::endl;
 
         // Ignore empty lines
         if (commandStr.empty())
@@ -303,6 +303,7 @@ void	Server::broadcastMessage(const std::string &message) {
 
 void	Server::initCommands( void )
 {
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("CAP", &cap));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("DIE", &die));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("INVITE", &invite));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("JOIN", &join));
@@ -314,6 +315,7 @@ void	Server::initCommands( void )
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("OPER", &oper));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PART", &part));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PASS", &pass));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PING", &ping));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("QUIT", &quit));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("TOPIC", &topic));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("USER", &user));

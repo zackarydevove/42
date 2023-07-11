@@ -22,6 +22,7 @@ class Client {
 		std::string				_realname;
         std::string				_partialInput;
 		std::vector<Channel *>	_channels;
+		Channel					*_currentChannel;
 		bool					_isRegistered;
 		bool					_isAuth;
 		bool					_isOp;

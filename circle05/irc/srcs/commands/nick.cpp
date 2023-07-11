@@ -29,7 +29,7 @@ int nick(Server &server, Client &client, std::vector<std::string> &input)
         client.setRegistered(true);
     }
     if (client.getRegistered() && client.getAuth())
-        client.sendMessage("Welcome to the server " + client.getNickname() + ".\n");
+        client.sendMessage(RPL_WELCOME(client.getNickname()));
 
     return 1;
 }

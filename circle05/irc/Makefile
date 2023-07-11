@@ -2,6 +2,7 @@ SRCS        =       srcs/main.cpp \
                     srcs/Channel.cpp \
                     srcs/Client.cpp \
                     srcs/Server.cpp \
+                    srcs/commands/cap.cpp \
                     srcs/commands/die.cpp \
                     srcs/commands/invite.cpp \
                     srcs/commands/join.cpp \
@@ -13,6 +14,7 @@ SRCS        =       srcs/main.cpp \
                     srcs/commands/oper.cpp \
                     srcs/commands/part.cpp \
                     srcs/commands/pass.cpp \
+                    srcs/commands/ping.cpp \
                     srcs/commands/quit.cpp \
                     srcs/commands/topic.cpp \
                     srcs/commands/user.cpp
