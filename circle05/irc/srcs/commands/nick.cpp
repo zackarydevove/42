@@ -5,12 +5,6 @@
 // input[1] = new nickname
 int nick(Server &server, Client &client, std::vector<std::string> &input)
 {
-    if (!client.getAuth())
-    {
-        // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
-        return 0;
-    }
     // Check if the necessary arguments are provided
     if (input.size() < 2)
     {
@@ -21,17 +15,21 @@ int nick(Server &server, Client &client, std::vector<std::string> &input)
     std::string newNickname = input[1];
 
     // Check if the new nickname is already in use
-    if (server.getClientByNickname(newNickname))
-    {
-        client.sendMessage("ERROR: The nickname '" + newNickname + "' is already in use.\n");
-        return 0;
-    }
+    while (server.getClientByNickname(newNickname))
+        newNickname += "_";
 
     // Update the client's nickname
     client.setNickname(newNickname);
 
     // Notify the client that the nickname change was successful
     client.sendMessage("Your nickname has been changed to '" + newNickname + "'.\n");
+
+    if (!client.getNickname().empty() && !client.getUsername().empty() && !client.getHostname().empty())
+    {
+        client.setRegistered(true);
+    }
+    if (client.getRegistered() && client.getAuth())
+        client.sendMessage("Welcome to the server " + client.getNickname() + ".\n");
 
     return 1;
 }

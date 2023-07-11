@@ -173,48 +173,45 @@ void Server::handleNewMessage(int client_fd) {
 
 // Handle the data received from the client.
 void Server::parseAndExecuteCommand(Client *client, const std::string &message){
-    // Split the message into command and arguments.
-    std::vector<std::string> tokens;
-    std::stringstream ss(message);
-    std::string token;
-    
-    // Split by spaces
-    while (std::getline(ss, token, ' '))
-        tokens.push_back(token);
+    // Split the message into separate commands
+    std::stringstream ssCommands(message);
+    std::string commandStr;
 
-    // Convert command to uppercase
-    std::string command = tokens[0];
-    std::transform(command.begin(), command.end(), command.begin(), ::toupper);
-
-    // Erase the trailing newline character from the command if it exists
-    size_t pos = command.find_last_not_of("\n");
-    if (pos != std::string::npos)
-        command.erase(pos + 1);
-    else
-        // If command only contain '\n' character
-        command.clear();
-
-    // Erase the trailing newline character from the last token if it exists
-    if (!tokens.empty()) {
-        std::string &lastToken = tokens.back();
-        size_t pos = lastToken.find_last_not_of("\n");
-        if (pos != std::string::npos)
-            lastToken.erase(pos + 1);
-        else
-            // If token only contain '\n' character
-            lastToken.clear();
-    }
-
-    // Look up the command in the map
-    std::map<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>::iterator it = _commands.find(command);
-
-    // If the command exists, call the corresponding function.
-    if (it != _commands.end())
-        it->second(*this, *client, tokens);
-    else
+    // Split by newline
+    while (std::getline(ssCommands, commandStr, '\n'))
     {
-        client->sendMessage("Invalid command.\n");
-        std::cout << "Invalid command received from client: " << command << std::endl;
+        // Erase all \n and ^M
+        commandStr.erase(std::remove(commandStr.begin(), commandStr.end(), '\n'), commandStr.end());
+        commandStr.erase(std::remove(commandStr.begin(), commandStr.end(), '\r'), commandStr.end());
+
+        // Ignore empty lines
+        if (commandStr.empty())
+            continue;
+
+        // Split the command line into command and arguments.
+        std::vector<std::string> tokens;
+        std::stringstream ss(commandStr);
+        std::string token;
+        
+        // Split by spaces
+        while (std::getline(ss, token, ' '))
+            tokens.push_back(token);
+
+        // Convert command to uppercase
+        std::string command = tokens[0];
+        std::transform(command.begin(), command.end(), command.begin(), ::toupper);
+
+        // Look up the command in the map
+        std::map<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>::iterator it = _commands.find(command);
+
+        // If the command exists, call the corresponding function.
+        if (it != _commands.end())
+            it->second(*this, *client, tokens);
+        else
+        {
+            client->sendMessage("Invalid command.\n");
+            std::cout << "Invalid command received from client: " << command << std::endl;
+        }
     }
 }
 

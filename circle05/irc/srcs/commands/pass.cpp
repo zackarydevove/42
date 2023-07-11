@@ -11,16 +11,14 @@ int pass(Server &server, Client &client, std::vector<std::string> &input)
         return 0;
     }
 
-    if (client.getAuth())
+    if (client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are already authenticated.\n");
+        client.sendMessage("ERROR: You are already registered.\n");
         return 0;
     }
 
-    std::string password = input[1];
-
-    if (server.getPassword() == password)
+    if (server.getPassword() == input[1])
         client.setAuth(true);
     else
     {
