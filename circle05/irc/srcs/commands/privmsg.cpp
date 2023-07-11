@@ -3,7 +3,7 @@
 // input[0] = msg command
 // input[1] = receiver (client / channel)
 // input[2] = message to send
-int msg(Server &server, Client &client, std::vector<std::string> &input)
+int privmsg(Server &server, Client &client, std::vector<std::string> &input)
 {
     if (!client.getAuth() && !client.getRegistered())
     {
@@ -20,6 +20,9 @@ int msg(Server &server, Client &client, std::vector<std::string> &input)
 
     std::string receiver = input[1];
     std::string message = input[2];
+
+    if (message[0] == ':')
+        message = message.substr(1);
 
     // Check if the receiver is a channel.
     Channel *channel = server.getChannelByName(receiver);

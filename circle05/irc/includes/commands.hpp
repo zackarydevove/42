@@ -24,7 +24,7 @@ int invite(Server &server, Client &client, std::vector<std::string> &input);
 int join(Server &server, Client &client, std::vector<std::string> &input);
 int kick(Server &server, Client &client, std::vector<std::string> &input);
 int mode(Server &server, Client &client, std::vector<std::string> &input);
-int msg(Server &server, Client &client, std::vector<std::string> &input);
+int privmsg(Server &server, Client &client, std::vector<std::string> &input);
 int names(Server &server, Client &client, std::vector<std::string> &input);
 int nick(Server &server, Client &client, std::vector<std::string> &input);
 int oper(Server &server, Client &client, std::vector<std::string> &input);

@@ -37,6 +37,7 @@ void Channel::addClient(Client *client)
 	if (it != _clients.end())
 		return ;
     _clients.push_back(client);
+	client->setCurrentChannel(this);
 }
 
 void Channel::removeClient(Client *client)
@@ -53,6 +54,8 @@ void Channel::removeClient(Client *client)
 	if (this->isOperator(*it))
 		this->removeOperator(*it);
     _clients.erase(it);
+	if (client->getCurrentChannel() == this)
+		client->setCurrentChannel(NULL);
 }
 
 Client *Channel::getClientByNickname(std::string &nickname)

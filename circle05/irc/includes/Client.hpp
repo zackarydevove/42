@@ -30,7 +30,7 @@ class Client {
     public:
         Client(int fd, const std::string name);
         ~Client();
-		
+
 		// Getters
 		int			getFd() { return _fd; };
 		std::string getHostname() { return _hostname; };
@@ -39,6 +39,7 @@ class Client {
 		std::string getRealname() { return _realname; };
 		std::string getPartialInput() { return _partialInput; };
 		std::vector<Channel *> getChannels() { return _channels; };
+		Channel		*getCurrentChannel() { return _currentChannel; };
 		bool 		getRegistered() { return _isRegistered; };
 		bool 		getAuth() { return _isAuth; };
 		bool 		getOp() { return _isOp; };
@@ -51,6 +52,7 @@ class Client {
 		void 		setRealname(std::string const &realname ) { _realname = realname; };
 		void 		setPartialInput(std::string const &partialInput ) { _partialInput = partialInput; };
 		void 		setOp(bool isOp) { _isOp = isOp; };
+		void		setCurrentChannel(Channel *currentChannel) { _currentChannel = currentChannel; };
 		void 		setRegistered(bool isRegistered) { _isRegistered = isRegistered; };
 		void 		setAuth(bool isAuth) { _isAuth = isAuth; };
 

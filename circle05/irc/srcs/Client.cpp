@@ -34,6 +34,7 @@ void	Client::leaveChannel(Channel *channel)
     	(*it)->removeClient(this);
 		_channels.erase(it);
 	}
+	this->setCurrentChannel(NULL);
 }
 
 void	Client::leaveAllChannels() {

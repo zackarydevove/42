@@ -8,7 +8,7 @@ SRCS        =       srcs/main.cpp \
                     srcs/commands/join.cpp \
                     srcs/commands/kick.cpp \
                     srcs/commands/mode.cpp \
-                    srcs/commands/msg.cpp \
+                    srcs/commands/privmsg.cpp \
                     srcs/commands/names.cpp \
                     srcs/commands/nick.cpp \
                     srcs/commands/oper.cpp \

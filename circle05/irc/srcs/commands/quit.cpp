@@ -22,6 +22,7 @@ int quit(Server &server, Client &client, std::vector<std::string> &input)
     std::cout << "Client " << client.getNickname() << " has left the server." << std::endl;
     client.sendMessage("You have successfully left the server.\n");
 
+
     // Disconnect the client.
     // server.removeClient(&client);
     client.setAuth(false);
