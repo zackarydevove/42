@@ -26,7 +26,6 @@ void ScalarConverter::convert(const std::string& str) {
     }
     // CHAR
     else if (isChar(str)) {
-        std::cout << "CHAR" << std::endl;
         char c = str[0];
         if (std::isprint(c))
             std::cout << "char: '" << c << "'" << std::endl;
@@ -38,7 +37,6 @@ void ScalarConverter::convert(const std::string& str) {
     }
     // INT
     else if (isInt(str)) {
-        std::cout << "INT" << std::endl;
         long i = std::atol(str.c_str());
         if (i < 0 || i > 126)
             std::cout << "char: impossible" << std::endl;
@@ -55,7 +53,6 @@ void ScalarConverter::convert(const std::string& str) {
     }
     // FLOAT
     else if (isFloat(str)) {
-        std::cout << "FLOAT" << std::endl;
         float f = std::strtof(str.c_str(), NULL);
         if (f < 0 || f > 126 || std::isnan(f) || std::isinf(f))
             std::cout << "char: impossible" << std::endl;
@@ -72,7 +69,6 @@ void ScalarConverter::convert(const std::string& str) {
     }
     // DOUBLE
     else if (isDouble(str)) {
-        std::cout << "DOUBLE" << std::endl;
         double d = std::strtod(str.c_str(), NULL);
         if (d < 0 || d > 126 || std::isnan(d) || std::isinf(d))
             std::cout << "char: impossible" << std::endl;
