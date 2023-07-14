@@ -16,9 +16,10 @@ Channel::~Channel() {
 		(*it)->leaveChannel(this);
 }
 
-void	Channel::broadcastMessage(const std::string &message) {
+void	Channel::broadcastMessage(const std::string &message, Client *client) {
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-		(*it)->sendMessage(message);
+		if ((*it) != client)
+			(*it)->sendMessage(message);
 }
 
 // --------------------CLIENT--------------------
@@ -37,7 +38,6 @@ void Channel::addClient(Client *client)
 	if (it != _clients.end())
 		return ;
     _clients.push_back(client);
-	client->setCurrentChannel(this);
 }
 
 void Channel::removeClient(Client *client)
@@ -54,8 +54,6 @@ void Channel::removeClient(Client *client)
 	if (this->isOperator(*it))
 		this->removeOperator(*it);
     _clients.erase(it);
-	if (client->getCurrentChannel() == this)
-		client->setCurrentChannel(NULL);
 }
 
 Client *Channel::getClientByNickname(std::string &nickname)

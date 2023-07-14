@@ -9,23 +9,28 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "KICK"));
         return 0;
     }
     // Check that we have at least channel name and nickname of user
     if (input.size() < 3)
     {
         // The client didn't provide enough arguments.
-        client.sendMessage("ERROR: You must provide the name of a channel and the nickname of the user to kick.\n");
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "KICK"));
         return (0);
     }
 
-    std::string channelName = input[1];
-    Channel *channel = server.getChannelByName(channelName);
+    Channel *channel = server.getChannelByName(input[1]);
     if (!channel)
     {
         // The channel doesn't exist.
-        client.sendMessage("ERROR: The specified channel does not exist.\n");
+        client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), input[1]));
+        return (0);
+    }
+
+    if (!client.getChannel(input[1]))
+    {
+        client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), input[1]));
         return (0);
     }
 
@@ -33,36 +38,25 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
     if (!channel->isOperator(&client))
     {
         // The client is not an operator in the specified channel.
-        client.sendMessage("ERROR: You are not an operator of the specified channel.\n");
+        client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->getName()));
         return (0);
     }
 
-    std::string clientToKickNickname = input[2];
-    Client *clientToKick = channel->getClientByNickname(clientToKickNickname);
+    Client *clientToKick = channel->getClientByNickname(input[2]);
     if (!clientToKick)
     {
         // The user to kick doesn't exist.
-        client.sendMessage("ERROR: The specified user does not exist.\n");
+        client.sendMessage(ERR_USERNOTINCHANNEL(client.getNickname(), channel->getName(), input[2]));
         return (0);
     }
 
-    // If the user is client of that channel
-    if (!channel->isClient(clientToKick))
-    {
-        // The user to kick doesn't exist.
-        client.sendMessage("ERROR: You are not part of the specified channel.\n");
-        return (0);
 
-    }
-
+    std::string kickMessage = "";
+    if (input.size() > 3)
+        kickMessage = input[3];
+    channel->broadcastMessage(KICK(client.getNickname(), client.getUsername(), channel->getName(), clientToKick->getNickname(), kickMessage), &client);
     // Kick the user from the channel.
-    channel->removeClient(clientToKick);
-
-    // Send a message to the channel that the user has been kicked.
-    channel->broadcastMessage(clientToKickNickname + " has been kicked from " + channelName + " by " + client.getNickname() + ".\n");
-
-    // Notify the kicked client.
-    clientToKick->sendMessage("You have been kicked from " + channelName + " by " + client.getNickname() + ".\n");
+    clientToKick->leaveChannel(channel);
 
     return (1);
 }

@@ -2,24 +2,26 @@
 
 // input[0] = msg command
 // input[1] = receiver (client / channel)
-// input[2] = message to send
+// input[...] = message to send
 int privmsg(Server &server, Client &client, std::vector<std::string> &input)
 {
     if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "PRIVMSG"));
         return 0;
     }
     if (input.size() < 3)
     {
         // Not enough parameters were provided.
-        client.sendMessage("ERROR: Not enough parameters. Syntax: MSG <receiver> <text>\n");
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), input[0]));
         return 0;
     }
 
     std::string receiver = input[1];
-    std::string message = input[2];
+    std::string message;
+    for (int i = 2; i < (int)input.size(); i++)
+        message += input[i] + " ";
 
     if (message[0] == ':')
         message = message.substr(1);
@@ -33,17 +35,13 @@ int privmsg(Server &server, Client &client, std::vector<std::string> &input)
         if (!channel->isClient(&client))
         {
             // The client is not a member of the channel.
-            client.sendMessage("ERROR: You are not a member of the channel " + receiver + "\n");
+            client.sendMessage(ERR_NOSUCHNICK(client.getNickname(), receiver));
             return 0;
         }
 
         // Send the message to all members of the channel.
-        std::vector<Client *> clients = channel->getClients();
-        for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
-        {
-            Client *receiverClient = *it;
-            receiverClient->sendMessage(client.getNickname() + ": " + message + "\n");
-        }
+
+        channel->broadcastMessage(PRIVMSG(client.getNickname(), client.getHostname(), receiver, message), &client);
         return 1;
     }
 
@@ -52,11 +50,11 @@ int privmsg(Server &server, Client &client, std::vector<std::string> &input)
     if (receiverClient)
     {
         // Send the message to the other client.
-        receiverClient->sendMessage(client.getNickname() + ": " + message + "\n");
+        receiverClient->sendMessage(PRIVMSG(client.getNickname(), client.getHostname(), receiver, message));
         return 1;
     }
 
     // The receiver does not exist.
-    client.sendMessage("ERROR: The receiver " + receiver + " does not exist.\n");
+    client.sendMessage(ERR_NOSUCHNICK(client.getNickname(), receiver));
     return 0;
 }

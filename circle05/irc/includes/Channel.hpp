@@ -31,7 +31,7 @@ class Channel {
 		Channel(Server &server, Client *client, std::string name);
         ~Channel();
 
-		void					broadcastMessage(const std::string &message);
+		void	broadcastMessage(const std::string &message, Client *client);
 
 		// Getters
 

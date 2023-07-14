@@ -8,16 +8,16 @@ int ping(Server &server, Client &client, std::vector<std::string> &input)
     if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "PING"));
         return 0;
     }
 	if (input.size() < 2)
     {
-		client.sendMessage("ERROR: Not enough arguments.\n");
+		client.sendMessage(ERR_NOORIGIN(client.getNickname()));
 		return false;
 	}
 	if (input[1] != SERVER_NAME) {
-		client.sendMessage("ERROR: Wrong server name.\n");
+		client.sendMessage(ERR_NOSUCHSERVER(client.getNickname()));
 		return false;
 	}
 	client.sendMessage(PONG(client.getNickname()));

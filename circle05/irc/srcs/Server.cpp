@@ -30,6 +30,16 @@ Server::~Server()
 
 // --------------------SERVER--------------------
 
+std::string Server::getInfo() {
+    std::stringstream info;
+    
+    info << "Server Name: " << _name << "\n"
+         << "Port: " << _port << "\n"
+         << "Connected Clients: " << _clients.size() << "\n";
+         
+    return info.str();
+}
+
 void Server::openSocket() {
     _socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (_socket_fd < 0)
@@ -228,11 +238,24 @@ void Server::addClient(Client *client)
     _clients.push_back(client);
 }
 
-// void Server::removeClient(Client *client)
-// {
-//     if (!client)
-//         return;
-// }
+void Server::removeClient(Client *client)
+{
+	if (!client)
+		return;
+
+    for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        if ((*it) == client)
+        {
+                // client->leaveAllChannels();
+                close(client->getFd());
+                delete client;
+                _clients.erase(it);
+                return ;
+
+        }
+    }
+}
 
 Client *Server::getClientByNickname(std::string &nickname)
 {
@@ -305,6 +328,7 @@ void	Server::initCommands( void )
 {
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("CAP", &cap));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("DIE", &die));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("INFO", &info));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("INVITE", &invite));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("JOIN", &join));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("KICK", &kick));
@@ -316,8 +340,11 @@ void	Server::initCommands( void )
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PART", &part));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PASS", &pass));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PING", &ping));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PRIVMSG", &privmsg));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("QUIT", &quit));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("TOPIC", &topic));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("USER", &user));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("WALLOPS", &wallops));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("WHOIS", &whois));
 }
 

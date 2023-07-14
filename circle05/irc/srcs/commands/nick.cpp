@@ -3,12 +3,13 @@
 // Command to change nickname
 // input[0] = nick command
 // input[1] = new nickname
+// NICKNAME de .getNickname() UNITIALISED HERE BECAUSE NICK SECOND COMMAND
 int nick(Server &server, Client &client, std::vector<std::string> &input)
 {
     // Check if the necessary arguments are provided
     if (input.size() < 2)
     {
-        client.sendMessage("ERROR: You must provide a new nickname.\n");
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "NICK"));
         return 0;
     }
 
@@ -22,12 +23,10 @@ int nick(Server &server, Client &client, std::vector<std::string> &input)
     client.setNickname(newNickname);
 
     // Notify the client that the nickname change was successful
-    client.sendMessage("Your nickname has been changed to '" + newNickname + "'.\n");
+    client.sendMessage(NICK(client.getNickname(), client.getHostname(), newNickname));
 
     if (!client.getNickname().empty() && !client.getUsername().empty() && !client.getHostname().empty())
-    {
         client.setRegistered(true);
-    }
     if (client.getRegistered() && client.getAuth())
         client.sendMessage(RPL_WELCOME(client.getNickname()));
 

@@ -8,14 +8,14 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "JOIN"));
         return 0;
     }
     // Check that we have at least one argument (channel)
     if (input.size() < 2)
     {
         // The client didn't provide a channel name to join.
-        client.sendMessage("ERROR: You must provide the name of a channel.\n");
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), input[0]));
         return (0);
     }
 
@@ -35,28 +35,27 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
             if (input.size() < 2 || channel->getPassword() != input[2])
             {
                 // Password is missing or wrong.
-                client.sendMessage("ERROR: The password provided is wrong.\n");
+                client.sendMessage(ERR_BADCHANNELKEY(client.getNickname(), channel->getName()));
                 return (0);
             }
         }
         if (channel->getInviteOnly() && !channel->isInvited(&client))
         {
             // Client is not on the invite list.
-            client.sendMessage("ERROR: You have not been invited to this channel.\n");
+            client.sendMessage(ERR_INVITEONLYCHAN(client.getNickname(), channel->getName()));
             return (0);
         }
         if (channel->getLimit() && channel->getClients().size() >= channel->getLimit())
         {
             // Client is not on the invite list.
-            client.sendMessage("ERROR: This channel is full.\n");
+            client.sendMessage(ERR_CHANNELISFULL(client.getNickname(), channel->getName()));
             return (0);
         }
     }
     // Add the client to the channel.
-    channel->addClient(&client);
+    client.joinChannel(channel);
     // Send a message to the channel that the client has joined.
-    std::string joinMessage = client.getNickname() + " has joined " + channelName + "\n";
-    channel->broadcastMessage(joinMessage);
-
+    channel->broadcastMessage(JOIN(client.getNickname(), client.getUsername(), channel->getName()), &client);
+    channel->removeInvited(&client);
     return (1);
 }

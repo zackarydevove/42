@@ -1,42 +1,44 @@
 #include "../../includes/commands.hpp"
 
-// input[0] = mode command
-// input[1] = channel name
-// input[2] = -i +i etc.
-// input[3] = password / nickname (optional)
-int mode(Server &server, Client &client, std::vector<std::string> &input)
+int modeClient(Server &server, Client &client, std::vector<std::string> &input)
 {
-    if (!client.getAuth() && !client.getRegistered())
+    (void)server;
+    bool add = (input[2][0] == '+') ; // + true - false
+    char mode = input[2][1]; // i t k o l
+
+    switch (mode)
     {
-        // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
-        return 0;
-    }
-    if (input.size() < 3)
-    {
-        client.sendMessage("ERROR: You must provide the name of a channel and a mode.\n");
-        return 0;
+        case 'i':
+            client.setInvisible(add);
+            break;
+        case 'w':
+            client.setWallops(add);
+            break;
+        case 'o':
+            client.setOp(add);
+            break;
+        default:
+            client.sendMessage(ERR_UMODEUNKNOWNFLAG(client.getNickname()));
+            return 0;
     }
 
+    return (1);
+}
+
+int modeChannel(Server &server, Client &client, std::vector<std::string> &input, Channel *channel)
+{
+    (void)server;
     std::string channelName = input[1];
-    Channel *channel = server.getChannelByName(channelName);
-
-    if (!channel)
-    {
-        client.sendMessage("ERROR: The specified channel does not exist.\n");
-        return 0;
-    }
-
-    if (!channel->isOperator(&client))
-    {
-        client.sendMessage("ERROR: You are not an operator of the specified channel.\n");
-        return 0;
-    }
-
-    bool add = (input[2][0] == '+') ; // + = true - = false
+    bool add = (input[2][0] == '+') ; // + true - false
     char mode = input[2][1]; // i t k o l
 
     Client *op = NULL;
+
+    if (mode != 't' && !channel->isOperator(&client))
+    {
+        client.sendMessage(ERR_CHANOPRIVSNEEDED(channel->getName(), client.getNickname()));
+        return (0);
+    }
 
     switch (mode)
     {
@@ -54,7 +56,7 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
             {
                 if (input.size() < 4)
                 {
-                    client.sendMessage("ERROR: You must provide a password.\n");
+                    client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
                     return 0;
                 }
                 channel->setPassword(input[3]);
@@ -66,13 +68,13 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
             // Give/take channel operator privilege
             if (input.size() < 4)
             {
-                client.sendMessage("ERROR: You must provide the nickname of a client.\n");
+                client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
                 return 0;
             }
             op = channel->getClientByNickname(input[3]);
             if (!op)
             {
-                client.sendMessage("ERROR: The specified client does not exist.\n");
+                client.sendMessage(ERR_USERNOTINCHANNEL(client.getNickname(), channel->getName(), input[3]));
                 return 0;
             }
             if (add)
@@ -86,7 +88,7 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
             {
                 if (input.size() < 4)
                 {
-                    client.sendMessage("ERROR: You must provide a user limit.\n");
+                    client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
                     return 0;
                 }
                 int limit = std::atoi(input[3].c_str());  // Use atoi instead of stoi
@@ -96,10 +98,48 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
                 channel->setLimit(0);
             break;
         default:
-            client.sendMessage("ERROR: Invalid mode.\n");
+            client.sendMessage(ERR_UMODEUNKNOWNFLAG(client.getNickname()));
             return 0;
     }
 
-    client.sendMessage("The mode for " + channelName + " has been changed successfully.\n");
     return 1;
+}
+
+// input[0] = mode command
+// input[1] = channel name
+// input[2] = -i +i etc.
+// input[3] = password / nickname / limit (optional)
+int mode(Server &server, Client &client, std::vector<std::string> &input)
+{
+    if (!client.getAuth() && !client.getRegistered())
+    {
+        // Client already authenticate
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "MODE"));
+        return 0;
+    }
+    if (input.size() < 3)
+    {
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "MODE"));
+        return 0;
+    }
+
+    // mode channel
+    if (input[1][0] == '#')
+    {
+        std::string channelName = input[1];
+        Channel *channel = server.getChannelByName(channelName);
+
+        if (!channel)
+        {
+            client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), input[1]));
+            return 0;
+        }
+
+        return (modeChannel(server, client, input, channel));
+    }
+    else if (input[1] == client.getNickname())
+        return (modeClient(server, client, input));
+    else
+        client.sendMessage(ERR_USERSDONTMATCH(client.getNickname()));
+    return (0);
 }

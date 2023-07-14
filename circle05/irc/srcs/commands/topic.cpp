@@ -9,14 +9,14 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
     if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "TOPIC"));
         return 0;
     }
     if (input.size() < 2)
 	{
         // The client didn't provide enough arguments.
         // Send a message back to the client to let them know.
-        client.sendMessage("ERROR: You must provide the name of a channel.\n");
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "TOPIC"));
         return (0);
     }
 
@@ -26,7 +26,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
 	{
         // The specified channel does not exist.
         // Send a message back to the client to let them know.
-        client.sendMessage("ERROR: The specified channel does not exist.\n");
+        client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), channelName));
         return (0);
     }
 
@@ -35,7 +35,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
     {
         // The client is not part of the specified channel.
         // Send a message back to the client to let them know.
-        client.sendMessage("ERROR: You are not part of the specified channel.\n");
+        client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), channelName));
         return (0);
     }
     
@@ -43,23 +43,27 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
     if (input.size() == 2)
     {
         std::string currentTopic = channel->getTopic();
-        client.sendMessage("The topic for " + channelName + " is '" + currentTopic + "'.\n");
+        if (currentTopic.empty())
+            client.sendMessage(RPL_NOTOPIC(client.getNickname(), channel->getName()));
+		else
+			client.sendMessage(RPL_TOPIC(client.getNickname(), channel->getName(), currentTopic));
     }
     else // A new topic was provided. Set the new topic.
     {
         // if topicRestricted, then Only operator can change topic.
         if (channel->getTopicRestricted() && !channel->isOperator(&client))
         {
-            client.sendMessage("ERROR: You are not an operator of the specified channel.\n");
+            client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), channel->getName()));
             return (0);
         }
         
+	    if (input[2][0] == ':')
+		    input[2] = input[2].substr(1);
         // Set the new topic.
-        std::string newTopic = input[2];
-        channel->setTopic(newTopic);
+        channel->setTopic(input[2]);
 
         // Notify the client that the topic was successfully changed.
-        client.sendMessage("The topic for " + channelName + " has been set to '" + newTopic + "'.\n");
+        client.sendMessage(TOPIC(client.getNickname(), client.getUsername(), channel->getName(), channel->getTopic()));
 	}
 	return (1);
 }

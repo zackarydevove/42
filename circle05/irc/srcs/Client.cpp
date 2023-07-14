@@ -34,15 +34,12 @@ void	Client::leaveChannel(Channel *channel)
     	(*it)->removeClient(this);
 		_channels.erase(it);
 	}
-	this->setCurrentChannel(NULL);
 }
 
 void	Client::leaveAllChannels() {
 	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-	{
-		std::cout << "Leaving channel: " << (*it)->getName() << std::endl;    
         this->leaveChannel((*it));
-	}
+
 }
 
 void	Client::sendMessage(const std::string &message) {

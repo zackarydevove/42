@@ -22,10 +22,11 @@ class Client {
 		std::string				_realname;
         std::string				_partialInput;
 		std::vector<Channel *>	_channels;
-		Channel					*_currentChannel;
 		bool					_isRegistered;
 		bool					_isAuth;
 		bool					_isOp;
+		bool					_isInvisible;
+		bool					_isWallops;
 
     public:
         Client(int fd, const std::string name);
@@ -39,10 +40,12 @@ class Client {
 		std::string getRealname() { return _realname; };
 		std::string getPartialInput() { return _partialInput; };
 		std::vector<Channel *> getChannels() { return _channels; };
-		Channel		*getCurrentChannel() { return _currentChannel; };
 		bool 		getRegistered() { return _isRegistered; };
 		bool 		getAuth() { return _isAuth; };
 		bool 		getOp() { return _isOp; };
+		bool 		getInvisible() { return _isInvisible; };
+		bool 		getWallops() { return _isWallops; };
+
 
 		// Setters
 		void 		setFd(int &fd ) { _fd = fd; };
@@ -51,10 +54,11 @@ class Client {
 		void 		setNickname(std::string const &nickname ) { _nickname = nickname; };
 		void 		setRealname(std::string const &realname ) { _realname = realname; };
 		void 		setPartialInput(std::string const &partialInput ) { _partialInput = partialInput; };
-		void 		setOp(bool isOp) { _isOp = isOp; };
-		void		setCurrentChannel(Channel *currentChannel) { _currentChannel = currentChannel; };
 		void 		setRegistered(bool isRegistered) { _isRegistered = isRegistered; };
 		void 		setAuth(bool isAuth) { _isAuth = isAuth; };
+		void 		setOp(bool isOp) { _isOp = isOp; };
+		void 		setInvisible(bool isInvisible) { _isInvisible = isInvisible; };
+		void 		setWallops(bool isWallops) { _isWallops = isWallops; };
 
 		Channel*	getChannel(const std::string channelName);
 		void		joinChannel(Channel *channel);

@@ -10,13 +10,13 @@ int oper(Server &server, Client &client, std::vector<std::string> &input)
     if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "OPER"));
         return 0;
     }
     if (input.size() < 3)
     {
         // Not enough parameters were provided.
-        client.sendMessage("ERROR: Not enough parameters. Syntax: OPER <name> <password>\n");
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), "OPER"));
         return 0;
     }
 
@@ -27,7 +27,7 @@ int oper(Server &server, Client &client, std::vector<std::string> &input)
     if (!clientToSetOp)
     {
         // Client not found.
-        client.sendMessage("ERROR: Client not found\n");
+        client.sendMessage(ERR_NOSUCHNICK(client.getNickname(), name));
         return 0;
     }
 
@@ -35,12 +35,12 @@ int oper(Server &server, Client &client, std::vector<std::string> &input)
     if (server.getPassword() != password)
     {
         // The credentials are not valid.
-        client.sendMessage("ERROR: Invalid operator credentials.\n");
+        client.sendMessage(ERR_PASSWDMISMATCH(client.getNickname()));
         return (0);
     }
     // The credentials are valid. Give the client operator privileges.
     clientToSetOp->setOp(true);
-    clientToSetOp->sendMessage("You are now an IRC operator.\n");
+    clientToSetOp->sendMessage(RPL_YOUROPER(clientToSetOp->getNickname()));
 
     return 1;
 }

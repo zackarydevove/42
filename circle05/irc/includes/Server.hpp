@@ -18,8 +18,6 @@
 # include "Channel.hpp"
 # include "commands.hpp"
 
-# define MAX_EVENTS 10
-
 class Channel;
 class Client;
 
@@ -29,11 +27,9 @@ class Server {
         int             		_port;
         std::string				_password;
 		std::string				_operatorPassword;
-
         int             		_socket_fd;
         struct sockaddr_in		_server_address; 
 		int						_epoll_fd;
-
         std::vector<Client *>	_clients;
         std::vector<Channel *>	_channels;
         std::map<std::string, int (*)(Server &, Client &, std::vector<std::string> & )>	_commands;
@@ -64,7 +60,7 @@ class Server {
 		void setEpollfd(int epoll_fd) { _epoll_fd = epoll_fd; };
 
         void 		addClient(Client *client);
-        // void 		removeClient(Client *client);
+        void 		removeClient(Client *client);
         Client 		*getClientByNickname(std::string &nickname);
         Client 		*getClientByUsername(std::string &username);
 
@@ -73,7 +69,8 @@ class Server {
         void 		removeChannel(Channel	*channel);
         Channel  	*getChannelByName(std::string name);
 
-        void	initCommands( void );
+        std::string getInfo();
+        void        initCommands( void );
 };
 
 #endif

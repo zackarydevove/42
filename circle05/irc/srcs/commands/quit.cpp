@@ -8,24 +8,19 @@ int quit(Server &server, Client &client, std::vector<std::string> &input)
     (void)server;
 	std::vector<Channel *> channels = client.getChannels();
 
-    // Notify other clients in the channels that this client is part of.
-    for (std::vector<Channel *>::iterator channel = channels.begin(); channel != channels.end(); ++channel)
+    if (input.size() < 2)
     {
-        std::string message = "Client " + client.getNickname() + " has disconnected.\n";
-        if (input.size() > 1)
-            message += "Reason: " + input[1] + ".\n";
-        (*channel)->broadcastMessage(message);
-        // Remove client from the channel.
-        (*channel)->removeClient(&client);
+        // Not enough parameters were provided.
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), input[0]));
+        return 0;
     }
 
-    std::cout << "Client " << client.getNickname() << " has left the server." << std::endl;
-    client.sendMessage("You have successfully left the server.\n");
-
+    // Notify other clients in the channels that this client is part of.
+    for (std::vector<Channel *>::iterator channel = channels.begin(); channel != channels.end(); channel++)
+        (*channel)->broadcastMessage(QUIT(client.getNickname(), client.getUsername(), input[1]), &client);
 
     // Disconnect the client.
-    // server.removeClient(&client);
-    client.setAuth(false);
+    server.removeClient(&client);
 
     return 1;
 }

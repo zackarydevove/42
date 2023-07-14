@@ -2,19 +2,20 @@
 
 // input[0] = command
 // input[1] = password
+// NICK UNITIALISED HERE BC PASS IS FIRST COMMAND
 int pass(Server &server, Client &client, std::vector<std::string> &input)
 {
     if (input.size() < 2)
     {
         // Not enough parameters were provided.
-        client.sendMessage("ERROR: Not enough parameters. Syntax: PASS <password>\n");
+        client.sendMessage(ERR_NEEDMOREPARAMS(client.getNickname(), input[0]));
         return 0;
     }
 
     if (client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are already registered.\n");
+        client.sendMessage(ERR_ALREADYREGISTRED(client.getNickname()));
         return 0;
     }
 
@@ -23,10 +24,9 @@ int pass(Server &server, Client &client, std::vector<std::string> &input)
     else
     {
         // Not enough parameters were provided.
-        client.sendMessage("ERROR: Wrong password.\n");
+        client.sendMessage(ERR_PASSWDMISMATCH(client.getNickname()));
         return 0;
     }
 
-    client.sendMessage("You have been authenticated!\nNow, use the NICK and USER command to choose a nickname and username.\n");
     return 1;
 }

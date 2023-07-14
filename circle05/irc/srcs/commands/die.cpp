@@ -7,22 +7,20 @@ int die(Server &server, Client &client, std::vector<std::string> &input)
 {
     (void)server;
     (void)input;
+    
     if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage("ERROR: You are are not authenticated.\nYou need to use the PASS command.\n");
-        return 0;
-    }
-    // Only allow IRC operators to use this command.
-    if (!client.getOp()) 
-    {
-        client.sendMessage("ERROR: You do not have permission to use this command.\n");
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "DIE"));
         return 0;
     }
 
-    // Notify all clients that the server is shutting down.
-    std::string message = "Server is shutting down.\n";
-    server.broadcastMessage(message);
+    // Only allow IRC operators to use this command.
+    if (!client.getOp()) 
+    {
+        client.sendMessage(ERR_NOPRIVILEGES(client.getNickname()));
+        return 0;
+    }
 
     g_shutdown = true;
 
