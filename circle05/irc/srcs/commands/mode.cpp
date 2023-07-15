@@ -5,6 +5,7 @@ int modeClient(Server &server, Client &client, std::vector<std::string> &input)
     (void)server;
     bool add = (input[2][0] == '+') ; // + true - false
     char mode = input[2][1]; // i t k o l
+    std::string msg = input[2];
 
     switch (mode)
     {
@@ -22,6 +23,8 @@ int modeClient(Server &server, Client &client, std::vector<std::string> &input)
             return 0;
     }
 
+    client.sendMessage(MODE_USER(client.getNickname(), client.getUsername(), client.getNickname(), msg));
+
     return (1);
 }
 
@@ -31,6 +34,7 @@ int modeChannel(Server &server, Client &client, std::vector<std::string> &input,
     std::string channelName = input[1];
     bool add = (input[2][0] == '+') ; // + true - false
     char mode = input[2][1]; // i t k o l
+    std::string msg = input[2];
 
     Client *op = NULL;
 
@@ -101,6 +105,9 @@ int modeChannel(Server &server, Client &client, std::vector<std::string> &input,
             client.sendMessage(ERR_UMODEUNKNOWNFLAG(client.getNickname()));
             return 0;
     }
+
+
+    client.sendMessage(MODE_CHANNEL(client.getNickname(), client.getUsername(), channelName, msg));
 
     return 1;
 }
