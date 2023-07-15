@@ -1,14 +1,14 @@
 #include "../../includes/commands.hpp"
 
-// input[0] = msg command
+// input[0] = notice command
 // input[1] = receiver (client / channel)
 // input[...] = message to send
-int privmsg(Server &server, Client &client, std::vector<std::string> &input)
+int notice(Server &server, Client &client, std::vector<std::string> &input)
 {
     if (!client.getAuth() && !client.getRegistered())
     {
         // Client already authenticate
-        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "PRIVMSG"));
+        client.sendMessage(ERR_NOTREGISTERED(client.getNickname(), "NOTICE"));
         return 0;
     }
     if (input.size() < 3)
@@ -41,8 +41,8 @@ int privmsg(Server &server, Client &client, std::vector<std::string> &input)
                 return 0;
             }
 
-            // Send the privmsg to all members of the channel.
-            channel->broadcastMessage(PRIVMSG(client.getNickname(), client.getHostname(), receiver, message), &client);
+            // Send the notice to all members of the channel.
+            channel->broadcastMessage(NOTICE(client.getNickname(), client.getHostname(), receiver, message), &client);
             return 1;
         }
         else
@@ -56,8 +56,8 @@ int privmsg(Server &server, Client &client, std::vector<std::string> &input)
     Client *receiverClient = server.getClientByNickname(receiver);
     if (receiverClient)
     {
-        // Send the privmsg to the other client.
-        receiverClient->sendMessage(PRIVMSG(client.getNickname(), client.getHostname(), receiver, message));
+        // Send the notice to the other client.
+        receiverClient->sendMessage(NOTICE(client.getNickname(), client.getHostname(), receiver, message));
         return 1;
     }
 

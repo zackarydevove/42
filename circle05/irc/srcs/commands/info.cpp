@@ -15,9 +15,6 @@ int info(Server &server, Client &client, std::vector<std::string> &input)
 
     // Send the INFO response
     client.sendMessage(RPL_INFO(client.getNickname()));
-    // client.sendMessage(RPL_INFO(client.getNickname(), "Version: " + server.getVersion()));
-    // client.sendMessage(RPL_INFO(client.getNickname(), "Started at: " + server.getStartTime()));
-    // client.sendMessage(RPL_INFO(client.getNickname(), "Admins: " + server.getAdmins()));
     client.sendMessage(RPL_ENDOFINFO(client.getNickname()));
 
     return 1;

@@ -15,7 +15,14 @@ int nick(Server &server, Client &client, std::vector<std::string> &input)
 
     std::string newNickname = input[1];
 
-    // Check if the new nickname is already in use
+    // If user try to change nickname to one that already exist
+    if (server.getClientByNickname(newNickname) && !client.getNickname().empty())
+    {
+			client.sendMessage(ERR_NICKNAMEINUSE(newNickname));
+			return 0;
+    }
+
+    // Otherwise, it's a new user. Check if the new nickname is already in use
     while (server.getClientByNickname(newNickname))
         newNickname += "_";
 
