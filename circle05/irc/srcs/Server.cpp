@@ -170,16 +170,15 @@ void Server::handleNewMessage(int client_fd) {
 
     // Check if the last character in the partialCommand is a newline character ('\n')
     if (!partialInput.empty() && partialInput[partialInput.size() - 1] == '\n') {
-        // Parse and execute command
-        parseAndExecuteCommand(client, partialInput);
-
-        // Clear the partial command after processing
-        client->setPartialInput("");
+        // Parse and execute command // If it's QUIT, return 0 (so no invalid read)
+        if (parseAndExecuteCommand(client, partialInput))
+            // Clear the partial command after processing
+            client->setPartialInput("");
     }
 }
 
 // Handle the data received from the client.
-void Server::parseAndExecuteCommand(Client *client, const std::string &message){
+int Server::parseAndExecuteCommand(Client *client, const std::string &message){
     // Split the message into separate commands
     std::stringstream ssCommands(message);
     std::string commandStr;
@@ -222,7 +221,11 @@ void Server::parseAndExecuteCommand(Client *client, const std::string &message){
             client->sendMessage("Invalid command.\n");
             std::cout << "Invalid command received from client: " << command << std::endl;
         }
+        if (command == "QUIT")
+            return (0);
     }
+    return (1);
+
 }
 
 

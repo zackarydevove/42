@@ -26,12 +26,11 @@ void	Channel::broadcastMessage(const std::string &message, Client *client) {
 
 void Channel::addClient(Client *client)
 {
-	(void)_server;
 	if (!client)
 		return ;
     if (_limit > 0 && _clients.size() >= _limit)
     {
-        client->sendMessage("ERROR: The specified channel is full.\n");
+        client->sendMessage("LIMIT MSG CHANNEL FULL");
         return ;
     }
 	std::vector<Client *>::iterator it = std::find(_clients.begin(), _clients.end(), client);

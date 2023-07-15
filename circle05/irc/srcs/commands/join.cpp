@@ -57,5 +57,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     // Send a message to the channel that the client has joined.
     channel->broadcastMessage(JOIN(client.getNickname(), client.getUsername(), channel->getName()), &client);
     channel->removeInvited(&client);
+    topic(server, client, input);
+    names(server, client, input);
     return (1);
 }

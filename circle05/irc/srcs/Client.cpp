@@ -3,7 +3,10 @@
 Client::Client(int fd, std::string hostname) : 
 	_fd(fd),
     _hostname(hostname),
-    _isAuth(false)
+	_username(""),
+	_nickname(""),
+    _isRegistered(false),
+	_isAuth(false)
     { }
 
 Client::~Client() {

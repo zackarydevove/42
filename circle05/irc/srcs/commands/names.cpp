@@ -28,8 +28,13 @@ int names(Server &server, Client &client, std::vector<std::string> &input)
                 // Show all the members of that channel
                 std::vector<Client *> clients = channel->getClients();
                 std::string clientsName;
+
                 for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
+                {
+                    if ((*it) == channel->getCreator())
+                        clientsName += "@";
                     clientsName += (*it)->getNickname() + " ";
+                }
 			    client.sendMessage(RPL_NAMREPLY(client.getNickname(), *it, clientsName));
 			    client.sendMessage(RPL_ENDOFNAMES(client.getNickname(), *it));
             }

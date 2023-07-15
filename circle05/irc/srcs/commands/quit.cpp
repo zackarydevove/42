@@ -5,7 +5,6 @@
 // input[1] = message why quit (optional)
 int quit(Server &server, Client &client, std::vector<std::string> &input)
 {
-    (void)server;
 	std::vector<Channel *> channels = client.getChannels();
 
     if (input.size() < 2)
