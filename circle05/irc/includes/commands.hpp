@@ -6,7 +6,7 @@
 # include "Server.hpp"
 # include "Channel.hpp"
 # include "define.hpp"
-#include <vector>
+# include <vector>
 
 class Server;
 class Client;
@@ -24,6 +24,7 @@ int mode(Server &server, Client &client, std::vector<std::string> &input);
 int names(Server &server, Client &client, std::vector<std::string> &input);
 int names(Server &server, Client &client, std::vector<std::string> &input);
 int nick(Server &server, Client &client, std::vector<std::string> &input);
+int notice(Server &server, Client &client, std::vector<std::string> &input);
 int oper(Server &server, Client &client, std::vector<std::string> &input);
 int part(Server &server, Client &client, std::vector<std::string> &input);
 int pass(Server &server, Client &client, std::vector<std::string> &input);

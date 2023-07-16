@@ -11,6 +11,7 @@ SRCS        =       srcs/main.cpp \
                     srcs/commands/mode.cpp \
                     srcs/commands/names.cpp \
                     srcs/commands/nick.cpp \
+                    srcs/commands/notice.cpp \
                     srcs/commands/oper.cpp \
                     srcs/commands/part.cpp \
                     srcs/commands/pass.cpp \

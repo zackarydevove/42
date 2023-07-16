@@ -21,11 +21,14 @@ Server::Server(int port, std::string password) :
 
 Server::~Server() 
 {
-    close(_socket_fd);
 	for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+	{
+		close((*it)->getFd());
 		delete *it;
+	}
 	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 		delete *it;
+    close(_socket_fd);
 }
 
 // --------------------SERVER--------------------
@@ -235,9 +238,11 @@ void Server::addClient(Client *client)
 {
 	if (!client)
 		return ;
-	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), client);
-	if (it != _clients.end())
-		return ;
+
+    for (std::vector<Client*>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+        if ((*it) == client)
+            return ;
+
     _clients.push_back(client);
 }
 
@@ -250,7 +255,7 @@ void Server::removeClient(Client *client)
     {
         if ((*it) == client)
         {
-                // client->leaveAllChannels();
+                client->leaveAllChannels();
                 close(client->getFd());
                 delete client;
                 _clients.erase(it);
@@ -286,20 +291,15 @@ Client *Server::getClientByFd(int fd)
 
 // --------------------CHANNEL--------------------
 
-
-Channel *Server::createChannel(std::string name, Client *client)
-{
-	Channel *channel = new Channel(*this, client, name);
-	return channel;
-}
-
 void Server::addChannel(Channel	*channel)
 {
 	if (!channel)
 		return ;
-	std::vector<Channel*>::iterator it = std::find(_channels.begin(), _channels.end(), channel);
-	if (it != _channels.end())
-		return ;
+
+    for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+		if ((*it) == channel)
+			return ;
+
     _channels.push_back(channel);
 }
 
@@ -307,10 +307,16 @@ void Server::removeChannel(Channel	*channel)
 {
 	if (!channel)
 		return ;
-	std::vector<Channel*>::iterator it = std::find(_channels.begin(), _channels.end(), channel);
-    if (it == _channels.end())
-        return ;
-    _channels.erase(it);
+
+    for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+    {
+		if ((*it) == channel)
+        {
+			delete (*it);
+        	_channels.erase(it);
+			return ;
+        }
+	}
 }
 
 Channel *Server::getChannelByName(std::string name)
@@ -339,6 +345,7 @@ void	Server::initCommands( void )
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PRIVMSG", &privmsg));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("NAMES", &names));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("NICK", &nick));
+	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("NOTICE", &notice));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("OPER", &oper));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PART", &part));
 	_commands.insert(std::pair<std::string, int (*)(Server&, Client&, std::vector<std::string>&)>("PASS", &pass));

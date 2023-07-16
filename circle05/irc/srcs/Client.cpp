@@ -5,8 +5,13 @@ Client::Client(int fd, std::string hostname) :
     _hostname(hostname),
 	_username(""),
 	_nickname(""),
+	_realname(""),
+	_partialInput(""),
     _isRegistered(false),
-	_isAuth(false)
+	_isAuth(false),
+	_isOp(false),
+    _isInvisible(false),
+    _isWallops(false)
     { }
 
 Client::~Client() {
@@ -40,8 +45,9 @@ void	Client::leaveChannel(Channel *channel)
 }
 
 void	Client::leaveAllChannels() {
-	for (std::vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it)
-        this->leaveChannel((*it));
+    std::vector<Channel*> temp(_channels);
+    for (std::vector<Channel*>::iterator it = temp.begin(); it != temp.end(); ++it)
+        this->leaveChannel(*it);
 
 }
 

@@ -64,7 +64,6 @@ class Server {
         Client 		*getClientByNickname(std::string &nickname);
         Client 		*getClientByUsername(std::string &username);
 
-        Channel 	*createChannel(std::string name, Client *client);
         void		addChannel(Channel	*channel);
         void 		removeChannel(Channel	*channel);
         Channel  	*getChannelByName(std::string name);
