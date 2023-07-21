@@ -19,9 +19,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
         return (0);
     }
 
-    std::string channelName = input[1];
-    // if (input[1][0] == '#')
-    //     channelName = input[1].substr(1);
+    std::string channelName = input[1].substr(1);
     Channel *channel = server.getChannelByName(channelName);
     // If the channel doesn't exist, create a new one.
     if (!channel)
@@ -57,7 +55,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     // Add the client to the channel.
     client.joinChannel(channel);
     // Send a message to the channel that the client has joined.
-    channel->broadcastMessage(JOIN(client.getNickname(), client.getUsername(), channel->getName()), &client);
+    channel->broadcastMessage(JOIN(client.getNickname(), client.getUsername(), channel->getName()), NULL);
     channel->removeInvited(&client);
     topic(server, client, input);
     names(server, client, input);

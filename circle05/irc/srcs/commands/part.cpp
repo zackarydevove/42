@@ -28,7 +28,7 @@ int part(Server &server, Client &client, std::vector<std::string> &input)
 	    std::vector<std::string> channels = spliit(input[1], ',');
 	    for (std::vector<std::string>::iterator it = channels.begin(); it != channels.end(); it++)
         {
-            Channel *channel = server.getChannelByName((*it));
+            Channel *channel = server.getChannelByName((*it).substr(1));
             if (channel)
             {
                 // Check if the client is a member of this channel.

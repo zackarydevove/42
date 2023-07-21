@@ -39,8 +39,8 @@ int oper(Server &server, Client &client, std::vector<std::string> &input)
         return (0);
     }
     // The credentials are valid. Give the client operator privileges.
-    clientToSetOp->setOp(true);
     clientToSetOp->sendMessage(RPL_YOUROPER(clientToSetOp->getNickname()));
+    clientToSetOp->setOp(true);
 
     return 1;
 }

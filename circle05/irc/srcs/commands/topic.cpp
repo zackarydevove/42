@@ -20,7 +20,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
         return (0);
     }
 
-    std::string channelName = input[1];
+    std::string channelName = input[1].substr(1);
     Channel *channel = server.getChannelByName(channelName);
     if (!channel)
 	{

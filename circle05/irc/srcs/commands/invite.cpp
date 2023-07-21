@@ -19,6 +19,9 @@ int invite(Server &server, Client &client, std::vector<std::string> &input)
     }
 
     std::string channelName = input[2];
+    if (channelName[0] == '#')
+        channelName = input[2].substr(1);
+
     Channel *channel = server.getChannelByName(channelName);
     if (!channel)
     {

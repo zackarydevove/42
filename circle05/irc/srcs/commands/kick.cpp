@@ -20,7 +20,8 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
         return (0);
     }
 
-    Channel *channel = server.getChannelByName(input[1]);
+    std::string channelName = input[1].substr(1);
+    Channel *channel = server.getChannelByName(channelName);
     if (!channel)
     {
         // The channel doesn't exist.
@@ -28,7 +29,7 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
         return (0);
     }
 
-    if (!client.getChannel(input[1]))
+    if (!client.getChannel(channelName))
     {
         client.sendMessage(ERR_NOTONCHANNEL(client.getNickname(), input[1]));
         return (0);

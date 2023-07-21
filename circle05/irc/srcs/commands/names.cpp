@@ -22,7 +22,7 @@ int names(Server &server, Client &client, std::vector<std::string> &input)
 		std::vector<std::string> channelNames = split(input[1], ',');
 		for (std::vector<std::string>::iterator it = channelNames.begin(); it != channelNames.end(); it++)
         {
-			Channel	*channel = server.getChannelByName((*it));
+			Channel	*channel = server.getChannelByName((*it).substr(1));
             if (channel)
             {
                 // Show all the members of that channel

@@ -16,7 +16,7 @@ int quit(Server &server, Client &client, std::vector<std::string> &input)
 
     // Notify other clients in the channels that this client is part of.
     for (std::vector<Channel *>::iterator channel = channels.begin(); channel != channels.end(); channel++)
-        (*channel)->broadcastMessage(QUIT(client.getNickname(), client.getUsername(), input[1]), &client);
+        (*channel)->broadcastMessage(QUIT(client.getNickname(), client.getUsername(), input[1].substr(1)), &client);
 
     // Disconnect the client.
     server.removeClient(&client);
