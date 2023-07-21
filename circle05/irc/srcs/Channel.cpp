@@ -51,6 +51,8 @@ void Channel::removeClient(Client *client)
 		_creator = NULL;
 	removeInvited(client);
 	removeOperator(client);
+	if (_operators.size() == 0 && _clients.size() > 0)
+		addOperator(*_clients.begin());
 	if (_clients.size() == 0 && _operators.size() == 0)
 		_server.removeChannel(this);
 }

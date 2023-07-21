@@ -47,9 +47,14 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
             client.sendMessage(RPL_NOTOPIC(client.getNickname(), channel->getName()));
 		else
 			client.sendMessage(RPL_TOPIC(client.getNickname(), channel->getName(), currentTopic));
+        return 1;
     }
     else // A new topic was provided. Set the new topic.
     {
+        std::string topic = "";
+        for (int i = 2; i < (int)input.size(); i++)
+            topic += input[i] + " ";
+
         // if topicRestricted, then Only operator can change topic.
         if (channel->getTopicRestricted() && !channel->isOperator(&client))
         {
@@ -57,10 +62,10 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
             return (0);
         }
         
-	    if (input[2][0] == ':')
-		    input[2] = input[2].substr(1);
+	    if (topic[0] == ':')
+		    topic = topic.substr(1);
         // Set the new topic.
-        channel->setTopic(input[2]);
+        channel->setTopic(topic);
 
         // Notify the client that the topic was successfully changed.
         channel->broadcastMessage(TOPIC(client.getNickname(), client.getUsername(), channel->getName(), channel->getTopic()), NULL);

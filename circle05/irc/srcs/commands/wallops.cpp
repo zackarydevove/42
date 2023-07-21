@@ -23,7 +23,9 @@ int wallops(Server &server, Client &client, std::vector<std::string> &input)
     }
 
     // Prepare the message to send
-    std::string message = input[1];
+    std::string message = "";
+    for (int i = 1; i < (int)input.size(); i++)
+        message += input[i] + " ";
     if (message[0] == ':')
         message = message.substr(1);
 
@@ -31,7 +33,7 @@ int wallops(Server &server, Client &client, std::vector<std::string> &input)
     std::vector<Client *> clients = server.getClients();
     for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
         if ((*it)->getOp())
-            (*it)->sendMessage(":" + client.getNickname() + " WALLOPS :" + message + "/r/n");
+            (*it)->sendMessage(":" + client.getNickname() + " WALLOPS :" + message + "\r\n");
 
     return 1;
 }
