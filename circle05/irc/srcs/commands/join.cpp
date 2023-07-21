@@ -20,6 +20,8 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     }
 
     std::string channelName = input[1];
+    // if (input[1][0] == '#')
+    //     channelName = input[1].substr(1);
     Channel *channel = server.getChannelByName(channelName);
     // If the channel doesn't exist, create a new one.
     if (!channel)
@@ -30,7 +32,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     // Else, check password, mode, etc.
     else
     {
-        if (channel->getPassword().size() > 0)
+        if (!channel->getPassword().empty())
         {
             if (input.size() < 2 || channel->getPassword() != input[2])
             {

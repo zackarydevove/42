@@ -63,7 +63,7 @@ int topic(Server &server, Client &client, std::vector<std::string> &input)
         channel->setTopic(input[2]);
 
         // Notify the client that the topic was successfully changed.
-        client.sendMessage(TOPIC(client.getNickname(), client.getUsername(), channel->getName(), channel->getTopic()));
+        channel->broadcastMessage(TOPIC(client.getNickname(), client.getUsername(), channel->getName(), channel->getTopic()), NULL);
 	}
 	return (1);
 }

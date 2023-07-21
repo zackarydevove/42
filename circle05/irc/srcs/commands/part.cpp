@@ -54,7 +54,7 @@ int part(Server &server, Client &client, std::vector<std::string> &input)
                 client.leaveChannel(channel);
 
                 // Broadcast the part message
-                channel->broadcastMessage(PART(client.getNickname(), client.getUsername(), channel->getName(), input[2]), &client);
+                channel->broadcastMessage(PART(client.getNickname(), client.getUsername(), channel->getName(), input[2]), NULL);
                 return 1;
             }
             else
