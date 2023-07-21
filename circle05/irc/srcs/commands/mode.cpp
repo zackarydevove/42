@@ -31,18 +31,11 @@ int modeClient(Server &server, Client &client, std::vector<std::string> &input)
 int modeChannel(Server &server, Client &client, std::vector<std::string> &input, Channel *channel)
 {
     (void)server;
-    std::string channelName = input[1];
     bool add = (input[2][0] == '+') ; // + true - false
     char mode = input[2][1]; // i t k o l
     std::string msg = input[2];
 
     Client *op = NULL;
-
-    if (mode != 't' && !channel->isOperator(&client))
-    {
-        client.sendMessage(ERR_CHANOPRIVSNEEDED(channel->getName(), client.getNickname()));
-        return (0);
-    }
 
     switch (mode)
     {
@@ -78,7 +71,7 @@ int modeChannel(Server &server, Client &client, std::vector<std::string> &input,
             op = channel->getClientByNickname(input[3]);
             if (!op)
             {
-                client.sendMessage(ERR_USERNOTINCHANNEL(client.getNickname(), channel->getName(), input[3]));
+                client.sendMessage(ERR_USERNOTINCHANNEL(client.getNickname(), input[1], input[3]));
                 return 0;
             }
             if (add)
@@ -106,8 +99,7 @@ int modeChannel(Server &server, Client &client, std::vector<std::string> &input,
             return 0;
     }
 
-
-    client.sendMessage(MODE_CHANNEL(client.getNickname(), client.getUsername(), channelName, msg));
+    client.sendMessage(MODE_CHANNEL(client.getNickname(), client.getUsername(), input[1], msg));
 
     return 1;
 }
@@ -133,13 +125,18 @@ int mode(Server &server, Client &client, std::vector<std::string> &input)
     // mode channel
     if (input[1][0] == '#')
     {
-        std::string channelName = input[1].substr(1);
-        Channel *channel = server.getChannelByName(channelName);
+        Channel *channel = server.getChannelByName(input[1].substr(1));
 
         if (!channel)
         {
             client.sendMessage(ERR_NOSUCHCHANNEL(client.getNickname(), input[1]));
             return 0;
+        }
+        if (!channel->isOperator(&client))
+        {
+            // The client is not an operator in the specified channel.
+            client.sendMessage(ERR_CHANOPRIVSNEEDED(client.getNickname(), input[1]));
+            return (0);
         }
 
         return (modeChannel(server, client, input, channel));
