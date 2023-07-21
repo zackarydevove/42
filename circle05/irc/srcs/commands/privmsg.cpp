@@ -29,7 +29,7 @@ int privmsg(Server &server, Client &client, std::vector<std::string> &input)
     // Check if the receiver is a channel.
     if (receiver[0] == '#')
     {
-        Channel *channel = server.getChannelByName(receiver);
+        Channel *channel = server.getChannelByName(receiver.substr(1));
         if (channel)
         {
             // The receiver is a channel.
