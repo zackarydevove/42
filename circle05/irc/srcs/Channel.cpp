@@ -45,16 +45,12 @@ void Channel::removeClient(Client *client)
 		return ;
 	std::vector<Client*>::iterator it = std::find(_clients.begin(), _clients.end(), client);
     if (it == _clients.end())
-	{
         return ;
-	}
+    _clients.erase(it);
 	if (client == _creator)
 		_creator = NULL;
-	if (this->isInvited(*it))
-		this->removeInvited(*it);
-	if (this->isOperator(*it))
-		this->removeOperator(*it);
-    _clients.erase(it);
+	removeInvited(client);
+	removeOperator(client);
 	if (_clients.size() == 0 && _operators.size() == 0)
 		_server.removeChannel(this);
 }
