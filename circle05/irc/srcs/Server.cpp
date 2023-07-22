@@ -15,7 +15,7 @@ Server::Server(int port, std::string password) :
     bindSocket();
     listenSocket();
     initCommands();
-    std::cout << "Server created" << std::endl;
+    // std::cout << "Server created" << std::endl;
     startServer();
 }
 
@@ -139,8 +139,8 @@ void Server::handleNewConnection(int _epoll_fd, struct sockaddr_in &client_addre
     event.data.fd = client_fd;
     if (epoll_ctl(_epoll_fd, EPOLL_CTL_ADD, client_fd, &event))
         throw std::runtime_error("Failed to add client socket file descriptor to epoll");
-    std::cout << "New client connected!" << std::endl;
-    newClient->sendMessage("To be able to join the server, make sure to use the PASS command to authenticate yourself.\n");
+    // std::cout << "New client connected!" << std::endl;
+    // newClient->sendMessage("To be able to join the server, make sure to use the PASS command to authenticate yourself.\n");
 }
 
 // Function to handle data from a client
@@ -194,7 +194,7 @@ int Server::parseAndExecuteCommand(Client *client, const std::string &message){
         commandStr.erase(std::remove(commandStr.begin(), commandStr.end(), '\r'), commandStr.end());
         
         // Print received message for debugging purposes
-        std::cout << "Received message from client: " << commandStr << std::endl;
+        // std::cout << "Received message from client: " << commandStr << std::endl;
 
         // Ignore empty lines
         if (commandStr.empty())
@@ -222,7 +222,7 @@ int Server::parseAndExecuteCommand(Client *client, const std::string &message){
         else
         {
             client->sendMessage("Invalid command.\n");
-            std::cout << "Invalid command received from client: " << command << std::endl;
+            // std::cout << "Invalid command received from client: " << command << std::endl;
         }
         if (command == "QUIT")
             return (0);
