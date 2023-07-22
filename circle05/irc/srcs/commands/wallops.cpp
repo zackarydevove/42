@@ -32,7 +32,7 @@ int wallops(Server &server, Client &client, std::vector<std::string> &input)
     // Send the message to all operators
     std::vector<Client *> clients = server.getClients();
     for (std::vector<Client *>::iterator it = clients.begin(); it != clients.end(); ++it)
-        if ((*it)->getOp())
+        if ((*it)->getOp() || (*it)->getWallops())
             (*it)->sendMessage(":" + client.getNickname() + " WALLOPS :" + message + "\r\n");
 
     return 1;
