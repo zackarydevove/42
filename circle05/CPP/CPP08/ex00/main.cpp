@@ -24,5 +24,15 @@ int main() {
     easyfind(characters, '0');
     easyfind(characters, 'z');
 
+    // std::vector<char *> strings;
+    // strings.push_back("x");
+    // strings.push_back("1");
+    // strings.push_back("e");
+    // strings.push_back("d");
+    // strings.push_back("0");
+
+    // easyfind(strings, '0');
+    // easyfind(strings, 'z');
+
     return 0;
 }

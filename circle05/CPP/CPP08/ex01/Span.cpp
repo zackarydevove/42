@@ -1,6 +1,8 @@
 #include "Span.hpp"
 
-Span::Span(unsigned int maxSize): _maxSize(maxSize) { }
+Span::Span() {};
+
+Span::Span(unsigned int maxSize): _maxSize(maxSize), _numbers(0) { }
 
 Span::Span(const Span& other): _maxSize(other._maxSize), _numbers(other._numbers) { }
 
@@ -17,35 +19,37 @@ Span& Span::operator=(const Span& other) {
 void Span::addNumber(int number) {
     if (_numbers.size() >= _maxSize)
         throw std::runtime_error("Span is already full");
-    _numbers.insert(number);
+    _numbers.push_back(number);
 }
 
 void Span::addNumber(std::vector<int>::iterator begin, std::vector<int>::iterator end) {
-    if (std::distance(begin, end) + _numbers.size() > _maxSize)
-        throw std::runtime_error("Adding these numbers would exceed the maximum size of the Span");
-    _numbers.insert(begin, end);
+    if (_numbers.size() >= _maxSize)
+        throw std::runtime_error("Span is already full");
+    for (std::vector<int>::iterator it = begin; it != end; it++)
+        addNumber(*it);
 }
 
 int Span::shortestSpan() const {
     if (_numbers.size() < 2)
         throw std::runtime_error("Not enough numbers in the Span to find a span");
 
-    std::multiset<int>::iterator it = _numbers.begin();
-    std::multiset<int>::iterator next = it;
-    ++next;
+    std::vector<int> copy = _numbers;
+    std::sort(copy.begin(), copy.end());
 
-    int shortestSpan = INT_MAX;
-    for (; next != _numbers.end(); ++it, ++next) {
-        int span = *next - *it;
-        if (span < shortestSpan)
-            shortestSpan = span;
+    int shortest = INT_MAX;
+    for (std::vector<int>::iterator it = copy.begin(); it + 1 != copy.end(); ++it) {
+        int diff = *(it + 1) - *it;
+        if (diff < shortest) {
+            shortest = diff;
+        }
     }
-    return shortestSpan;
+
+    return shortest;
 }
 
 int Span::longestSpan() const {
     if (_numbers.size() < 2)
         throw std::runtime_error("Not enough numbers in the Span to find a span");
 
-    return *(_numbers.rbegin()) - *(_numbers.begin());
+    return *(std::max_element(_numbers.begin(), _numbers.end())) - *(std::min_element(_numbers.begin(), _numbers.end()));
 }
