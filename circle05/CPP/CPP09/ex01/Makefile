@@ -2,7 +2,7 @@ SRCS 		=		main.cpp RPN.cpp
 
 OBJS 		=		$(SRCS:.cpp=.o)
 
-NAME 		=		ex01
+NAME 		=		RPN
 
 CC 			=		c++
 

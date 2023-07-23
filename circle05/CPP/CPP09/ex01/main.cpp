@@ -9,7 +9,7 @@ int main(int argc, char* argv[]) {
             int result = rpn.evaluate(argv[1]);
             std::cout << result << '\n';
         } catch (const std::exception& e) {
-            std::cerr << "Error" << '\n';
+            std::cerr << "Error: " << e.what() << '\n';
         }
     }
     else
