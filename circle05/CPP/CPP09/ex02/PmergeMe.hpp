@@ -2,13 +2,13 @@
 #define PMERGEME_HPP
 
 #include <vector>
-#include <list>
+#include <deque>
 #include <iostream>
 
 class PmergeMe {
 private:
     std::vector<int> _intVec;
-    std::list<int> _intList;
+    std::deque<int> _intDeq;
     int _after_printed;
 
     PmergeMe();
@@ -19,11 +19,13 @@ public:
     PmergeMe(int argc, char** argv);
     ~PmergeMe();
 
-    void sortWithVector();
-    void sortWithList();
+    template<typename T> void merge(T& arr, T& L, T& R);
+    template<typename T> void mergeInsertionSort(T& arr);
 
-    void printBefore();
-    void printAfter();
+    void sortWithVector();
+    void sortWithDeque();
+
+    void print(bool x);
 };
 
 #endif
