@@ -16,6 +16,7 @@ int	main(int ac, char **av)
 {
 	// If we ctrl+c, we quit clean
 	signal(SIGINT, shutdown);
+	signal(SIGPIPE, SIG_IGN);
 	if (ac != 3)
 		return (std::cerr << "Error: Usage: ./ircserv <port> <password>" << std::endl, 0);
 
