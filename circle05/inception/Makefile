@@ -8,12 +8,12 @@ run:
 	@echo "Running docker-compose..."
 	docker-compose -f srcs/docker-compose.yml up -d
 
-stop:
+down:
 	@echo "Stopping docker-compose..."
 	docker-compose -f srcs/docker-compose.yml down
 
-re: stop all
+re: down all
 
-clean: stop
+clean: down
 	@echo "Removing all docker images..."
 	docker system prune -a --volumes

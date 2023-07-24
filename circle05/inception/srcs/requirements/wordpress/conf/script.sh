@@ -12,8 +12,7 @@ else
 	wget http://wordpress.org/latest.tar.gz
 	tar xfz latest.tar.gz
 	mv wordpress/* .
-	rm -rf latest.tar.gz
-	rm -rf wordpress
+	rm -rf latest.tar.gz wordpress
 
 	# Install wp_cli command and put it in the right directory /usr/local/bin
 	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar

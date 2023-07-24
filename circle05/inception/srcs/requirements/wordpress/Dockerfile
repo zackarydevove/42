@@ -11,7 +11,8 @@ RUN apt-get install -y wget \
     php-pdo \
     php-gd \
     php-cli \
-    php-mbstring
+    php-mbstring \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy the .conf in the html directory (necessary tools to download wordpress)
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
