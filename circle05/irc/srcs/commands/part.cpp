@@ -41,8 +41,8 @@ int part(Server &server, Client &client, std::vector<std::string> &input)
 
                 // if message;
                 std::string message = "";
-                if (input.size() >= 3)
-                    message = input[2];
+                for (size_t i = 2; i < input.size(); i++)
+                    message += input[i] + " ";
 
                 // Broadcast the part message
                 channel->broadcastMessage(PART(client.getNickname(), client.getUsername(), channel->getName(), message), NULL);
