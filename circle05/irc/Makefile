@@ -25,35 +25,40 @@ SRCS        =       srcs/main.cpp \
 
 DIRS        =       $(sort $(dir $(SRCS)))
 
-OBJS_DIR    =       obj/
+OBJS 		=		$(SRCS:.cpp=.o)
+DEPS 		=		$(SRCS:.cpp=.d)
 
-OBJS        =       $(addprefix $(OBJS_DIR), $(SRCS:.cpp=.o))
+OBJS_DIR	=		obj/
+DEPS_DIR	=		obj/
 
-NAME        =       ircserv
+OBJS		:=		$(addprefix $(OBJS_DIR), $(OBJS))
+DEPS		:=		$(addprefix $(DEPS_DIR), $(DEPS))
 
-CC          =       c++
+NAME 		=		ircserv
 
-CFLAGS      =       -Wall -Wextra -Werror -std=c++98 -MMD
+CC 			=		c++
 
-all         :       $(NAME)
+CFLAGS 		=		-Wall -Wextra -Werror -std=c++98 -MMD
 
-$(NAME)     :       $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+all			:		$(NAME)
 
-$(OBJS_DIR)%.o :    %.cpp | dirs
-	$(CC) $(CFLAGS) -c $< -o $@
+$(NAME)		:		$(OBJS)
+					$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
-dirs:
-	mkdir -p $(addprefix $(OBJS_DIR), $(DIRS))
+$(OBJS_DIR):
+					mkdir -p $(addprefix $(OBJS_DIR), $(DIRS))
 
-clean       :
-	rm -rf $(OBJS_DIR)
+$(OBJS_DIR)%.o	:	%.cpp | $(OBJS_DIR)
+					$(CC) $(CFLAGS) -c $< -o $@
 
-fclean      :       clean
-	rm -rf $(NAME)
+clean		:		
+					rm -rf $(OBJS) $(DEPS) $(OBJS_DIR)
 
-re          :       fclean all
+fclean		:		clean
+					rm -rf $(NAME)
 
-.PHONY      :       all clean fclean re dirs
+re			:		fclean all
 
--include $(OBJS:.o=.d)
+.PHONY		:		all clean fclean re
+
+-include $(DEPS)
