@@ -32,7 +32,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     {
         if (!channel->getPassword().empty())
         {
-            if (input.size() < 2 || channel->getPassword() != input[2])
+            if (input.size() < 3 || channel->getPassword() != input[2])
             {
                 // Password is missing or wrong.
                 client.sendMessage(ERR_BADCHANNELKEY(client.getNickname(), channel->getName()));
@@ -57,7 +57,7 @@ int join(Server &server, Client &client, std::vector<std::string> &input)
     // Send a message to the channel that the client has joined.
     channel->broadcastMessage(JOIN(client.getNickname(), client.getUsername(), channel->getName()), NULL);
     channel->removeInvited(&client);
-    topic(server, client, input);
+    // topic(server, client, input);
     names(server, client, input);
     return (1);
 }
