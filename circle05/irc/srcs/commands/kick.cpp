@@ -53,8 +53,8 @@ int kick(Server &server, Client &client, std::vector<std::string> &input)
 
 
     std::string kickMessage = "";
-    if (input.size() > 3)
-        kickMessage = input[3];
+    for (size_t i = 3; i < input.size(); i++)
+        kickMessage += input[i] + " ";
     channel->broadcastMessage(KICK(client.getNickname(), client.getUsername(), channel->getName(), clientToKick->getNickname(), kickMessage), NULL);
     // Kick the user from the channel.
     clientToKick->leaveChannel(channel);
