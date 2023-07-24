@@ -122,11 +122,9 @@ int modeChannel(Server &server, Client &client, std::vector<std::string> &input,
 			else
 				msg += "-";
             msg += input[2][i];
-            std::cout << msg << std::endl;
         }
     }
 
-    std::cout << msg << std::endl;
     client.sendMessage(MODE_CHANNEL(client.getNickname(), client.getUsername(), input[1].substr(1), msg));
 
     return 1;
