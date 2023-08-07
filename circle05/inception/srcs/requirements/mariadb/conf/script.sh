@@ -1,26 +1,27 @@
 #!/bin/bash
 
-# Check if the database already exist
+# Start mysql in the background for initial setup
+service mysql start
+
+# Check if the database already exists
 if [ -f /mariadb_installed ]
 then 
 	echo "Database already exists"
 else
 	echo "Configuring $MYSQL_DATABASE ..."
 
-	#mysql_install_db
-	killall mysqld
-	mysql_install_db &> /dev/null;
-	service mysql start 2> /dev/null;
-
-	#SQL langage, create everything (rootpassword, user, privileges, etc.)
-	mysql -e "CREATE DATABASE $MYSQL_DATABASE;";
-	mysql -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';";
-	mysql -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';";
-	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';FLUSH PRIVILEGES;";
+	# Create everything in db
+	mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE;"
+	mysql -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+	mysql -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+	mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
+	mysql -e "FLUSH PRIVILEGES;"
 	
     touch /mariadb_installed
 fi
 
-killall mysqld
+# Stop the initial MySQL service
+service mysql stop
+
 echo "database $MYSQL_DATABASE ready"
 mysqld --bind-address=0.0.0.0

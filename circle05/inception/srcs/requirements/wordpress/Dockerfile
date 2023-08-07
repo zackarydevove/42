@@ -1,9 +1,9 @@
 # Start from a debian image base
 FROM debian:buster
 
-# Update and Install packages, -y for automatic yes to any prompts
-RUN apt-get update -y
-RUN apt-get install -y wget \
+# Update and Install packages
+RUN apt-get update -y && \
+    apt-get install -y wget \
     php \
     php-cgi \
     php-mysql \
@@ -11,20 +11,26 @@ RUN apt-get install -y wget \
     php-pdo \
     php-gd \
     php-cli \
-    php-mbstring \
+    php-mbstring && \
     rm -rf /var/lib/apt/lists/*
 
-# Copy the .conf in the html directory (necessary tools to download wordpress)
+# Download wordpress
+RUN wget http://wordpress.org/wordpress-6.1.1.tar.gz -P /var/www/html && \
+	tar -xvf /var/www/html/wordpress-6.1.1.tar.gz -C /var/www/html && \
+	rm -rf /var/www/html/wordpress-6.1.1.tar.gz && \
+	chown -R www-data:www-data /var/www/html/wordpress
+
+# Install wp_cli command
+RUN	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+	chmod +x wp-cli.phar && \
+	mv wp-cli.phar /usr/local/bin/wp
+
+# Copy configurations
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
+COPY ./conf/script.sh ./
 
-# Create php directory to enable php-fpm to run and store the temporary files from php
-RUN mkdir -p /run/php
+RUN chmod +x ./script.sh && mkdir -p /run/php
 
-# Copy the script, give the right to launch it in local on our computer, and launch it
-COPY ./conf/script.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/script.sh
-
-# Expose the 9000 port
 EXPOSE 9000
 
-ENTRYPOINT ["bash", "/usr/local/bin/script.sh"]
+ENTRYPOINT ["sh", "./script.sh"]

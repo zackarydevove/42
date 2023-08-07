@@ -1,19 +1,25 @@
-all: build run
+all:
+	mkdir -p $(HOME)/data/mariadb
+	mkdir -p $(HOME)/data/wordpress
+	docker compose -f ./srcs/docker-compose.yml up --build -d
 
-build:
-	@echo "Building docker images..."
-	docker-compose -f srcs/docker-compose.yml build
+logs:
+	docker logs wordpress
+	docker logs mariadb
+	docker logs nginx
 
-run:
-	@echo "Running docker-compose..."
-	docker-compose -f srcs/docker-compose.yml up -d
+check:
+	docker ps
+	docker volume ls
+	docker images
 
-down:
-	@echo "Stopping docker-compose..."
-	docker-compose -f srcs/docker-compose.yml down
+clean:
+	docker stop wordpress mariadb nginx
+	docker rm wordpress mariadb nginx
 
-re: down all
+fclean: clean
+	docker rmi my-wordpress my-mariadb my-nginx
+	@sudo rm -rf $(HOME)/data/mariadb $(HOME)/data/wordpress
+	@docker system prune -af
 
-clean: down
-	@echo "Removing all docker images..."
-	docker system prune -a --volumes
+re:	fclean all
