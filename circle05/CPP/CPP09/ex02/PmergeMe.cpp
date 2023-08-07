@@ -7,10 +7,8 @@
 PmergeMe::PmergeMe(int ac, char** av)
 {
     // Put everything in vector and deque
-    _after_printed = 0;
     for(int i = 1; i < ac; ++i) {
         int num = atoi(av[i]);
-        // Check if negatif value
         if (num < 0)
             throw std::runtime_error("Error: Only positive integers are allowed.");
         _intVec.push_back(num);
@@ -22,30 +20,19 @@ PmergeMe::PmergeMe(int ac, char** av)
 
     // VECTOR
     clock_t start = clock();
-
     mergeInsertionSort(_intVec);
-
     clock_t end = clock();
     double duration = (double)(end - start) / CLOCKS_PER_SEC * 10000;
-    if (!_after_printed)
-    {
-        _after_printed = 1;
-        print(false);
-    }
-    std::cout << std::fixed << std::setprecision(5) << "Time to process a range of " << _intVec.size() << " elements with std::vector : " << duration << " us\n";
 
     // DEQUE
     start = clock();
-
     mergeInsertionSort(_intDeq);
-
     end = clock();
+
+	// Print after sort values
+    print(false);
+    std::cout << std::fixed << std::setprecision(5) << "Time to process a range of " << _intVec.size() << " elements with std::vector : " << duration << " us\n";
     duration = (double)(end - start) / CLOCKS_PER_SEC * 10000;
-    if (!_after_printed)
-    {
-        _after_printed = 1;
-        print(false);
-    }
     std::cout << std::fixed << std::setprecision(5) << "Time to process a range of " << _intDeq.size() << " elements with std::deque : " << duration << " us\n";
 }
 

@@ -9,7 +9,6 @@ class PmergeMe {
 private:
     std::vector<int> _intVec;
     std::deque<int> _intDeq;
-    int _after_printed;
 
     PmergeMe();
     PmergeMe(const PmergeMe& other);
@@ -19,11 +18,8 @@ public:
     PmergeMe(int argc, char** argv);
     ~PmergeMe();
 
-    template<typename T> void merge(T& arr, T& L, T& R);
     template<typename T> void mergeInsertionSort(T& arr);
-
-    void sortWithVector();
-    void sortWithDeque();
+    template<typename T> void merge(T& arr, T& L, T& R);
 
     void print(bool x);
 };
