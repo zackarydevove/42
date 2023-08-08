@@ -18,7 +18,7 @@ RUN apt-get update -y && \
 RUN wget http://wordpress.org/wordpress-6.1.1.tar.gz -P /var/www/html && \
 	tar -xvf /var/www/html/wordpress-6.1.1.tar.gz -C /var/www/html && \
 	rm -rf /var/www/html/wordpress-6.1.1.tar.gz && \
-	chown -R www-data:www-data /var/www/html/wordpress
+	chown -R www-data:www-data /var/www/*
 
 # Install wp_cli command
 RUN	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \

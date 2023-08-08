@@ -12,6 +12,8 @@ services:
     volumes:
       - mariadb:/var/lib/mysql
     restart: unless-stopped
+    networks:
+      - inception
 
   wordpress:
     image: my-wordpress
@@ -26,6 +28,8 @@ services:
     depends_on: 
       - mariadb
     restart: on-failure
+    networks:
+      - inception
 
   nginx:
     image: my-nginx
@@ -42,6 +46,8 @@ services:
     restart: on-failure
     ports:
       - "443:443"
+    networks:
+      - inception
 
 volumes:
   wordpress:
@@ -56,3 +62,7 @@ volumes:
       o: bind
       type: none
       device: $HOME/data/mariadb
+
+networks:
+  inception:
+    name: inception

@@ -1,13 +1,16 @@
 #!/bin/bash
 
-# Start mysql in the background for initial setup
-service mysql start
-
 # Check if the database already exists
 if [ -f /mariadb_installed ]
 then 
 	echo "Database already exists"
 else
+	# Start MariaDB in the background for initial setup
+	mysqld_safe &
+
+	# Wait for MariaDB to start up
+	sleep 10
+
 	echo "Configuring $MYSQL_DATABASE ..."
 
 	# Create everything in db
@@ -18,10 +21,11 @@ else
 	mysql -e "FLUSH PRIVILEGES;"
 	
     touch /mariadb_installed
-fi
 
-# Stop the initial MySQL service
-service mysql stop
+    # Kill all mysqld processes (since mysqld_safe might spawn multiple) 
+    killall mysqld
+    sleep 10
+fi
 
 echo "database $MYSQL_DATABASE ready"
 mysqld --bind-address=0.0.0.0
