@@ -1,7 +1,7 @@
 # Start from a debian image base
 FROM debian:buster
 
-# Update and Install packages, -y for automatic yes to any prompts
+# Update and Install packages
 RUN apt-get update -y && \
     apt-get install -y nginx openssl && \
     rm -rf /var/lib/apt/lists/*

@@ -11,14 +11,6 @@ else
 	# Wait for the database to be created correctly
 	sleep 30
 
-	# Create the wp-config.php file
-	# wp config create --allow-root \
-	# 				--dbname="$MYSQL_DATABASE" \
-	# 				--dbuser="$MYSQL_USER" \
-	# 				--dbpass="$MYSQL_PASSWORD" \
-    #     			--dbhost="$MYSQL_HOST" \
-	# 				--path="$WP_PATH";
-
 	# Setup the wp-config.php file
 	sed -i "s/username_here/$MYSQL_USER/g" /var/www/html/wordpress/wp-config-sample.php
 	sed -i "s/password_here/$MYSQL_PASSWORD/g" /var/www/html/wordpress/wp-config-sample.php

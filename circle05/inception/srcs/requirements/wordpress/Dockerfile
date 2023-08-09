@@ -18,12 +18,14 @@ RUN	wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.ph
 	chmod +x wp-cli.phar && \
 	mv wp-cli.phar /usr/local/bin/wp
 
-# Copy configurations
+# Copy configurations and script
 COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
 COPY ./conf/script.sh ./
 
+# Give rights to execute script and create temporary folder for PHP-FPM's socket files.
 RUN chmod +x ./script.sh && mkdir -p /run/php
 
+# Expose port 9000 for php-fpm
 EXPOSE 9000
 
 ENTRYPOINT ["sh", "./script.sh"]
