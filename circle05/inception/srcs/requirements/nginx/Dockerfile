@@ -3,8 +3,8 @@ FROM debian:buster
 
 # Update and Install packages, -y for automatic yes to any prompts
 RUN apt-get update -y && \
-       apt-get install -y nginx openssl && \
-       rm -rf /var/lib/apt/lists/*
+    apt-get install -y nginx openssl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Create directory for SSL certificates
 RUN mkdir -p /etc/nginx/ssl

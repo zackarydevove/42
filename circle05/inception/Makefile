@@ -1,6 +1,6 @@
 all:
-	mkdir -p $(HOME)/data/mariadb
-	mkdir -p $(HOME)/data/wordpress
+	mkdir -p /home/zack/data/mariadb
+	mkdir -p /home/zack/data/wordpress
 	docker compose -f ./srcs/docker-compose.yml up --build -d
 
 logs:
@@ -18,8 +18,8 @@ clean:
 	docker rm wordpress mariadb nginx
 
 fclean: clean
-	docker rmi my-wordpress my-mariadb my-nginx
-	@sudo rm -rf $(HOME)/data/mariadb $(HOME)/data/wordpress
+	docker rmi wordpress mariadb nginx
+	@sudo rm -rf /home/zack/data/mariadb /home/zack/data/wordpress
 	@docker system prune -af
 
 re:	fclean all
