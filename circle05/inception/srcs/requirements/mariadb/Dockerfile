@@ -11,10 +11,7 @@ RUN apt-get update -y && \
     apt-get install -y mariadb-server mariadb-client && \
     rm -rf /var/lib/apt/lists/*
 
-# Start the MariaDB service and set the root password
-RUN service mysql start && mysqladmin -u root password $MYSQL_ROOT_PASSWORD
-
-# Start the MariaDB service, create database, user, and grant access
+# Start the MariaDB service, set root password, create database, user, and grant access
 RUN service mysql start && \
     mysql -uroot -p$MYSQL_ROOT_PASSWORD -e \
     "CREATE DATABASE $MYSQL_DATABASE; \
@@ -22,7 +19,7 @@ RUN service mysql start && \
     GRANT ALL ON $MYSQL_DATABASE.* TO '$MYSQL_USER'@'%'; \
     FLUSH PRIVILEGES;"
 
-# Expose port 9000 for mariadb
+# Expose port 3306 for mariadb
 EXPOSE 3306
 
 # Start the MariaDB server and bind its address to all available network interfaces (0.0.0.0)
